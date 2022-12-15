@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       [AppString.categoryName],
                   categoryImage: AppConstants.popularCategoriesList[index]
                       [AppString.categoryImage],
-                  width: size.width * 0.19,
+                  width: size.width * 0.188,
                 ),
               ),
             ),

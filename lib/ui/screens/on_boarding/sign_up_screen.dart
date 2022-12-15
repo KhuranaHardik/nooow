@@ -122,14 +122,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             readOnly: false,
             placeholder: AppString.confirmPassword,
           ),
-          // const SizedBox(height: 18),
-          // CustomTextField(
-          //   controller: _nameTextEditingController,
-          //   textInputAction: TextInputAction.next,
-          //   isObscure: false,
-          //   readOnly: false,
-          // ),
-
           const SizedBox(height: 21),
           // Get OTP button
           CustomElevatedButton(
