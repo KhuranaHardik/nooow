@@ -1,4 +1,4 @@
-import 'package:coach_app/utils/apphelper/constants/app_constants.dart';
+import 'package:nooow/utils/app_constants.dart';
 
 // email validation
 class EmailValidator {

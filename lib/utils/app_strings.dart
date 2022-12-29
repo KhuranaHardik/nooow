@@ -16,6 +16,7 @@ class AppString {
   static const String emailAddress = "Email Address";
   static const String alreadyHaveAnAccount = "Already have an account? ";
 
+  static const String forgotPassword = "Forgot Password?";
   static const String resetPassword = "Reset password";
   static const String resetMyPassword = "Reset my password";
 

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nooow/utils/app_colors.dart';
 
 //Custom Elevated Button.
 class CustomElevatedButton extends StatelessWidget {
@@ -10,21 +12,21 @@ class CustomElevatedButton extends StatelessWidget {
     this.child,
     this.elevation,
     required this.borderColor,
-    this.borderRadius=5.0,
+    this.borderRadius = 5.0,
+    this.isAnimate = false,
   }) : super(key: key);
 
   final Color? buttonColor;
   final Size? buttonSize;
   final void Function()? onPressed;
   final Widget? child;
+  final bool? isAnimate;
   final double? elevation;
   final Color borderColor;
   final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    //Loader to show loading if an api call is made.
-    // bool loader = Provider.of<UIProvider>(context).loading;
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -37,11 +39,22 @@ class CustomElevatedButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius!),
         ),
       ),
-      child:
-          // loader == true
-          //     ? const CircularProgressIndicator(color: AppColors.whiteTwo)
-          //     :
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          isAnimate ?? false
+              ? const CupertinoActivityIndicator(
+                  color: AppColors.white,
+                  radius: 10,
+                  animating: true,
+                )
+              : const SizedBox.shrink(),
+          SizedBox(
+            width: isAnimate ?? false ? 5 : 0,
+          ),
           Center(child: child),
+        ],
+      ),
     );
   }
 }

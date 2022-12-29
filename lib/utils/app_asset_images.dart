@@ -7,6 +7,7 @@ class AppAssetImages {
   static const String google = 'assets/google.png';
   static const String grocery = 'assets/grocery.png';
   static const String hotDeals = 'assets/hot_deals.png';
+  static const String loadingScreen='assets/loading_screen.png';
   static const String appLogo = 'assets/logo.png';
   static const String movies = 'assets/movies.png';
   static const String offers = 'assets/offers.png';

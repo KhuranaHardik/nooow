@@ -15,15 +15,19 @@ class AdContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 21),
+      margin: const EdgeInsets.symmetric(horizontal: 21),
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: AppColors.navyBlue,
         image: const DecorationImage(
-          // TODO: Update offer image from the API
-          image: AssetImage(AppAssetImages.appLogo),
-        ),
+            // TODO: Update offer image from the API
+            image:
+                // image == null
+                //     ?
+                AssetImage(AppAssetImages.appLogo)
+            // : NetworkImage(image!) as ImageProvider,
+            ),
       ),
     );
   }

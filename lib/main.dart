@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:nooow/provider/password_provider.dart';
-import 'package:nooow/ui/screens/on_boarding/sign_in_screen.dart';
-import 'package:nooow/utils/app_keys.dart';
+import 'package:nooow/provider/api_services_provider.dart';
+import 'package:nooow/provider/ui_provider.dart';
+import 'package:nooow/services/local_db.dart';
+import 'package:nooow/utils/app_constants.dart';
 import 'package:nooow/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppSharedPrefrence().getInitialRoute();
   runApp(const MyApp());
 }
 
@@ -17,15 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => PasswordProvider(),
-        ),
+        ChangeNotifierProvider(create: (context) => UIProvider()),
+        ChangeNotifierProvider(create: (context) => ApiServiceProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: AppKeys.appName,
-        home: SignInScreen(),
-        // initialRoute: ResetPasswordScreen(),
+        initialRoute: AppSharedPrefrence().initialRoute,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
     );

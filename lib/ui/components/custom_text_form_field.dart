@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nooow/provider/password_provider.dart';
+import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -37,9 +37,10 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PasswordProvider>(
+    return Consumer<UIProvider>(
       builder: (context, passwordProvider, child) {
         return TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           readOnly: readOnly,
           controller: controller,
           cursorColor: Colors.black,
@@ -68,7 +69,7 @@ class CustomTextField extends StatelessWidget {
                         splashFactory: NoSplash.splashFactory),
                     child: Icon(
                       isObscure ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.navyBlue,
+                      color: AppColors.navyBlue,
                     ),
                     onPressed: () {
                       isObscure = passwordProvider.showPassword(isObscure);
