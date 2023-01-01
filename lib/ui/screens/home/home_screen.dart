@@ -10,6 +10,7 @@ import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/category_container.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
+import 'package:nooow/ui/components/drawer_list_tile.dart';
 import 'package:nooow/ui/components/food_brand_widget.dart';
 import 'package:nooow/ui/components/offers_container.dart';
 import 'package:nooow/utils/app_asset_images.dart';
@@ -64,66 +65,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.whiteBackground,
+      drawer: drawer(),
       appBar: AppBar(
-        leading: const SizedBox.shrink(),
-        automaticallyImplyLeading: false,
+        foregroundColor: AppColors.black,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           systemStatusBarContrastEnforced: true,
         ),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Are you sure to logout?'),
-                      actions: [
-                        IconButton(
-                            onPressed: () async {
-                              SharedPreferences pref =
-                                  await SharedPreferences.getInstance();
-                              if (await pref.clear()) {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    AppRoutes.signInScreen, (route) => false);
-                              }
-                            },
-                            icon: const Text('Yes')),
-                        IconButton(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Text('No')),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.power_settings_new,
-                color: Colors.red,
-              ))
-        ],
-        elevation: 0.0,
-        backgroundColor: AppColors.whiteBackground,
+        centerTitle: true,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              AppAssetImages.appLogo,
-              height: 22,
+              AppAssetImages.homePlace,
+              color: AppColors.black,
+              height: 17,
+              width: 17,
             ),
-            const Spacer(),
-            Image.asset(AppAssetImages.place),
-            const SizedBox(width: 4),
-            Text(
-              AppString.tempLocation,
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: AppColors.navyBlue,
+            const SizedBox(width: 3),
+            DropdownButton(
+              iconDisabledColor: AppColors.black,
+              iconEnabledColor: AppColors.black,
+              hint: Text(
+                AppString.tempLocation,
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: AppColors.black,
+                ),
               ),
-            )
+              // TODO: Dropdown List of cities.
+              items: const [],
+              onChanged: (val) {},
+            ),
           ],
         ),
+        // TODO: Notifications, favorites & search
+        actions: const [],
+        elevation: 0.0,
+        backgroundColor: AppColors.whiteBackground,
       ),
       body: WillPopScope(
         onWillPop: () async {
@@ -145,18 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     primary: true,
                     children: [
                       const SizedBox(height: 3),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 21),
-                        child: CustomTextField(
-                          controller: _searchTextEditingController,
-                          focusNode: _searchFocus,
-                          isObscure: false,
-                          readOnly: false,
-                          textInputAction: TextInputAction.done,
-                          placeholder: AppString.searchForItems,
-                        ),
-                      ),
-                      const SizedBox(height: 17),
                       // Advertisements
                       SizedBox(
                         height: 180,
@@ -413,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 // Loading Screen
-                uiProvider.loader == true
+                uiProvider.loading == true
                     ? Container(
                         height: size.height,
                         color: AppColors.whiteBackground.withOpacity(0.4),
@@ -427,6 +395,118 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget drawer() {
+    return Drawer(
+      elevation: 0.0,
+      child: ListView(
+        children: [
+          Container(
+            height: 114,
+            padding: const EdgeInsets.only(top: 36, bottom: 30, left: 22),
+            decoration: const BoxDecoration(
+              color: AppColors.navyBlue,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(8.0)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 24,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'User Name',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      'Farmer',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 17.5, right: 17.5, top: 24),
+            child: Column(
+              children: [
+                // Settings
+                DrawerListTile(
+                  iconPath: AppAssetImages.settings,
+                  tileTitle: "Settings",
+                  isDropDown: true,
+                  onTap: () {},
+                ),
+                const SizedBox(height: 11),
+                // Privacy & Policy
+                DrawerListTile(
+                  iconPath: AppAssetImages.drawerPrivacyPolicy,
+                  tileTitle: "Privacy & Policy",
+                  isDropDown: false,
+                  onTap: () {},
+                ),
+                const SizedBox(height: 11),
+                // Refer To Friends
+                DrawerListTile(
+                  iconPath: AppAssetImages.share,
+                  tileTitle: "Refer To Friends",
+                  isDropDown: false,
+                  onTap: () {},
+                ),
+                const SizedBox(height: 11),
+                // Logout
+                DrawerListTile(
+                  iconPath: AppAssetImages.drawerLogOut,
+                  tileTitle: "Logout",
+                  isDropDown: false,
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Are you sure to logout?'),
+                          actions: [
+                            IconButton(
+                              onPressed: () async {
+                                SharedPreferences pref =
+                                    await SharedPreferences.getInstance();
+                                if (await pref.clear()) {
+                                  Navigator.pushNamedAndRemoveUntil(context,
+                                      AppRoutes.signInScreen, (route) => false);
+                                }
+                              },
+                              icon: const Text('Yes'),
+                            ),
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Text('No'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

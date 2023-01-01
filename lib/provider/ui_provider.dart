@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
 class UIProvider extends ChangeNotifier {
+  // For bottom navigation bar.
+  int onTap(int index) {
+    int currentIndex = index;
+    notifyListeners();
+    return currentIndex;
+  }
+
   // for changing the button color.
   bool buttonColorChange(List<TextEditingController> controller) {
     for (int i = 0; i < controller.length; i++) {
       if (controller[i].text.isEmpty) {
         notifyListeners();
-        return false;
+        return true;
       }
     }
     notifyListeners();
-    return true;
+    return false;
   }
 
   //Provider to show the obscure text of the password.
@@ -21,15 +28,15 @@ class UIProvider extends ChangeNotifier {
   }
 
   // To show loader
-  bool loader = false;
+  bool loading = false;
 
   void loaderTrue() {
-    loader = true;
+    loading = true;
     notifyListeners();
   }
 
   void loaderFalse() {
-    loader = false;
+    loading = false;
     notifyListeners();
   }
 }

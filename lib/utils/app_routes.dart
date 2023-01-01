@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nooow/ui/screens/home/bottom_navigation_screen.dart';
 import 'package:nooow/ui/screens/home/home_screen.dart';
 import 'package:nooow/ui/screens/on_boarding/enter_otp_forgot_password_screen.dart';
 import 'package:nooow/ui/screens/on_boarding/enter_otp_sign_up_screen.dart';
@@ -21,10 +22,10 @@ abstract class AppRoutes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case '/':
-      //   return MaterialPageRoute(
-      //     builder: (context) => const SignInScreen(),
-      //   );
+      case '/':
+        return MaterialPageRoute(
+          builder: (context) => const BottomNavigationBarScreen(),
+        );
 
       case signInScreen:
         return MaterialPageRoute(

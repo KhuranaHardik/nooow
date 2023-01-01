@@ -34,23 +34,23 @@ class AppConstants {
     },
     {
       AppString.categoryName: AppString.beauty,
-      AppString.categoryImage: AppAssetImages.beauty,
+      AppString.categoryImage: AppAssetImages.homeBeauty,
     },
     {
-      AppString.categoryName: AppString.beauty,
-      AppString.categoryImage: AppAssetImages.beauty,
+      AppString.categoryName: AppString.food,
+      AppString.categoryImage: AppAssetImages.homeFood,
     },
     {
       AppString.categoryName: AppString.grocery,
-      AppString.categoryImage: AppAssetImages.grocery,
+      AppString.categoryImage: AppAssetImages.homeGrocery,
     },
     {
       AppString.categoryName: AppString.movies,
-      AppString.categoryImage: AppAssetImages.movies,
+      AppString.categoryImage: AppAssetImages.homeMovies,
     },
     {
       AppString.categoryName: AppString.pharmacy,
-      AppString.categoryImage: AppAssetImages.pharmacy,
+      AppString.categoryImage: AppAssetImages.homePharmacy,
     },
     {
       AppString.categoryName: AppString.fashion,
@@ -58,7 +58,7 @@ class AppConstants {
     },
     {
       AppString.categoryName: AppString.grocery,
-      AppString.categoryImage: AppAssetImages.beauty,
+      AppString.categoryImage: AppAssetImages.homeBeauty,
     },
   ];
 }

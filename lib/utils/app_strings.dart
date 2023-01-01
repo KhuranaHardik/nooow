@@ -1,5 +1,5 @@
 class AppString {
-  static const String tempLocation = "Greater Noida, 201306, UP";
+  static const String tempLocation = "Greater Noida";
 
   static const String signIn = "Sign in";
   static const String phoneNumber = "Phone Number";

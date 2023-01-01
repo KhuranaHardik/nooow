@@ -104,8 +104,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 // Reset Password Button
                 Consumer<UIProvider>(
                   builder: (context, consumer, child) => CustomElevatedButton(
-                    isAnimate: consumer.loader,
-                    onPressed: consumer.loader
+                    isAnimate: consumer.loading,
+                    onPressed: consumer.loading
                         ? () {}
                         : () async {
                             if (_formKey.currentState!.validate()) {

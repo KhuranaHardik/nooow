@@ -33,6 +33,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late FocusNode _emailFocus;
   late FocusNode _passwordFocus;
   late FocusNode _confirmPasswordFocus;
+  bool _isFieldsEmpty = true;
+  late List<TextEditingController> _controllerList;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -48,6 +50,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailFocus = FocusNode();
     _passwordFocus = FocusNode();
     _confirmPasswordFocus = FocusNode();
+    _controllerList = [
+      _nameTextEditingController,
+      _phoneTextEditingController,
+      _emailTextEditingController,
+      _passwordTextEditingController,
+      _confirmPasswordTextEditingController,
+    ];
   }
 
   @override
@@ -85,6 +94,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 },
                 child: Form(
                   key: _formKey,
+                  onChanged: () {
+                    _isFieldsEmpty =
+                        uiProvider.buttonColorChange(_controllerList);
+                  },
                   child: ListView(
                     padding: EdgeInsets.only(
                       left: 35,
@@ -170,45 +183,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 21),
                       // Get OTP button
-                      Consumer<UIProvider>(
-                        builder: (context, consumer, child) =>
-                            CustomElevatedButton(
-                          isAnimate: consumer.loader,
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              consumer.loaderTrue();
-                              await ApiServiceProvider()
-                                  .signupProvider(context: context, body: {
-                                "name": _nameTextEditingController.text,
-                                "contact": _phoneTextEditingController.text,
-                                "email": _emailTextEditingController.text,
-                                "password": _passwordTextEditingController.text,
-                                "confirm_password":
-                                    _confirmPasswordTextEditingController.text,
-                              });
-
-                              consumer.loaderFalse();
-                            }
-                          },
-                          elevation: 0,
-                          borderColor: AppColors.transparent,
-                          buttonColor: AppColors.navyBlue,
-                          buttonSize: Size(size.width, 52),
-                          child: Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 17.0),
-                              child: Text(
-                                AppString.getOtp,
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
+                      CustomElevatedButton(
+                        isAnimate: uiProvider.loading,
+                        onPressed: _isFieldsEmpty
+                            ? () {}
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  uiProvider.loaderTrue();
+                                  await ApiServiceProvider().signupProvider(
+                                    context: context,
+                                    body: {
+                                      "name": _nameTextEditingController.text,
+                                      "contact":
+                                          _phoneTextEditingController.text,
+                                      "email": _emailTextEditingController.text,
+                                      "password":
+                                          _passwordTextEditingController.text,
+                                      "confirm_password":
+                                          _confirmPasswordTextEditingController
+                                              .text,
+                                    },
+                                  );
+                                  uiProvider.loaderFalse();
+                                }
+                              },
+                        elevation: 0,
+                        borderColor: AppColors.transparent,
+                        buttonColor: AppColors.navyBlue,
+                        buttonSize: Size(size.width, 52),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 17.0),
+                            child: Text(
+                              AppString.getOtp,
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
                               ),
                             ),
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 21),
                       Center(
                         child: RichText(
@@ -241,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               // Loading Screen
-              uiProvider.loader == true
+              uiProvider.loading == true
                   ? Container(
                       height: size.height,
                       color: AppColors.whiteBackground.withOpacity(0.4),

@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UIProvider()),
         ChangeNotifierProvider(create: (context) => ApiServiceProvider()),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: AppKeys.appName,
-        initialRoute: AppSharedPrefrence().initialRoute,
+        // initialRoute: AppSharedPrefrence().initialRoute,
         onGenerateRoute: AppRoutes.generateRoute,
       ),
     );

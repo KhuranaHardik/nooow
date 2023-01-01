@@ -84,7 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Consumer<UIProvider>(
                       builder: (context, consumer, child) =>
                           CustomElevatedButton(
-                        isAnimate: consumer.loader,
+                        isAnimate: consumer.loading,
                         onPressed: () async {
                           consumer.loaderTrue();
 

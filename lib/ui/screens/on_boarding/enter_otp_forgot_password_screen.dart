@@ -161,8 +161,8 @@ class _EnterOtpForgotPasswordScreenState
                   const SizedBox(height: 16),
                   Consumer<UIProvider>(
                     builder: (context, consumer, child) => CustomElevatedButton(
-                      isAnimate: consumer.loader,
-                      onPressed: consumer.loader
+                      isAnimate: consumer.loading,
+                      onPressed: consumer.loading
                           ? () {}
                           : () async {
                               consumer.loaderTrue();

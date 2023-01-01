@@ -26,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController _passwordController;
   late FocusNode _emailFocus;
   late FocusNode _passwordFocus;
-  bool _isFieldsEmpty = false;
+  bool _isFieldsEmpty = true;
   late List<TextEditingController> _controllerList;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -71,15 +71,14 @@ class _SignInScreenState extends State<SignInScreen> {
           _emailFocus.unfocus();
           _passwordFocus.unfocus();
         },
-        child: Consumer<ApiServiceProvider>(
-          builder: (context, apiServiceProvider, child) {
+        child: Consumer2<ApiServiceProvider, UIProvider>(
+          builder: (context, apiServiceProvider, uiProvider, child) {
             return SingleChildScrollView(
               child: Form(
                 key: _formKey,
                 onChanged: () {
                   _isFieldsEmpty =
-                      Provider.of<UIProvider>(context, listen: false)
-                          .buttonColorChange(_controllerList);
+                      uiProvider.buttonColorChange(_controllerList);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 35.0),
@@ -140,52 +139,48 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       const SizedBox(height: 21),
                       // Get OTP button
-                      Consumer<UIProvider>(
-                        builder: (context, uiProvider, child) =>
-                            CustomElevatedButton(
-                          isAnimate: uiProvider.loader,
-                          onPressed: _isFieldsEmpty
-                              ? uiProvider.loader
-                                  ? () {}
-                                  : () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        uiProvider.loaderTrue();
-                                        await apiServiceProvider.loginProvider(
-                                          context: context,
-                                          body: {
-                                            "email": _emailController.text,
-                                            "password":
-                                                _passwordController.text,
-                                          },
-                                        );
-                                        uiProvider.loaderFalse();
-                                      }
+                      CustomElevatedButton(
+                        isAnimate: uiProvider.loading,
+                        onPressed: _isFieldsEmpty
+                            ? () {}
+                            : uiProvider.loading
+                                ? () {}
+                                : () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      uiProvider.loaderTrue();
+                                      await apiServiceProvider.loginProvider(
+                                        context: context,
+                                        body: {
+                                          "email": _emailController.text,
+                                          "password": _passwordController.text,
+                                        },
+                                      );
+                                      uiProvider.loaderFalse();
                                     }
-                              : () {},
-                          elevation: 0,
-                          borderColor: AppColors.transparent,
-                          buttonColor: _isFieldsEmpty
-                              ? AppColors.navyBlue
-                              : AppColors.navyBlue.withOpacity(0.4),
-                          buttonSize: Size(size.width, 52),
-                          child: Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 17.0),
-                              child: Text(
-                                AppString.signIn,
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: _isFieldsEmpty
-                                      ? AppColors.white
-                                      : AppColors.black,
-                                ),
+                                  },
+                        elevation: 0,
+                        borderColor: AppColors.transparent,
+                        buttonColor: _isFieldsEmpty
+                            ? AppColors.navyBlue.withOpacity(0.4)
+                            : AppColors.navyBlue,
+                        buttonSize: Size(size.width, 52),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 17.0),
+                            child: Text(
+                              AppString.signIn,
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: _isFieldsEmpty
+                                    ? AppColors.black
+                                    : AppColors.white,
                               ),
                             ),
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 21),
                       Center(
                         child: Text(
@@ -221,9 +216,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                     Text(
                                       AppString.facebook,
                                       style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: AppColors.black),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: AppColors.black,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -250,9 +246,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                     Text(
                                       AppString.google,
                                       style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: AppColors.black),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: AppColors.black,
+                                      ),
                                     ),
                                   ],
                                 ),

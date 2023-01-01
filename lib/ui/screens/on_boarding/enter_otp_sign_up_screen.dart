@@ -155,7 +155,7 @@ class _EnterOtpSignUpScreenState extends State<EnterOtpSignUpScreen> {
               const SizedBox(height: 16),
               Consumer<UIProvider>(
                 builder: (context, consumer, child) => CustomElevatedButton(
-                  isAnimate: consumer.loader,
+                  isAnimate: consumer.loading,
                   onPressed: () async {
                     consumer.loaderTrue();
                     await ApiServiceProvider()
