@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,8 @@ class CustomTextField extends StatelessWidget {
     this.isPasswordField = false,
     this.suffixIcon,
     this.focusNode,
-    this.textStyle,
+    required this.borderColor,
+    // this.textStyle,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -35,7 +37,8 @@ class CustomTextField extends StatelessWidget {
   final bool readOnly;
   final Widget? suffixIcon;
   final FocusNode? focusNode;
-  final TextStyle? textStyle;
+  final Color borderColor;
+  // final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,7 @@ class CustomTextField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           readOnly: readOnly,
           controller: controller,
-          cursorColor: Colors.black,
+          cursorColor: AppColors.navyBlue,
           textInputAction: textInputAction,
           keyboardType: textInputType,
           validator: validator,
@@ -53,17 +56,21 @@ class CustomTextField extends StatelessWidget {
           obscureText: isObscure,
           focusNode: focusNode,
           decoration: InputDecoration(
-            hintStyle: textStyle,
-            hintText: placeholder,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.navyBlue,
-              ),
+            labelText: placeholder,
+            labelStyle: GoogleFonts.montserrat(
+              color: AppColors.black,
+              fontWeight: FontWeight.w600,
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.navyBlue,
-              ),
+            hintText: placeholder,
+            hintStyle: GoogleFonts.montserrat(
+              color: AppColors.black,
+              fontWeight: FontWeight.w400,
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: borderColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: borderColor),
             ),
             suffixIcon: isPasswordField
                 ? TextButton(

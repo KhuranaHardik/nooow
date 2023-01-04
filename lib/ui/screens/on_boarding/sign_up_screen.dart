@@ -79,6 +79,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Size size = MediaQuery.of(context).size;
     double appBarHeight = AppBar().preferredSize.height;
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        foregroundColor: AppColors.black,
+        elevation: 0.0,
+        backgroundColor: AppColors.whiteBackground,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemStatusBarContrastEnforced: true,
+        ),
+      ),
       backgroundColor: AppColors.whiteBackground,
       body: Consumer2<UIProvider, ApiServiceProvider>(
         builder: (context, uiProvider, apiServiceProvider, child) {
@@ -105,7 +115,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       bottom: appBarHeight,
                     ),
                     children: [
-                      SizedBox(height: appBarHeight),
                       Row(
                         children: [
                           Image.asset(
@@ -131,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         readOnly: false,
                         placeholder: AppString.name,
                         validator: UserNameValidator().validateUserName,
+                        borderColor: AppColors.navyBlue,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -142,6 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         placeholder: AppString.phoneNumber,
                         validator: PhoneNoValidator().phoneNoValidation,
                         inputFormatter: [LengthLimitingTextInputFormatter(10)],
+                        borderColor: AppColors.navyBlue,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -152,6 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         readOnly: false,
                         placeholder: AppString.emailAddress,
                         validator: EmailValidator().validateEmail,
+                        borderColor: AppColors.navyBlue,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -162,6 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         readOnly: false,
                         placeholder: AppString.password,
                         validator: PasswordValidator().validatePassword,
+                        borderColor: AppColors.navyBlue,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -171,6 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         isObscure: true,
                         readOnly: false,
                         placeholder: AppString.confirmPassword,
+                        borderColor: AppColors.navyBlue,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return "Password Required*";

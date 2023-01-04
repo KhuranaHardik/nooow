@@ -78,6 +78,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       readOnly: false,
                       focusNode: _emailFocus,
                       placeholder: AppString.emailAddress,
+                      borderColor: AppColors.navyBlue,
                     ),
                     const SizedBox(height: 18),
                     // Reset Password Button
@@ -87,13 +88,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         isAnimate: consumer.loading,
                         onPressed: () async {
                           consumer.loaderTrue();
-
                           await ApiServiceProvider().forgotPasswordProvider(
                             context: context,
                             body: {"email": _emailController.text},
                           );
                           consumer.loaderFalse();
-
                           // Navigator.pushNamed(
                           //   context,
                           //   AppRoutes.enterOtpForgotPasswordScreen,

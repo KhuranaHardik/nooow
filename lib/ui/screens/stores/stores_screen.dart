@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
-import 'package:nooow/ui/components/hot_deals_screen/hot_deals_category.dart';
-import 'package:nooow/ui/components/stores_screen/stores_card.dart';
+import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
+import 'package:nooow/ui/screens/stores/components/stores_card.dart';
+import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 
@@ -46,7 +49,86 @@ class _StoresScreenState extends State<StoresScreen> {
           ),
         ),
         // TODO: Notifications, favorites & search
-        actions: const [],
+        actions: [
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Favourites Pressed');
+                  },
+                  icon: const Icon(
+                    Icons.favorite_border_outlined,
+                    color: AppColors.white,
+                    size: 21,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              log('Search Pressed');
+            },
+            icon: const Icon(Icons.search, size: 21),
+          ),
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Notifications Pressed');
+                  },
+                  icon: const Icon(
+                    Icons.notifications_none,
+                    size: 21,
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView(
         children: [
@@ -126,18 +208,33 @@ class _StoresScreenState extends State<StoresScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          GridView.builder(
-            primary: false,
-            shrinkWrap: true,
-            itemCount: 10,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 19,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.5),
+            child: GridView.builder(
+              primary: false,
+              shrinkWrap: true,
+              itemCount: 10,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 17,
+                crossAxisSpacing: 16,
+              ),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StoresDetailScreen(),
+                      ),
+                    );
+                  },
+                  child: StoresCard(width: size.width * 0.42),
+                );
+              },
             ),
-            itemBuilder: (context, index) {
-              return StoresCard(width: size.width);
-            },
-          )
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );

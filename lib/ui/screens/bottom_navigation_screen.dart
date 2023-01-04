@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/screens/home/home_screen.dart';
-import 'package:nooow/ui/screens/home/hot_offers_screen.dart';
-import 'package:nooow/ui/screens/home/nearby_screens.dart';
-import 'package:nooow/ui/screens/home/profile_screen.dart';
-import 'package:nooow/ui/screens/home/stores_screen.dart';
+import 'package:nooow/ui/screens/hot_offers/hot_offers_screen.dart';
+import 'package:nooow/ui/screens/near_by/nearby_screens.dart';
+import 'package:nooow/ui/screens/profile/profile_screen.dart';
+import 'package:nooow/ui/screens/stores/stores_screen.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   int _selectedIndex = 0;
   final List _screens = [
     const HomeScreen(),
-    const NearByScreens(),
+    const NearByScreen(),
     const HotDealsScreen(),
     const StoresScreen(),
     const ProfileScreens(),

@@ -28,6 +28,7 @@ class DrawerListTile extends StatelessWidget {
             iconPath,
             height: 16,
             width: 16,
+            color: AppColors.navyBlue,
           ),
           const SizedBox(width: 7),
           Text(

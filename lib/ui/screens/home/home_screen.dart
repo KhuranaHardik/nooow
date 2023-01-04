@@ -1,25 +1,27 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/api_services.dart';
+import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/category_container.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
-import 'package:nooow/ui/components/drawer_list_tile.dart';
-import 'package:nooow/ui/components/food_brand_widget.dart';
-import 'package:nooow/ui/components/offers_container.dart';
+import 'package:nooow/ui/screens/home/components/food_brand_widget.dart';
+import 'package:nooow/ui/screens/home/components/offers_container.dart';
+import 'package:nooow/ui/screens/home/components/drawer_widget.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_constants.dart';
 import 'package:nooow/utils/app_routes.dart';
 import 'package:nooow/utils/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -29,19 +31,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late AppSharedPrefrence _appSharedPrefrence;
   late PageController _pageController;
   late TextEditingController _searchTextEditingController;
   late TextEditingController _subscribeTextEditingController;
   late FocusNode _searchFocus;
   late FocusNode _subscribeNode;
   Map<String, dynamic>? _sliderList = {};
+  bool? isUserSignedIn = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _sliderList = await ApiServices().sliderList(context);
+      isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
     });
+    _appSharedPrefrence = AppSharedPrefrence();
     _pageController = PageController();
     _searchTextEditingController = TextEditingController();
     _subscribeTextEditingController = TextEditingController();
@@ -65,8 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.whiteBackground,
-      drawer: drawer(),
+      drawer: drawer(
+        context: context,
+        isUserSignedIn: isUserSignedIn,
+        backgroungHeight: size.height * 0.18,
+      ),
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         foregroundColor: AppColors.black,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -98,10 +109,90 @@ class _HomeScreenState extends State<HomeScreen> {
               items: const [],
               onChanged: (val) {},
             ),
+            const Spacer(),
           ],
         ),
-        // TODO: Notifications, favorites & search
-        actions: const [],
+        actions: [
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
+                  },
+                  icon: const Icon(
+                    Icons.favorite_border_outlined,
+                    color: AppColors.black,
+                    size: 21,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              log('Search Pressed');
+            },
+            icon: const Icon(Icons.search, size: 21),
+          ),
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Notifications Pressed');
+                  },
+                  icon: const Icon(
+                    Icons.notifications_none,
+                    size: 21,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
         elevation: 0.0,
         backgroundColor: AppColors.whiteBackground,
       ),
@@ -355,6 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   isObscure: false,
                                   readOnly: false,
                                   placeholder: AppString.enterEmailAddressHere,
+                                  borderColor: AppColors.navyBlue,
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -395,118 +487,6 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget drawer() {
-    return Drawer(
-      elevation: 0.0,
-      child: ListView(
-        children: [
-          Container(
-            height: 114,
-            padding: const EdgeInsets.only(top: 36, bottom: 30, left: 22),
-            decoration: const BoxDecoration(
-              color: AppColors.navyBlue,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(8.0)),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 24,
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'User Name',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      'Farmer',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 17.5, right: 17.5, top: 24),
-            child: Column(
-              children: [
-                // Settings
-                DrawerListTile(
-                  iconPath: AppAssetImages.settings,
-                  tileTitle: "Settings",
-                  isDropDown: true,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Privacy & Policy
-                DrawerListTile(
-                  iconPath: AppAssetImages.drawerPrivacyPolicy,
-                  tileTitle: "Privacy & Policy",
-                  isDropDown: false,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Refer To Friends
-                DrawerListTile(
-                  iconPath: AppAssetImages.share,
-                  tileTitle: "Refer To Friends",
-                  isDropDown: false,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Logout
-                DrawerListTile(
-                  iconPath: AppAssetImages.drawerLogOut,
-                  tileTitle: "Logout",
-                  isDropDown: false,
-                  onTap: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Are you sure to logout?'),
-                          actions: [
-                            IconButton(
-                              onPressed: () async {
-                                SharedPreferences pref =
-                                    await SharedPreferences.getInstance();
-                                if (await pref.clear()) {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      AppRoutes.signInScreen, (route) => false);
-                                }
-                              },
-                              icon: const Text('Yes'),
-                            ),
-                            IconButton(
-                              onPressed: () => Navigator.pop(context),
-                              icon: const Text('No'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

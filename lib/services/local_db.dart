@@ -5,13 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSharedPrefrence {
   static final AppSharedPrefrence _singleton = AppSharedPrefrence._internal();
-
   factory AppSharedPrefrence() {
     return _singleton;
   }
-
   AppSharedPrefrence._internal();
 
+  // List of visited screens
   Future<Map<String, bool?>> _visitedScreen() async {
     return {
       AppRoutes.signInScreen: await _getScreen(AppRoutes.signInScreen),
@@ -19,6 +18,7 @@ class AppSharedPrefrence {
     };
   }
 
+  // Check whether the screen is visited or not.
   Future<bool?> _getScreen(String screen) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool(screen);
@@ -41,5 +41,17 @@ class AppSharedPrefrence {
   Future<void> saveScreen(String screen) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setBool(screen, true);
+  }
+
+  // Setting user as signed in.
+  Future<void> setUserSignedIn(bool isUserSignedIn) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool("userSignedIn", isUserSignedIn);
+  }
+
+  // Setting user as signed in.
+  Future<bool?> getUserSignedIn() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getBool("userSignedIn");
   }
 }

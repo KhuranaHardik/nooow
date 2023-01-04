@@ -1,11 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
-import 'package:nooow/ui/components/hot_deals_screen/hot_deals_card.dart';
-import 'package:nooow/ui/components/hot_deals_screen/hot_deals_category.dart';
+import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
+import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
 
 class HotDealsScreen extends StatefulWidget {
   const HotDealsScreen({super.key});
@@ -46,7 +49,86 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
           ),
         ),
         // TODO: Notifications, favorites & search
-        actions: const [],
+        actions: [
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Favourites Pressed');
+                  },
+                  icon: const Icon(
+                    Icons.favorite_border_outlined,
+                    color: AppColors.white,
+                    size: 21,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              log('Search Pressed');
+            },
+            icon: const Icon(Icons.search, size: 21),
+          ),
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: IconButton(
+                  onPressed: () {
+                    log('Notifications Pressed');
+                  },
+                  icon: const Icon(
+                    Icons.notifications_none,
+                    size: 21,
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 2,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.red,
+                  child: Center(
+                    child: Text(
+                      '0',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 9,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 20),
@@ -131,12 +213,30 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
             primary: false,
             shrinkWrap: true,
             itemCount: 10,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 19,
+              mainAxisExtent: size.height * 0.28,
             ),
             itemBuilder: (context, index) {
-              return HotDealsOfferCard(width: size.width);
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border:
+                      Border.all(color: const Color.fromRGBO(210, 210, 210, 1)),
+                ),
+                child: HotDealsOfferCard(
+                  height: size.height,
+                  saveOnTap: () {
+                    log('Save');
+                  },
+                  seeDetailsOnTap: () {
+                    Navigator.pushNamed(
+                        context, AppRoutes.hotOfferDetailsScreen);
+                  },
+                ),
+              );
             },
           ),
         ],

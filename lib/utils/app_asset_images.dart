@@ -26,6 +26,7 @@ class AppAssetImages {
   static const String arrowRight = 'assets/arrow_right.png';
   static const String banner = 'assets/banner.png';
   static const String banner2 = 'assets/banner2.png';
+  static const String banner3 = 'assets/banner3.png';
   static const String delete = 'assets/delete.png';
   static const String electronic = 'assets/electronic.png';
   static const String fashion = 'assets/fashion.png';

@@ -58,7 +58,8 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       backgroundColor: AppColors.whiteBackground,
       appBar: AppBar(
-        leading: const SizedBox.shrink(),
+        automaticallyImplyLeading: true,
+        foregroundColor: AppColors.black,
         elevation: 0.0,
         backgroundColor: AppColors.whiteBackground,
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -107,6 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         isObscure: false,
                         readOnly: false,
                         placeholder: AppString.emailAddress,
+                        borderColor: AppColors.navyBlue,
                       ),
                       const SizedBox(height: 21),
                       // Password
@@ -119,6 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         readOnly: false,
                         placeholder: AppString.password,
                         isPasswordField: true,
+                        borderColor: AppColors.navyBlue,
                       ),
                       // const SizedBox(height: 21),
                       Row(
