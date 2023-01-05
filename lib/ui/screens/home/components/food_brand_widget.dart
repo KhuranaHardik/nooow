@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_strings.dart';
 
 class FoodBrandWidget extends StatelessWidget {
   final double width;
@@ -33,7 +34,7 @@ class FoodBrandWidget extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              'Save 10%',
+              AppString.save10Percent,
               style: GoogleFonts.montserrat(
                 color: AppColors.white,
                 fontWeight: FontWeight.bold,

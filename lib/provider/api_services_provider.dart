@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:nooow/model/login_model.dart';
 import 'package:nooow/services/api_services.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/app_common_snack_bar.dart';
@@ -24,21 +25,38 @@ class ApiServiceProvider extends ChangeNotifier {
   Future<void> loginProvider(
       {required BuildContext context,
       required Map<String, dynamic> body}) async {
-    Map<String, dynamic>? result =
-        await apiServices.login(context: context, body: body);
+    LoginModel? result = await apiServices.login(context: context, body: body);
 
-    if (result == null || result.isEmpty) {
+    if (result == null) {
       null;
     } else {
-      if (result["status"]) {
+      if (result.status ?? false) {
         await AppSharedPrefrence().saveScreen(AppRoutes.signInScreen);
+        await AppSharedPrefrence().setUserSignedIn(true);
+        print(
+          result.information == null
+              ? "<------------ Information Null --------------->"
+              : result.information!.profileImage == null
+                  ? "<------------ Null --------------->"
+                  : "<------------ ${result.information!.profileImage.toString()} --------------->",
+        );
+        await AppSharedPrefrence().saveUserData(
+          userId: result.information!.id.toString(),
+          userName: result.information!.name.toString(),
+          userProfile: result.information!.profileImage.toString(),
+          userAddress: result.information!.address.toString(),
+          mobileNumber: result.information!.contact.toString(),
+        );
         Navigator.pushNamedAndRemoveUntil(
           context,
-          AppRoutes.homeScreen,
+          "/",
           (route) => false,
         );
       } else {
-        AppCommonSnackBar().appCommonSnackbar(context, result["message"]);
+        AppCommonSnackBar().appCommonSnackbar(
+          context,
+          result.message.toString(),
+        );
       }
     }
   }
@@ -58,6 +76,7 @@ class ApiServiceProvider extends ChangeNotifier {
       } else {
         if (data['status']) {
           await AppSharedPrefrence().saveScreen(AppRoutes.signInScreen);
+          await AppSharedPrefrence().setUserSignedIn(true);
           Navigator.pushNamed(
             context,
             AppRoutes.enterOtpSignUpScreen,

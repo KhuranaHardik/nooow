@@ -13,7 +13,8 @@ class FlyersCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Image
@@ -30,7 +31,7 @@ class FlyersCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        // const SizedBox(height: 16),
         // Details
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -43,7 +44,7 @@ class FlyersCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 17.0),
           child: Text(

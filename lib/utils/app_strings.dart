@@ -44,6 +44,24 @@ class AppString {
 
   static const String offersDealAroundYou = "OFFERS AND DEALS AROUND YOU";
 
-  static const String categoryName = 'Category Name';
-  static const String categoryImage = 'Category Image';
+  static const String categoryName = "Category Name";
+  static const String categoryImage = "Category Image";
+
+  //////////////////////////////////////////////
+  static const String userName = "User Name";
+  static const String signInSignUp = "Sign In / Sign Up";
+  static const String settings = "Settings";
+  static const String privacyAndPolicy = "Privacy & Policy";
+  static const String referToFriends = "Refer To Friends";
+  static const String logout = "Logout";
+  static const String areYouSureToLogout = "Are you sure to logout?";
+  static const String yes = "Yes";
+  static const String no = "No";
+
+  static const String save10Percent = "Save 10%";
+  static const String christmasOffer = "Christmas Offer";
+  static const String upto50PercentOff = "Upto 50% Off";
+  static const String orderPizzasNow = "Order pizzas now & win amazing prizes";
+  static const String save = "Save";
+  static const String seeDetails = "See Details";
 }

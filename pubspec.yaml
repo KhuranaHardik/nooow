@@ -41,6 +41,9 @@ dependencies:
   shared_preferences: ^2.0.15
   google_fonts: ^3.0.1
   dotted_border: ^2.0.0+3
+  google_maps_flutter: ^2.2.3
+  google_maps_cluster_manager: ^3.0.0+1
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

@@ -49,8 +49,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           systemStatusBarContrastEnforced: true,
         ),
       ),
-      body: Consumer<ApiServiceProvider>(
-        builder: (context, apiServiceProvider, child) {
+      body: Consumer2<UIProvider, ApiServiceProvider>(
+        builder: (context, uiProvider, apiServiceProvider, child) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
             child: Stack(
@@ -74,7 +74,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     CustomTextField(
                       controller: _emailController,
                       textInputAction: TextInputAction.done,
-                      isObscure: false,
                       readOnly: false,
                       focusNode: _emailFocus,
                       placeholder: AppString.emailAddress,
@@ -82,45 +81,44 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     const SizedBox(height: 18),
                     // Reset Password Button
-                    Consumer<UIProvider>(
-                      builder: (context, consumer, child) =>
-                          CustomElevatedButton(
-                        isAnimate: consumer.loading,
-                        onPressed: () async {
-                          consumer.loaderTrue();
-                          await ApiServiceProvider().forgotPasswordProvider(
-                            context: context,
-                            body: {"email": _emailController.text},
-                          );
-                          consumer.loaderFalse();
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   AppRoutes.enterOtpForgotPasswordScreen,
-                          //   arguments: {
-                          //     "email": _emailController.text,
-                          //     "otp": result["information"]["otp"].toString(),
-                          //   },
-                          // );
-                        },
-                        elevation: 0,
-                        borderColor: AppColors.transparent,
-                        buttonColor: AppColors.navyBlue,
-                        buttonSize: Size(size.width, 52),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 17.0),
-                          child: Text(
-                            AppString.getOtp,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                    CustomElevatedButton(
+                      isAnimate: uiProvider.loading,
+                      onPressed: () async {
+                        uiProvider.loaderTrue();
+                        await ApiServiceProvider().forgotPasswordProvider(
+                          context: context,
+                          body: {"email": _emailController.text},
+                        );
+                        uiProvider.loaderFalse();
+                      },
+                      elevation: 0,
+                      borderColor: AppColors.transparent,
+                      buttonColor: AppColors.navyBlue,
+                      buttonSize: Size(size.width, 52),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 17.0),
+                        child: Text(
+                          AppString.getOtp,
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 // Loading Screen
+                uiProvider.loading
+                    ? Container(
+                  height: size.height,
+                  color: AppColors.whiteBackground.withOpacity(0.4),
+                  child: const Center(
+                    child:
+                    CircularProgressIndicator(color: AppColors.navyBlue),
+                  ),
+                )
+                    : const SizedBox()
               ],
             ),
           );

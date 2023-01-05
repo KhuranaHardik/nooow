@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:nooow/model/login_model.dart';
 import 'package:nooow/ui/components/app_common_snack_bar.dart';
 import 'package:nooow/utils/app_constants.dart';
 
@@ -20,7 +21,7 @@ class ApiServices {
   }
 
   // login with Email And Password
-  Future<Map<String, dynamic>?> login(
+  Future<LoginModel?> login(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
       http.Response response = await http.post(
@@ -30,9 +31,28 @@ class ApiServices {
       );
 
       Map<String, dynamic> data = jsonDecode(response.body);
-      log(data.toString());
+      log('dsjbcKAS;LLCDSN;DW;LASMKLDSANLVDMSFA;V $data');
 
-      return data;
+      return LoginModel(
+        information: Information(
+          id: data['information']['id'],
+          name: data['information']['name'],
+          email: data['information']['email'],
+          contact: data['information']['contact'],
+          password: data['information']['password'],
+          newsletter: data['information']['newsletter'],
+          profileImage: data['information']['profile_image'],
+          pincode: data['information']['pincode'],
+          address: data['information']['address'],
+          verify: data['information']['verify'],
+          suspended: data['information']['suspended'],
+          deletedByUser: data['information']['deleted_by_user'],
+          created: data['information']['created'],
+          status: data['information']['status'],
+        ),
+        status: data['status'],
+        message: data['message'],
+      );
     } on TimeoutException {
       AppCommonSnackBar().appCommonSnackbar(context, "It Takes to  much time");
     } on SocketException catch (e) {

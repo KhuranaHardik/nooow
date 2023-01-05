@@ -1,10 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nooow">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
    <application
         android:label="nooow"
         android:name="${applicationName}"
         android:icon="@drawable/logo">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyAOW5T9GTYYy6pBVUd7viMZzRjp-WZfFy4"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

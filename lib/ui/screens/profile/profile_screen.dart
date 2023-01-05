@@ -2,8 +2,12 @@ import 'dart:developer';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/api_services_provider.dart';
+import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreens extends StatefulWidget {
   const ProfileScreens({super.key});
@@ -73,6 +77,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,
@@ -145,143 +150,160 @@ class _ProfileScreensState extends State<ProfileScreens> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 33),
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color.fromRGBO(219, 219, 219, 1)),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+      body: Consumer2<UIProvider, ApiServiceProvider>(
+          builder: (context, uiProvider, apiServiceProvider, child) {
+        return Stack(
+          children: [
+            ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 33),
               children: [
-                // Profile and Menu
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: const Color.fromRGBO(219, 219, 219, 1)),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Profile and Menu
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            color: const Color.fromRGBO(210, 210, 210, 1),
+                            child: const CircleAvatar(radius: 32),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.more_vert),
+                          )
+                        ],
                       ),
-                      color: const Color.fromRGBO(210, 210, 210, 1),
-                      child: const CircleAvatar(radius: 32),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.more_vert),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 19),
-                CustomTextField(
-                  controller: _nameTextController,
-                  focusNode: _nameFocusNode,
-                  textInputAction: TextInputAction.next,
-                  isObscure: false,
-                  readOnly: false,
-                  placeholder: "Name",
-                  borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                ),
-                const SizedBox(height: 17),
-                CustomTextField(
-                  controller: _mobileTextController,
-                  focusNode: _mobileFocusNode,
-                  textInputAction: TextInputAction.next,
-                  isObscure: false,
-                  readOnly: false,
-                  placeholder: "Mobile",
-                  borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                ),
-                const SizedBox(height: 17),
-                CustomTextField(
-                  controller: _emailTextController,
-                  focusNode: _emailFocusNode,
-                  textInputAction: TextInputAction.next,
-                  isObscure: false,
-                  readOnly: false,
-                  placeholder: "Email",
-                  borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                ),
-                const SizedBox(height: 17),
-                CustomTextField(
-                  controller: _locationTextController,
-                  focusNode: _locationFocusNode,
-                  textInputAction: TextInputAction.next,
-                  isObscure: false,
-                  readOnly: false,
-                  placeholder: "Location",
-                  borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 22),
-          Container(
-            padding: const EdgeInsets.all(19),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color.fromRGBO(219, 219, 219, 1)),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: ListView(
-              primary: false,
-              shrinkWrap: true,
-              children: [
-                Text(
-                  'Offers & Coupons',
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppColors.black,
+                      const SizedBox(height: 19),
+                      CustomTextField(
+                        controller: _nameTextController,
+                        focusNode: _nameFocusNode,
+                        textInputAction: TextInputAction.next,
+                        readOnly: false,
+                        placeholder: "Name",
+                        borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                      ),
+                      const SizedBox(height: 17),
+                      CustomTextField(
+                        controller: _mobileTextController,
+                        focusNode: _mobileFocusNode,
+                        textInputAction: TextInputAction.next,
+                        readOnly: false,
+                        placeholder: "Mobile",
+                        borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                      ),
+                      const SizedBox(height: 17),
+                      CustomTextField(
+                        controller: _emailTextController,
+                        focusNode: _emailFocusNode,
+                        textInputAction: TextInputAction.next,
+                        readOnly: false,
+                        placeholder: "Email",
+                        borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                      ),
+                      const SizedBox(height: 17),
+                      CustomTextField(
+                        controller: _locationTextController,
+                        focusNode: _locationFocusNode,
+                        textInputAction: TextInputAction.next,
+                        readOnly: false,
+                        placeholder: "Location",
+                        borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                Column(
-                  children: List.generate(
-                    5,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 13.0),
-                      child: DottedBorder(
-                        radius: const Radius.circular(7),
-                        color: const Color.fromRGBO(210, 210, 210, 1),
-                        padding: EdgeInsets.only(
-                          top: 6,
-                          bottom: 9,
-                          left: 9,
-                          right: size.width * 0.30,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Christmas Coupon offer',
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            Text(
-                              'Coupon Code : MTK1278',
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: AppColors.black.withOpacity(0.75),
-                              ),
-                            )
-                          ],
+                const SizedBox(height: 22),
+                Container(
+                  padding: const EdgeInsets.all(19),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: const Color.fromRGBO(219, 219, 219, 1)),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: ListView(
+                    primary: false,
+                    shrinkWrap: true,
+                    children: [
+                      Text(
+                        'Offers & Coupons',
+                        style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.black,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 16),
+                      Column(
+                        children: List.generate(
+                          5,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 13.0),
+                            child: DottedBorder(
+                              radius: const Radius.circular(7),
+                              color: const Color.fromRGBO(210, 210, 210, 1),
+                              padding: EdgeInsets.only(
+                                top: 6,
+                                bottom: 9,
+                                left: 9,
+                                right: size.width * 0.30,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Christmas Coupon offer',
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Coupon Code : MTK1278',
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: AppColors.black.withOpacity(0.75),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
             ),
-          )
-        ],
-      ),
+            // Loading Screen
+            uiProvider.loading
+                ? Container(
+                    height: size.height,
+                    color: AppColors.whiteBackground.withOpacity(0.4),
+                    child: const Center(
+                      child:
+                          CircularProgressIndicator(color: AppColors.navyBlue),
+                    ),
+                  )
+                : const SizedBox()
+          ],
+        );
+      }),
     );
   }
 }

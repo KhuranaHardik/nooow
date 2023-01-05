@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
@@ -9,6 +10,8 @@ import 'package:nooow/ui/screens/stores/components/stores_card.dart';
 import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class StoresScreen extends StatefulWidget {
   const StoresScreen({super.key});
@@ -48,7 +51,6 @@ class _StoresScreenState extends State<StoresScreen> {
             color: AppColors.white,
           ),
         ),
-        // TODO: Notifications, favorites & search
         actions: [
           Stack(
             alignment: Alignment.topRight,
@@ -58,6 +60,7 @@ class _StoresScreenState extends State<StoresScreen> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,
@@ -208,31 +211,35 @@ class _StoresScreenState extends State<StoresScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.5),
-            child: GridView.builder(
-              primary: false,
-              shrinkWrap: true,
-              itemCount: 10,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 17,
-                crossAxisSpacing: 16,
-              ),
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const StoresDetailScreen(),
-                      ),
+          Consumer<UIProvider>(
+            builder: (context, uiProvider, child) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.5),
+                child: GridView.builder(
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: 10,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 17,
+                    crossAxisSpacing: 16,
+                  ),
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StoresDetailScreen(),
+                          ),
+                        );
+                      },
+                      child: StoresCard(width: size.width * 0.42),
                     );
                   },
-                  child: StoresCard(width: size.width * 0.42),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 10),
         ],
