@@ -74,7 +74,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     CustomTextField(
                       controller: _emailController,
                       textInputAction: TextInputAction.done,
-                      isObscure: false,
                       readOnly: false,
                       focusNode: _emailFocus,
                       placeholder: AppString.emailAddress,

@@ -9,6 +9,7 @@ import 'package:nooow/ui/screens/stores/components/stores_card.dart';
 import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
 
 class StoresScreen extends StatefulWidget {
   const StoresScreen({super.key});
@@ -48,7 +49,6 @@ class _StoresScreenState extends State<StoresScreen> {
             color: AppColors.white,
           ),
         ),
-        // TODO: Notifications, favorites & search
         actions: [
           Stack(
             alignment: Alignment.topRight,
@@ -58,6 +58,7 @@ class _StoresScreenState extends State<StoresScreen> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,

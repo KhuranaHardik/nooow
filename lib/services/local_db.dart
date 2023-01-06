@@ -54,4 +54,30 @@ class AppSharedPrefrence {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool("userSignedIn");
   }
+
+  List<String>? userData;
+
+  // Setting User Details
+  Future<void> saveUserData({
+    required String userId,
+    required String userName,
+    required String userProfile,
+    required String userAddress,
+    required String mobileNumber,
+  }) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setStringList('userData', [
+      userId,
+      userName,
+      userProfile,
+      userAddress,
+      mobileNumber,
+    ]);
+  }
+
+  // Getting User Details
+  Future<void> getUserData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    userData = pref.getStringList('userData');
+  }
 }

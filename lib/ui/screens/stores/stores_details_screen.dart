@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
 import 'package:nooow/ui/screens/stores/components/flyer_card.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
 
 class StoresDetailScreen extends StatefulWidget {
   const StoresDetailScreen({super.key});
@@ -40,6 +41,7 @@ class _StoresDetailScreenState extends State<StoresDetailScreen> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,

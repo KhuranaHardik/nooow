@@ -21,11 +21,6 @@ class UIProvider extends ChangeNotifier {
   }
 
   //Provider to show the obscure text of the password.
-  bool showPassword(bool obscure) {
-    obscure = !obscure;
-    notifyListeners();
-    return obscure;
-  }
 
   // To show loader
   bool loading = false;
@@ -38,5 +33,16 @@ class UIProvider extends ChangeNotifier {
   void loaderFalse() {
     loading = false;
     notifyListeners();
+  }
+}
+
+class ObscureIconProvider extends ChangeNotifier {
+  bool obscure = false;
+  bool showPassword() {
+    print("Provider before $obscure");
+    obscure = !obscure;
+    print("Provider after $obscure");
+    notifyListeners();
+    return obscure;
   }
 }

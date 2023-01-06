@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
@@ -9,6 +10,7 @@ import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart'
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class HotDealsScreen extends StatefulWidget {
   const HotDealsScreen({super.key});
@@ -48,7 +50,6 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
             color: AppColors.white,
           ),
         ),
-        // TODO: Notifications, favorites & search
         actions: [
           Stack(
             alignment: Alignment.topRight,
@@ -58,6 +59,7 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,
@@ -130,116 +132,135 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 20),
-        children: [
-          const SizedBox(height: 19),
-          // Advertisements
-          SizedBox(
-            height: 180,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 160,
-                  child: PageView.builder(
-                    itemCount: 5,
-                    controller: _pageController,
-                    scrollDirection: Axis.horizontal,
+      body: Consumer<UIProvider>(
+        builder: (context, uiProvider, child) {
+          return Stack(
+            children: [
+              ListView(
+                padding: const EdgeInsets.only(bottom: 20),
+                children: [
+                  const SizedBox(height: 19),
+                  // Advertisements
+                  SizedBox(
+                    height: 180,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 160,
+                          child: PageView.builder(
+                            itemCount: 5,
+                            controller: _pageController,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return AdContainerWidget(
+                                width: size.width,
+                                // image: sliderList["information"][index]["slider"],
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: List.generate(
+                              5,
+                              (index) {
+                                return const AdMarkerWidget(
+                                    color: AppColors.lightGrey);
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  // Categories
+                  SizedBox(
+                    height: 54,
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      scrollDirection: Axis.horizontal,
+                      children: const [
+                        HotDealsCategoryWidget(
+                          isSelected: true,
+                          categoryImage: AppAssetImages.mostPopular,
+                          categoryName: "Most Popular",
+                        ),
+                        SizedBox(width: 15),
+                        HotDealsCategoryWidget(
+                          isSelected: false,
+                          categoryImage: AppAssetImages.travel,
+                          categoryName: "Travel",
+                        ),
+                        SizedBox(width: 15),
+                        HotDealsCategoryWidget(
+                          isSelected: false,
+                          categoryImage: AppAssetImages.fashion,
+                          categoryName: "Fashion",
+                        ),
+                        SizedBox(width: 15),
+                        HotDealsCategoryWidget(
+                          isSelected: false,
+                          categoryImage: AppAssetImages.food,
+                          categoryName: "Food",
+                        ),
+                        SizedBox(width: 15),
+                        HotDealsCategoryWidget(
+                          isSelected: false,
+                          categoryImage: AppAssetImages.electronic,
+                          categoryName: "Electronic",
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GridView.builder(
+                    primary: false,
+                    shrinkWrap: true,
+                    itemCount: 10,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 19,
+                      mainAxisExtent: size.height * 0.28,
+                    ),
                     itemBuilder: (context, index) {
-                      return AdContainerWidget(
-                        width: size.width,
-                        // image: sliderList["information"][index]["slider"],
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: const Color.fromRGBO(210, 210, 210, 1)),
+                        ),
+                        child: HotDealsOfferCard(
+                          height: size.height,
+                          saveOnTap: () {
+                            log('Save');
+                          },
+                          seeDetailsOnTap: () {
+                            Navigator.pushNamed(
+                                context, AppRoutes.hotOfferDetailsScreen);
+                          },
+                        ),
                       );
                     },
                   ),
-                ),
-                const SizedBox(height: 14),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: List.generate(
-                      5,
-                      (index) {
-                        return const AdMarkerWidget(color: AppColors.lightGrey);
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(height: 28),
-          // Categories
-          SizedBox(
-            height: 54,
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              scrollDirection: Axis.horizontal,
-              children: const [
-                HotDealsCategoryWidget(
-                  isSelected: true,
-                  categoryImage: AppAssetImages.mostPopular,
-                  categoryName: "Most Popular",
-                ),
-                SizedBox(width: 15),
-                HotDealsCategoryWidget(
-                  isSelected: false,
-                  categoryImage: AppAssetImages.travel,
-                  categoryName: "Travel",
-                ),
-                SizedBox(width: 15),
-                HotDealsCategoryWidget(
-                  isSelected: false,
-                  categoryImage: AppAssetImages.fashion,
-                  categoryName: "Fashion",
-                ),
-                SizedBox(width: 15),
-                HotDealsCategoryWidget(
-                  isSelected: false,
-                  categoryImage: AppAssetImages.food,
-                  categoryName: "Food",
-                ),
-                SizedBox(width: 15),
-                HotDealsCategoryWidget(
-                  isSelected: false,
-                  categoryImage: AppAssetImages.electronic,
-                  categoryName: "Electronic",
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          GridView.builder(
-            primary: false,
-            shrinkWrap: true,
-            itemCount: 10,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 19,
-              mainAxisExtent: size.height * 0.28,
-            ),
-            itemBuilder: (context, index) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border:
-                      Border.all(color: const Color.fromRGBO(210, 210, 210, 1)),
-                ),
-                child: HotDealsOfferCard(
-                  height: size.height,
-                  saveOnTap: () {
-                    log('Save');
-                  },
-                  seeDetailsOnTap: () {
-                    Navigator.pushNamed(
-                        context, AppRoutes.hotOfferDetailsScreen);
-                  },
-                ),
-              );
-            },
-          ),
-        ],
+                ],
+              ),
+              uiProvider.loading
+                  ? Container(
+                      height: size.height,
+                      color: AppColors.whiteBackground.withOpacity(0.4),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.navyBlue),
+                      ),
+                    )
+                  : const SizedBox()
+            ],
+          );
+        },
       ),
     );
   }

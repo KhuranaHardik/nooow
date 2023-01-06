@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
 
 class ProfileScreens extends StatefulWidget {
   const ProfileScreens({super.key});
@@ -73,6 +74,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                 child: IconButton(
                   onPressed: () {
                     log('Favourites Pressed');
+                    Navigator.pushNamed(context, AppRoutes.myListScreen);
                   },
                   icon: const Icon(
                     Icons.favorite_border_outlined,
@@ -181,7 +183,6 @@ class _ProfileScreensState extends State<ProfileScreens> {
                   controller: _nameTextController,
                   focusNode: _nameFocusNode,
                   textInputAction: TextInputAction.next,
-                  isObscure: false,
                   readOnly: false,
                   placeholder: "Name",
                   borderColor: const Color.fromRGBO(219, 219, 219, 1),
@@ -191,7 +192,6 @@ class _ProfileScreensState extends State<ProfileScreens> {
                   controller: _mobileTextController,
                   focusNode: _mobileFocusNode,
                   textInputAction: TextInputAction.next,
-                  isObscure: false,
                   readOnly: false,
                   placeholder: "Mobile",
                   borderColor: const Color.fromRGBO(219, 219, 219, 1),
@@ -201,7 +201,6 @@ class _ProfileScreensState extends State<ProfileScreens> {
                   controller: _emailTextController,
                   focusNode: _emailFocusNode,
                   textInputAction: TextInputAction.next,
-                  isObscure: false,
                   readOnly: false,
                   placeholder: "Email",
                   borderColor: const Color.fromRGBO(219, 219, 219, 1),
@@ -211,7 +210,6 @@ class _ProfileScreensState extends State<ProfileScreens> {
                   controller: _locationTextController,
                   focusNode: _locationFocusNode,
                   textInputAction: TextInputAction.next,
-                  isObscure: false,
                   readOnly: false,
                   placeholder: "Location",
                   borderColor: const Color.fromRGBO(219, 219, 219, 1),

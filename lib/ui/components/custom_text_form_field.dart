@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 //CustomTextField to use text form field wherever needed.
 class CustomTextField extends StatelessWidget {
-  CustomTextField({
+  const CustomTextField({
     Key? key,
     required this.controller,
     this.textInputType = TextInputType.name,
@@ -17,7 +17,6 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.inputFormatter,
     required this.textInputAction,
-    required this.isObscure,
     required this.readOnly,
     this.isPasswordField = false,
     this.suffixIcon,
@@ -33,7 +32,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatter;
   final TextInputAction textInputAction;
   final bool isPasswordField;
-  bool isObscure;
+
   final bool readOnly;
   final Widget? suffixIcon;
   final FocusNode? focusNode;
@@ -42,52 +41,61 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UIProvider>(
-      builder: (context, passwordProvider, child) {
-        return TextFormField(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          readOnly: readOnly,
-          controller: controller,
-          cursorColor: AppColors.navyBlue,
-          textInputAction: textInputAction,
-          keyboardType: textInputType,
-          validator: validator,
-          inputFormatters: inputFormatter,
-          obscureText: isObscure,
-          focusNode: focusNode,
-          decoration: InputDecoration(
-            labelText: placeholder,
-            labelStyle: GoogleFonts.montserrat(
-              color: AppColors.black,
-              fontWeight: FontWeight.w600,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => ObscureIconProvider(),
+      child: Consumer<ObscureIconProvider>(
+        builder: (context, passwordProvider, child) {
+          return TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            readOnly: readOnly,
+            controller: controller,
+            cursorColor: AppColors.navyBlue,
+            textInputAction: textInputAction,
+            keyboardType: textInputType,
+            validator: validator,
+            inputFormatters: inputFormatter,
+            obscureText: passwordProvider.obscure,
+            focusNode: focusNode,
+            decoration: InputDecoration(
+              labelText: placeholder,
+              labelStyle: GoogleFonts.montserrat(
+                color: AppColors.black,
+                fontWeight: FontWeight.w600,
+              ),
+              hintText: placeholder,
+              hintStyle: GoogleFonts.montserrat(
+                color: AppColors.black,
+                fontWeight: FontWeight.w400,
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor),
+              ),
+              suffixIcon: isPasswordField
+                  ? IconButton(
+                      style: const ButtonStyle(
+                          splashFactory: NoSplash.splashFactory),
+                      splashRadius: 15,
+                      icon: Icon(
+                        passwordProvider.obscure
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: AppColors.navyBlue,
+                      ),
+                      // Text(
+                      //   isObscure ? "Show" : "Hide",
+                      // ),
+                      onPressed: () {
+                        passwordProvider.showPassword();
+                      },
+                    )
+                  : suffixIcon,
             ),
-            hintText: placeholder,
-            hintStyle: GoogleFonts.montserrat(
-              color: AppColors.black,
-              fontWeight: FontWeight.w400,
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: borderColor),
-            ),
-            suffixIcon: isPasswordField
-                ? TextButton(
-                    style: const ButtonStyle(
-                        splashFactory: NoSplash.splashFactory),
-                    child: Icon(
-                      isObscure ? Icons.visibility : Icons.visibility_off,
-                      color: AppColors.navyBlue,
-                    ),
-                    onPressed: () {
-                      isObscure = passwordProvider.showPassword(isObscure);
-                    },
-                  )
-                : suffixIcon,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
