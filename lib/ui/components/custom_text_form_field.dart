@@ -84,9 +84,6 @@ class CustomTextField extends StatelessWidget {
                             : Icons.visibility_off,
                         color: AppColors.navyBlue,
                       ),
-                      // Text(
-                      //   isObscure ? "Show" : "Hide",
-                      // ),
                       onPressed: () {
                         passwordProvider.showPassword();
                       },

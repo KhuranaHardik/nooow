@@ -208,7 +208,7 @@ class _StoresDetailScreenState extends State<StoresDetailScreen> {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 17,
                                 crossAxisSpacing: 17,
-                                mainAxisExtent: size.height * 0.28,
+                                mainAxisExtent: size.height * 0.30,
                               ),
                               itemBuilder: (context, index) {
                                 return Container(

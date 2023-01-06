@@ -13,7 +13,7 @@ import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/category_container.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
-import 'package:nooow/ui/screens/home/components/drawer_list_tile.dart';
+import 'package:nooow/ui/components/drawer.dart';
 import 'package:nooow/ui/screens/home/components/food_brand_widget.dart';
 import 'package:nooow/ui/screens/home/components/offers_container.dart';
 import 'package:nooow/utils/app_asset_images.dart';
@@ -22,7 +22,6 @@ import 'package:nooow/utils/app_constants.dart';
 import 'package:nooow/utils/app_routes.dart';
 import 'package:nooow/utils/app_strings.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -41,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic>? _sliderList = {};
   bool? isUserSignedIn = false;
   bool signedIn = false;
+  int? dropDownValue = 0;
+  int sliderIndex = 0;
+  int offerIndex = 0;
 
   @override
   void initState() {
@@ -82,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: drawer(
         context: context,
         backgroundHeight: size.height * 0.18,
+        isUserSignedIn: isSignIn,
       ),
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -92,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
               AppAssetImages.homePlace,
@@ -102,103 +105,127 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 3),
             DropdownButton(
-              iconDisabledColor: AppColors.black,
-              iconEnabledColor: AppColors.black,
-              hint: Text(
-                AppString.tempLocation,
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: AppColors.black,
+              value: dropDownValue,
+              onChanged: (val) {
+                setState(() {
+                  dropDownValue = val;
+                });
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: 0,
+                  child: Text('Delhi'),
                 ),
-              ),
-              // TODO: Dropdown List of cities.
-              items: const [],
-              onChanged: (val) {},
+                DropdownMenuItem(
+                  value: 1,
+                  child: Text('Noida'),
+                ),
+                DropdownMenuItem(
+                  value: 2,
+                  child: Text('Bareilly'),
+                ),
+                DropdownMenuItem(
+                  value: 3,
+                  child: Text('Chandigarh'),
+                ),
+                DropdownMenuItem(
+                  value: 4,
+                  child: Text('Jalandhar'),
+                ),
+                DropdownMenuItem(
+                  value: 5,
+                  child: Text(
+                    'Shahjahanpur',
+                  ),
+                ),
+              ],
+              underline: const SizedBox(height: 0),
             ),
-            const Spacer(),
           ],
         ),
         actions: [
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Favourites Pressed');
-                    Navigator.pushNamed(context, AppRoutes.myListScreen);
-                  },
-                  icon: const Icon(
-                    Icons.favorite_border_outlined,
-                    color: AppColors.black,
-                    size: 21,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-            onPressed: () {
-              log('Search Pressed');
+          // Favorites
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
-            icon: const Icon(Icons.search, size: 21),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Notifications Pressed');
-                  },
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    size: 21,
-                    color: AppColors.black,
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      color: AppColors.black,
+                      size: 22,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
+                  Positioned(
+                    top: 12,
+                    // right: 2,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          // Notifications
+          InkWell(
+            onTap: () {
+              log('Notifications');
+            },
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: AppColors.black,
+                      size: 22,
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 2)
         ],
         elevation: 0.0,
         backgroundColor: AppColors.whiteBackground,
@@ -231,6 +258,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 160,
                               child: PageView.builder(
+                                onPageChanged: (value) {
+                                  setState(() {
+                                    sliderIndex = value;
+                                  });
+                                },
                                 itemCount: 5,
                                 controller: _pageController,
                                 scrollDirection: Axis.horizontal,
@@ -250,8 +282,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: List.generate(
                                   5,
                                   (index) {
-                                    return const AdMarkerWidget(
-                                        color: AppColors.lightGrey);
+                                    return AdMarkerWidget(
+                                      color: index == sliderIndex
+                                          ? AppColors.navyBlue
+                                          : AppColors.lightGrey,
+                                    );
                                   },
                                 ),
                               ),
@@ -273,24 +308,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 20),
                       // Popular Categories
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 21),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          spacing: 18.38,
-                          runSpacing: 17,
-                          children: List.generate(
-                            AppConstants.popularCategoriesList.length,
-                            (index) => CategoryContainerWidget(
-                              categoryName:
-                                  AppConstants.popularCategoriesList[index]
-                                      [AppString.categoryName],
-                              categoryImage:
-                                  AppConstants.popularCategoriesList[index]
-                                      [AppString.categoryImage],
-                              width: size.width * 0.188,
-                            ),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: 17,
+                        runSpacing: 17,
+                        children: List.generate(
+                          AppConstants.popularCategoriesList.length,
+                          (index) => CategoryContainerWidget(
+                            categoryName:
+                                AppConstants.popularCategoriesList[index]
+                                    [AppString.categoryName],
+                            categoryImage:
+                                AppConstants.popularCategoriesList[index]
+                                    [AppString.categoryImage],
+                            width: size.width * 0.18,
                           ),
                         ),
                       ),
@@ -329,21 +361,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 17),
-                      // Markers
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 21),
-                        child: Row(
-                          children: List.generate(
-                            5,
-                            (index) {
-                              return const AdMarkerWidget(
-                                  color: AppColors.lightGrey);
-                            },
-                          ),
-                        ),
-                      ),
+
                       const SizedBox(height: 30),
-                      // Top Food Brands
+                      // Top Food Brands Text
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 21),
                         child: Text(
@@ -493,141 +513,6 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget drawer({
-    required BuildContext context,
-    // required bool? isUserSignedIn,
-    required double backgroundHeight,
-  }) {
-    // bool signedIn = isUserSignedIn ?? false;
-    return Drawer(
-      elevation: 0.0,
-      child: ListView(
-        children: [
-          Container(
-            height: backgroundHeight,
-            padding: const EdgeInsets.only(top: 36, bottom: 30, left: 22),
-            decoration: const BoxDecoration(
-              color: AppColors.navyBlue,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(8.0)),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(radius: 24),
-                const SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isUserSignedIn ?? false
-                          ? AppString.userName
-                          : AppString.signInSignUp,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                    // Text(
-                    //   'Farmer',
-                    //   style: GoogleFonts.poppins(
-                    //     fontWeight: FontWeight.w400,
-                    //     color: AppColors.white,
-                    //     fontSize: 14,
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 17.5, right: 17.5, top: 24),
-            child: Column(
-              children: [
-                // Settings
-                DrawerListTile(
-                  iconPath: AppAssetImages.settings,
-                  tileTitle: AppString.settings,
-                  isDropDown: true,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Privacy & Policy
-                DrawerListTile(
-                  iconPath: AppAssetImages.drawerPrivacyPolicy,
-                  tileTitle: AppString.privacyAndPolicy,
-                  isDropDown: false,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Refer To Friends
-                DrawerListTile(
-                  iconPath: AppAssetImages.share,
-                  tileTitle: AppString.referToFriends,
-                  isDropDown: false,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 11),
-                // Logout
-                isUserSignedIn ?? false
-                    ? DrawerListTile(
-                        iconPath: AppAssetImages.drawerLogOut,
-                        tileTitle: AppString.logout,
-                        isDropDown: false,
-                        onTap: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(AppString.areYouSureToLogout),
-                                actions: [
-                                  IconButton(
-                                    onPressed: () async {
-                                      SharedPreferences pref =
-                                          await SharedPreferences.getInstance();
-                                      if (await pref.clear()) {
-                                        await AppSharedPrefrence()
-                                            .setUserSignedIn(false);
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context,
-                                            AppRoutes.signInScreen,
-                                            (route) => false);
-                                      }
-                                    },
-                                    icon: const Text(AppString.yes),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    icon: const Text(AppString.no),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                    : DrawerListTile(
-                        iconPath: AppAssetImages.profile,
-                        tileTitle: AppString.signInSignUp,
-                        isDropDown: false,
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.signInScreen,
-                          );
-                        },
-                      ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -26,8 +26,8 @@ class FoodBrandWidget extends StatelessWidget {
         ),
         Container(
           height: 30,
-          width: width - 10,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          width: width - 20,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: AppColors.navyBlue,
@@ -35,7 +35,9 @@ class FoodBrandWidget extends StatelessWidget {
           child: Center(
             child: Text(
               AppString.save10Percent,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.montserrat(
+                fontSize: 12,
                 color: AppColors.white,
                 fontWeight: FontWeight.bold,
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
@@ -8,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nooow/provider/ui_provider.dart';
+import 'package:nooow/services/local_db.dart';
+import 'package:nooow/ui/components/drawer.dart';
 import 'package:nooow/ui/screens/near_by/components/places.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
@@ -21,6 +25,10 @@ class NearByScreen extends StatefulWidget {
 }
 
 class _NearByScreenState extends State<NearByScreen> {
+  late AppSharedPrefrence _appSharedPrefrence;
+  bool? isUserSignedIn = false;
+  bool signedIn = false;
+
   final double _currentLat = 0.0;
   final double _currentLong = 0.0;
   final CameraPosition _cameraPosition =
@@ -146,15 +154,29 @@ class _NearByScreenState extends State<NearByScreen> {
   @override
   void initState() {
     _manager = _initClusterManager();
-    // _getCurrentLatLong();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+      isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
+      setState(() {});
+      log(isUserSignedIn.toString());
+      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+    });
+    _appSharedPrefrence = AppSharedPrefrence();
     super.initState();
   }
+
+  bool get isSignIn => isUserSignedIn ?? false;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      drawer: drawer(
+        context: context,
+        isUserSignedIn: isUserSignedIn,
+        backgroundHeight: size.height * 0.18,
+      ),
       appBar: AppBar(
         backgroundColor: AppColors.navyBlue,
         elevation: 0.0,
@@ -167,85 +189,88 @@ class _NearByScreenState extends State<NearByScreen> {
           ),
         ),
         actions: [
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Favourites Pressed');
-                    Navigator.pushNamed(context, AppRoutes.myListScreen);
-                  },
-                  icon: const Icon(
-                    Icons.favorite_border_outlined,
-                    color: AppColors.white,
-                    size: 21,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-            onPressed: () {
-              log('Search Pressed');
+          // Favorites
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
-            icon: const Icon(Icons.search, size: 21),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Notifications Pressed');
-                  },
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    size: 21,
-                    color: AppColors.white,
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
+                  Positioned(
+                    top: 12,
+                    // right: 2,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          // Notifications
+          InkWell(
+            onTap: () {
+              log('Notifications');
+            },
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 2)
         ],
       ),
       body: Consumer<UIProvider>(builder: (context, uiProvider, child) {
@@ -262,29 +287,30 @@ class _NearByScreenState extends State<NearByScreen> {
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  // child: GoogleMap(
-                  //   myLocationEnabled: true,
-                  //   mapType: MapType.normal,
-                  //   initialCameraPosition: _cameraPosition,
-                  //   markers: markers,
-                  //   onMapCreated: (GoogleMapController controller) {
-                  //     setState(() {
-                  //       mapController = controller;
-                  //       _controller.complete(controller);
-                  //       _manager.setMapId(controller.mapId);
-                  //     });
-                  //     mapController?.animateCamera(
-                  //       CameraUpdate.newCameraPosition(
-                  //         CameraPosition(
-                  //           target: LatLng(_currentLat, _currentLong),
-                  //           zoom: 7,
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  //   onCameraMove: _manager.onCameraMove,
-                  //   onCameraIdle: _manager.updateMap,
-                  // ),
+                  child: GoogleMap(
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    mapType: MapType.normal,
+                    initialCameraPosition: _cameraPosition,
+                    markers: markers,
+                    onMapCreated: (GoogleMapController controller) {
+                      setState(() {
+                        mapController = controller;
+                        _controller.complete(controller);
+                        _manager.setMapId(controller.mapId);
+                      });
+                      mapController?.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target: LatLng(_currentLat, _currentLong),
+                            zoom: 7,
+                          ),
+                        ),
+                      );
+                    },
+                    onCameraMove: _manager.onCameraMove,
+                    onCameraIdle: _manager.updateMap,
+                  ),
                 ),
                 const SizedBox(height: 18),
                 Text(

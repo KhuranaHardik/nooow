@@ -106,7 +106,7 @@ class HotDealsOfferCard extends StatelessWidget {
                     onTap: seeDetailsOnTap,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 11, vertical: 4.5),
+                          horizontal: 7, vertical: 4.5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(3),
                         color: const Color.fromRGBO(244, 205, 69, 1),

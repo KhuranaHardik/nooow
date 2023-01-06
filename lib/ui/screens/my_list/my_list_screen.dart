@@ -32,84 +32,47 @@ class _MyListScreenState extends State<MyListScreen> {
           ),
         ),
         actions: [
-          // Stack(
-          //   alignment: Alignment.topRight,
-          //   children: [
-          //     Padding(
-          //       padding: const EdgeInsets.only(top: 1),
-          //       child: IconButton(
-          //         onPressed: () {
-          //           log('Favourites Pressed');
-          //         },
-          //         icon: const Icon(
-          //           Icons.favorite_border_outlined,
-          //           color: AppColors.white,
-          //           size: 21,
-          //         ),
-          //       ),
-          //     ),
-          //     Positioned(
-          //       top: 5,
-          //       right: 2,
-          //       child: CircleAvatar(
-          //         radius: 10,
-          //         backgroundColor: Colors.red,
-          //         child: Center(
-          //           child: Text(
-          //             '0',
-          //             style: GoogleFonts.montserrat(
-          //               fontWeight: FontWeight.w600,
-          //               fontSize: 9,
-          //               color: AppColors.white,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          IconButton(
-            onPressed: () {
-              log('Search Pressed');
+          // Notifications
+          InkWell(
+            onTap: () {
+              log('Notifications');
             },
-            icon: const Icon(Icons.search, size: 21),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Notifications Pressed');
-                  },
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    size: 21,
-                    color: AppColors.white,
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          const SizedBox(width: 2)
         ],
       ),
       body: Consumer<UIProvider>(
@@ -161,7 +124,7 @@ class _MyListScreenState extends State<MyListScreen> {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 17,
                                 crossAxisSpacing: 17,
-                                mainAxisExtent: size.height * 0.28,
+                                mainAxisExtent: size.height * 0.30,
                               ),
                               itemBuilder: (context, index) {
                                 return Container(

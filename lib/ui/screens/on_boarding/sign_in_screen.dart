@@ -75,11 +75,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 Form(
                   key: _formKey,
                   onChanged: () {
-                    _isFieldsEmpty = uiProvider.buttonColorChange(_controllerList);
+                    _isFieldsEmpty =
+                        uiProvider.buttonColorChange(_controllerList);
                     setState(() {});
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 35.0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -150,7 +153,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                           context: context,
                                           body: {
                                             "email": _emailController.text,
-                                            "password": _passwordController.text,
+                                            "password":
+                                                _passwordController.text,
                                           },
                                         );
                                         uiProvider.loaderFalse();
@@ -164,7 +168,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           buttonSize: Size(size.width, 52),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 17.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 17.0),
                               child: Text(
                                 AppString.signIn,
                                 style: GoogleFonts.montserrat(
@@ -178,7 +183,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 21),
                         Center(
                           child: Text(
@@ -204,8 +208,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               buttonSize: Size(size.width * 0.38, 52),
                               child: Center(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -224,7 +228,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 19),
+                            const SizedBox(width: 16),
                             // Google Sign In
                             CustomElevatedButton(
                               onPressed: () {},
@@ -234,8 +238,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               buttonSize: Size(size.width * 0.38, 52),
                               child: Center(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -284,7 +288,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               ],
                             ),
                           ),
-                        )
+                        ),
+                        const SizedBox(height: 20)
                       ],
                     ),
                   ),
@@ -292,13 +297,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 // Loading Screen
                 uiProvider.loading
                     ? Container(
-                  height: size.height,
-                  color: AppColors.whiteBackground.withOpacity(0.4),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                        color: AppColors.navyBlue),
-                  ),
-                )
+                        height: size.height,
+                        color: AppColors.whiteBackground.withOpacity(0.4),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.navyBlue),
+                        ),
+                      )
                     : const SizedBox()
               ],
             ),

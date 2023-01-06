@@ -1,10 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/ui_provider.dart';
+import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
+import 'package:nooow/ui/components/drawer.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
 import 'package:nooow/ui/screens/stores/components/stores_card.dart';
 import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
@@ -22,10 +26,22 @@ class StoresScreen extends StatefulWidget {
 
 class _StoresScreenState extends State<StoresScreen> {
   late PageController _pageController;
+  late AppSharedPrefrence _appSharedPrefrence;
+  bool? isUserSignedIn = false;
+  bool signedIn = false;
+  int sliderIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+      isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
+      setState(() {});
+      log(isUserSignedIn.toString());
+      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+    });
+    _appSharedPrefrence = AppSharedPrefrence();
     _pageController = PageController();
   }
 
@@ -35,11 +51,18 @@ class _StoresScreenState extends State<StoresScreen> {
     super.dispose();
   }
 
+  bool get isSignIn => isUserSignedIn ?? false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      drawer: drawer(
+        context: context,
+        isUserSignedIn: isUserSignedIn,
+        backgroundHeight: size.height * 0.18,
+      ),
       appBar: AppBar(
         backgroundColor: AppColors.navyBlue,
         elevation: 0.0,
@@ -52,85 +75,88 @@ class _StoresScreenState extends State<StoresScreen> {
           ),
         ),
         actions: [
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Favourites Pressed');
-                    Navigator.pushNamed(context, AppRoutes.myListScreen);
-                  },
-                  icon: const Icon(
-                    Icons.favorite_border_outlined,
-                    color: AppColors.white,
-                    size: 21,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-            onPressed: () {
-              log('Search Pressed');
+          // Favorites
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
-            icon: const Icon(Icons.search, size: 21),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Notifications Pressed');
-                  },
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    size: 21,
-                    color: AppColors.white,
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
+                  Positioned(
+                    top: 12,
+                    // right: 2,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          // Notifications
+          InkWell(
+            onTap: () {
+              log('Notifications');
+            },
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 2)
         ],
       ),
       body: ListView(
@@ -144,6 +170,11 @@ class _StoresScreenState extends State<StoresScreen> {
                 SizedBox(
                   height: 160,
                   child: PageView.builder(
+                    onPageChanged: (value) {
+                      setState(() {
+                        sliderIndex = value;
+                      });
+                    },
                     itemCount: 5,
                     controller: _pageController,
                     scrollDirection: Axis.horizontal,
@@ -162,7 +193,10 @@ class _StoresScreenState extends State<StoresScreen> {
                     children: List.generate(
                       5,
                       (index) {
-                        return const AdMarkerWidget(color: AppColors.lightGrey);
+                        return AdMarkerWidget(
+                            color: index == sliderIndex
+                                ? AppColors.navyBlue
+                                : AppColors.lightGrey);
                       },
                     ),
                   ),
