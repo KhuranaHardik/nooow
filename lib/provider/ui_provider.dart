@@ -37,8 +37,8 @@ class UIProvider extends ChangeNotifier {
 }
 
 class ObscureIconProvider extends ChangeNotifier {
-  bool obscure = false;
-  bool showPassword() {
+  // bool obscure = true;
+  bool showPassword(bool obscure) {
     print("Provider before $obscure");
     obscure = !obscure;
     print("Provider after $obscure");

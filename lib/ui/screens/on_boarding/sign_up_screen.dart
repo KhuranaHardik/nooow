@@ -140,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         placeholder: AppString.name,
                         validator: UserNameValidator().validateUserName,
                         borderColor: AppColors.navyBlue,
+                        isObscure: false,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -151,6 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         validator: PhoneNoValidator().phoneNoValidation,
                         inputFormatter: [LengthLimitingTextInputFormatter(10)],
                         borderColor: AppColors.navyBlue,
+                        isObscure: false,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -161,6 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         placeholder: AppString.emailAddress,
                         validator: EmailValidator().validateEmail,
                         borderColor: AppColors.navyBlue,
+                        isObscure: false,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -171,6 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         placeholder: AppString.password,
                         validator: PasswordValidator().validatePassword,
                         borderColor: AppColors.navyBlue,
+                        isObscure: false,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -180,6 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         readOnly: false,
                         placeholder: AppString.confirmPassword,
                         borderColor: AppColors.navyBlue,
+                        isObscure: false,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return "Password Required*";

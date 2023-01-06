@@ -78,6 +78,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       focusNode: _emailFocus,
                       placeholder: AppString.emailAddress,
                       borderColor: AppColors.navyBlue,
+                      isObscure: false,
                     ),
                     const SizedBox(height: 18),
                     // Reset Password Button
@@ -111,13 +112,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 // Loading Screen
                 uiProvider.loading
                     ? Container(
-                  height: size.height,
-                  color: AppColors.whiteBackground.withOpacity(0.4),
-                  child: const Center(
-                    child:
-                    CircularProgressIndicator(color: AppColors.navyBlue),
-                  ),
-                )
+                        height: size.height,
+                        color: AppColors.whiteBackground.withOpacity(0.4),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.navyBlue),
+                        ),
+                      )
                     : const SizedBox()
               ],
             ),
