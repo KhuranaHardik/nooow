@@ -68,10 +68,9 @@ class AppKeys {
 }
 
 abstract class ApiEndPoints {
-  static const String sliderList =
-      "http://nooow.com/testing.nooow.com/api/Api/slider";
+  static const String sliderList = "http://testing.nooow.com/api/Api/slider";
   static const String categoryList =
-      "http://nooow.com/testing.nooow.com/api/Api/category";
+      "http://testing.nooow.com/api/Api/category";
   static const String otpForSignup =
       "http://testing.nooow.com/api/Api/verify_otp";
   static const String forgotOtpVerificationUrl =
@@ -98,4 +97,6 @@ abstract class ApiEndPoints {
       "http://nooow.com/testing.nooow.com/api/Api/remove_from_cart";
   static const String resetPasswordUrl =
       "http://nooow.com/testing.nooow.com/api/Api/change_forgot_password";
+  static const String offerListurl = "http://testing.nooow.com/api/Api/offers";
+  static const String topBrandsUrl = "https://testing.nooow.com/api/Api/brands";
 }

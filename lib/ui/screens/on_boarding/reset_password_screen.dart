@@ -93,6 +93,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         focusNode: _passwordFocus,
                         placeholder: AppString.password,
                         borderColor: AppColors.navyBlue,
+                        isObscure: true,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -104,6 +105,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         focusNode: _confirmPasswordFocus,
                         placeholder: AppString.confirmPassword,
                         borderColor: AppColors.navyBlue,
+                        isObscure: true,
                       ),
                       const SizedBox(height: 18),
                       // Reset Password Button

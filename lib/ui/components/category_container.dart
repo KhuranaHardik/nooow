@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 
 class CategoryContainerWidget extends StatelessWidget {
@@ -25,7 +26,12 @@ class CategoryContainerWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0),
               color: AppColors.lighterGrey,
-              image: DecorationImage(image: AssetImage(categoryImage)),
+              image: DecorationImage(
+                  image: (categoryImage.isEmpty)
+                      ? const AssetImage(AppAssetImages.appLogo)
+                          as ImageProvider
+                      : NetworkImage(categoryImage),
+                  fit: BoxFit.contain),
             ),
             padding:
                 const EdgeInsets.symmetric(vertical: 15.6, horizontal: 14.2),

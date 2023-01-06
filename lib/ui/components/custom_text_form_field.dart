@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 //CustomTextField to use text form field wherever needed.
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+  CustomTextField({
     Key? key,
     required this.controller,
     this.textInputType = TextInputType.name,
@@ -19,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     required this.textInputAction,
     required this.readOnly,
     this.isPasswordField = false,
+    required this.isObscure,
     this.suffixIcon,
     this.focusNode,
     required this.borderColor,
@@ -32,7 +33,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatter;
   final TextInputAction textInputAction;
   final bool isPasswordField;
-
+  bool isObscure;
   final bool readOnly;
   final Widget? suffixIcon;
   final FocusNode? focusNode;
@@ -54,7 +55,7 @@ class CustomTextField extends StatelessWidget {
             keyboardType: textInputType,
             validator: validator,
             inputFormatters: inputFormatter,
-            obscureText: passwordProvider.obscure,
+            obscureText: isObscure,
             focusNode: focusNode,
             decoration: InputDecoration(
               labelText: placeholder,
@@ -79,13 +80,11 @@ class CustomTextField extends StatelessWidget {
                           splashFactory: NoSplash.splashFactory),
                       splashRadius: 15,
                       icon: Icon(
-                        passwordProvider.obscure
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                        isObscure ? Icons.visibility : Icons.visibility_off,
                         color: AppColors.navyBlue,
                       ),
                       onPressed: () {
-                        passwordProvider.showPassword();
+                        isObscure = passwordProvider.showPassword(isObscure);
                       },
                     )
                   : suffixIcon,

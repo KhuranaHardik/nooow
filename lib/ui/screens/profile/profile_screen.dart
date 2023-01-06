@@ -223,6 +223,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           readOnly: false,
                           placeholder: "Name",
                           borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                          isObscure: false,
                         ),
                         const SizedBox(height: 17),
                         CustomTextField(
@@ -232,6 +233,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           readOnly: false,
                           placeholder: "Mobile",
                           borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                          isObscure: false,
                         ),
                         const SizedBox(height: 17),
                         CustomTextField(
@@ -241,6 +243,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           readOnly: false,
                           placeholder: "Email",
                           borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                          isObscure: false,
                         ),
                         const SizedBox(height: 17),
                         CustomTextField(
@@ -250,6 +253,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           readOnly: false,
                           placeholder: "Location",
                           borderColor: const Color.fromRGBO(219, 219, 219, 1),
+                          isObscure: false,
                         ),
                       ],
                     ),

@@ -2,11 +2,12 @@
 
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:nooow/model/login_model.dart';
 import 'package:nooow/services/api_services.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/app_common_snack_bar.dart';
+import 'package:nooow/utils/app_constants.dart';
 import 'package:nooow/utils/app_routes.dart';
 
 class ApiServiceProvider extends ChangeNotifier {
@@ -177,5 +178,99 @@ class ApiServiceProvider extends ChangeNotifier {
       }
     }
     // print(response.body);
+  }
+
+  // slider api
+  List<Map<String, dynamic>?>? sliderList;
+
+  Future<void> slider(BuildContext context) async {
+    try {
+      Map<String, dynamic>? data = await apiServices.getApi(
+          context: context, url: ApiEndPoints.sliderList);
+      if (data == null || data.isEmpty) {
+        sliderList = [];
+        notifyListeners();
+      } else {
+        sliderList =
+            (data['information'] as List).cast<Map<String, dynamic>?>();
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  // category list  api
+  List<Map<String, dynamic>?>? categorylist;
+
+  Future<void> categoryList(BuildContext context) async {
+    try {
+      Map<String, dynamic>? data = await apiServices.getApi(
+          context: context, url: ApiEndPoints.categoryList);
+      if (data == null || data.isEmpty) {
+        categorylist = [];
+        notifyListeners();
+      } else {
+        categorylist =
+            (data['information'] as List).cast<Map<String, dynamic>?>();
+
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  // category list  api
+  List<Map<String, dynamic>?>? offerList;
+
+  Future<void> offerListApi(BuildContext context) async {
+    try {
+      Map<String, dynamic>? data = await apiServices.getApi(
+          context: context, url: ApiEndPoints.offerListurl);
+      if (data == null || data.isEmpty) {
+        offerList = [];
+        notifyListeners();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
+      } else {
+        offerList = (data['information'] as List).cast<Map<String, dynamic>?>();
+
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  // category list  api
+  List<Map<String, dynamic>?>? topFoodBrandList;
+
+  Future<void> topFoodBradListApi(BuildContext context) async {
+    try {
+      Map<String, dynamic>? data = await apiServices.getApi(
+          context: context, url: ApiEndPoints.topBrandsUrl);
+      if (data == null || data.isEmpty) {
+        topFoodBrandList = [];
+        notifyListeners();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
+      } else {
+        topFoodBrandList =
+            (data['information'] as List).cast<Map<String, dynamic>?>();
+
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
   }
 }

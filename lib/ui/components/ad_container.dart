@@ -20,14 +20,11 @@ class AdContainerWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: AppColors.navyBlue,
-        image: const DecorationImage(
-            // TODO: Update offer image from the API
-            image:
-                // image == null
-                //     ?
-                AssetImage(AppAssetImages.appLogo)
-            // : NetworkImage(image!) as ImageProvider,
-            ),
+        image: DecorationImage(
+            image: image == null
+                ? const AssetImage(AppAssetImages.appLogo)
+                : NetworkImage(image!) as ImageProvider,
+            fit: BoxFit.fill),
       ),
     );
   }

@@ -169,16 +169,17 @@ class ApiServices {
     return null;
   }
 
-  // Slider List
-  Future<Map<String, dynamic>?> sliderList(BuildContext context) async {
+  // // OTP Verification
+  Future<Map<String, dynamic>?> resetPassword(
+      {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.get(
-        Uri.parse(ApiEndPoints.sliderList),
+      http.Response response = await http.post(
+        Uri.parse(ApiEndPoints.resetPasswordUrl),
         headers: {'fake-key': 'Nooow9876543210'},
+        body: body,
       );
 
       Map<String, dynamic> data = jsonDecode(response.body);
-      log(data.runtimeType.toString());
       log(data.toString());
 
       return data;
@@ -194,14 +195,41 @@ class ApiServices {
     return null;
   }
 
-  // // OTP Verification
-  Future<Map<String, dynamic>?> resetPassword(
-      {Map<String, dynamic>? body, required BuildContext context}) async {
+// post api
+  Future<dynamic> postApi(
+      {required Map<String, dynamic> body,
+      required BuildContext context,
+      required String url}) async {
     try {
       http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.resetPasswordUrl),
+        Uri.parse(url),
         headers: {'fake-key': 'Nooow9876543210'},
         body: body,
+      );
+
+      Map<String, dynamic> data = jsonDecode(response.body);
+      log(data.toString());
+
+      return data;
+    } on TimeoutException {
+      AppCommonSnackBar().appCommonSnackbar(context, "It Takes to  much time");
+    } on SocketException catch (e) {
+      AppCommonSnackBar().appCommonSnackbar(context, "Network Error");
+      log(e.message.toString());
+    } catch (e) {
+      AppCommonSnackBar().appCommonSnackbar(context, "Server Error");
+      log(e.toString());
+    }
+    return null;
+  }
+
+  // get api
+  Future<dynamic> getApi(
+      {required BuildContext context, required String url}) async {
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers: {'fake-key': 'Nooow9876543210'},
       );
 
       Map<String, dynamic> data = jsonDecode(response.body);

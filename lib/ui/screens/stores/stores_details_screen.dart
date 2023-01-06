@@ -36,85 +36,88 @@ class _StoresDetailScreenState extends State<StoresDetailScreen> {
           ),
         ),
         actions: [
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Favourites Pressed');
-                    Navigator.pushNamed(context, AppRoutes.myListScreen);
-                  },
-                  icon: const Icon(
-                    Icons.favorite_border_outlined,
-                    color: AppColors.white,
-                    size: 21,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-            onPressed: () {
-              log('Search Pressed');
+          // Favorites
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
-            icon: const Icon(Icons.search, size: 21),
-          ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 1),
-                child: IconButton(
-                  onPressed: () {
-                    log('Notifications Pressed');
-                  },
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    size: 21,
-                    color: AppColors.white,
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 5,
-                right: 2,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red,
-                  child: Center(
-                    child: Text(
-                      '0',
-                      style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 9,
-                        color: AppColors.white,
+                  Positioned(
+                    top: 12,
+                    // right: 2,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          // Notifications
+          InkWell(
+            onTap: () {
+              log('Notifications');
+            },
+            child: SizedBox(
+              width: 26,
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 17, right: 6),
+                    child: Icon(
+                      Icons.notifications_none,
+                      color: AppColors.white,
+                      size: 22,
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Colors.red,
+                      child: Center(
+                        child: Text(
+                          '0',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 2)
         ],
       ),
       body: DefaultTabController(
