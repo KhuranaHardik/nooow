@@ -110,8 +110,24 @@ abstract class AppRoutes {
         );
 
       case hotOfferDetailsScreen:
+        Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+        String offerName = args["offerName"];
+        String expiry = args["expiry"];
+        int discountPercent = args["discountPercent"];
+        String offerTitle = args["offerTitle"];
+        String couponCode = args["couponCode"];
+        String stepsToAvailOffer = args["stepsToAvailOffer"];
+        String aboutStore = args["aboutStore"];
         return MaterialPageRoute(
-          builder: (context) => const HotOfferDetailScreen(),
+          builder: (context) => HotOfferDetailScreen(
+            offerName: offerName,
+            expiry: expiry,
+            discountPercent: discountPercent,
+            offerTitle: offerTitle,
+            couponCode: couponCode,
+            stepsToAvailOffer: stepsToAvailOffer,
+            aboutStore: aboutStore,
+          ),
         );
 
       case myListScreen:

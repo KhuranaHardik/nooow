@@ -5,13 +5,13 @@ import 'package:nooow/utils/app_colors.dart';
 class DrawerListTile extends StatelessWidget {
   final String iconPath;
   final String tileTitle;
-  final bool isDropDown;
+  final bool isLogoutButton;
   final Function()? onTap;
   const DrawerListTile({
     super.key,
     required this.iconPath,
     required this.tileTitle,
-    required this.isDropDown,
+    required this.isLogoutButton,
     required this.onTap,
   });
 
@@ -28,7 +28,6 @@ class DrawerListTile extends StatelessWidget {
             iconPath,
             height: 16,
             width: 16,
-            color: AppColors.navyBlue,
           ),
           const SizedBox(width: 7),
           Text(
@@ -38,15 +37,6 @@ class DrawerListTile extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          const Spacer(),
-          isDropDown
-              ? DropdownButton(
-                  iconDisabledColor: AppColors.black,
-                  iconEnabledColor: AppColors.black,
-                  items: const [],
-                  onChanged: (val) {},
-                )
-              : const SizedBox.shrink(),
         ],
       ),
       onTap: onTap,

@@ -52,36 +52,44 @@ Widget drawer({
           padding: const EdgeInsets.only(left: 17.5, right: 17.5, top: 24),
           child: Column(
             children: [
-              // Settings
+              // Coupons
               DrawerListTile(
+                isLogoutButton: false,
+                iconPath: AppAssetImages.settings,
+                tileTitle: 'Coupons',
+                onTap: () {},
+              ),
+              const SizedBox(height: 11),
+              // Favorites
+              DrawerListTile(
+                isLogoutButton: false,
                 iconPath: AppAssetImages.settings,
                 tileTitle: AppString.settings,
-                isDropDown: true,
                 onTap: () {},
               ),
               const SizedBox(height: 11),
               // Privacy & Policy
               DrawerListTile(
+                isLogoutButton: false,
                 iconPath: AppAssetImages.drawerPrivacyPolicy,
                 tileTitle: AppString.privacyAndPolicy,
-                isDropDown: false,
                 onTap: () {},
               ),
               const SizedBox(height: 11),
               // Refer To Friends
               DrawerListTile(
+                isLogoutButton: false,
                 iconPath: AppAssetImages.share,
                 tileTitle: AppString.referToFriends,
-                isDropDown: false,
                 onTap: () {},
               ),
               const SizedBox(height: 11),
               // Logout
               isUserSignedIn ?? false
                   ? DrawerListTile(
+                      isLogoutButton: true,
                       iconPath: AppAssetImages.drawerLogOut,
                       tileTitle: AppString.logout,
-                      isDropDown: false,
                       onTap: () async {
                         await showDialog(
                           context: context,
@@ -115,9 +123,9 @@ Widget drawer({
                       },
                     )
                   : DrawerListTile(
+                      isLogoutButton: false,
                       iconPath: AppAssetImages.profile,
                       tileTitle: AppString.signInSignUp,
-                      isDropDown: false,
                       onTap: () {
                         Navigator.pop(context);
                         Navigator.pushNamed(
