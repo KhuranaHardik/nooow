@@ -43,4 +43,6 @@ class AppAssetImages {
   static const String sort = 'assets/sort.png';
   static const String stores = 'assets/stores.png';
   static const String travel = 'assets/travel.png';
+  static const String userNotFound = 'assets/userNotFound.png';
+  static const String defaultProfile = 'assets/defaultProfile.png';
 }

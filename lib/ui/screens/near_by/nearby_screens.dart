@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/drawer.dart';
+import 'package:nooow/ui/components/user_not_found_error.dart';
 import 'package:nooow/ui/screens/near_by/components/places.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
@@ -25,7 +25,6 @@ class NearByScreen extends StatefulWidget {
 }
 
 class _NearByScreenState extends State<NearByScreen> {
-  late AppSharedPrefrence _appSharedPrefrence;
   bool? isUserSignedIn = false;
   bool signedIn = false;
 
@@ -48,11 +47,8 @@ class _NearByScreenState extends State<NearByScreen> {
                 log(p.toString());
               }
             },
-            icon:
-                // BitmapDescriptor.defaultMarkerWithHue(
-                //     BitmapDescriptor.hueMagenta),
-                await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
-                    text: cluster.isMultiple ? cluster.count.toString() : null),
+            icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
+                text: cluster.isMultiple ? cluster.count.toString() : null),
             infoWindow: InfoWindow(
               title: cluster.items.toString(),
             ));
@@ -91,25 +87,6 @@ class _NearByScreenState extends State<NearByScreen> {
 
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
-
-  //  function to get currentlocation using Geolocator
-  // _myPosition() async {
-  //   // return Geolocator.requestPermission().then((value) =>
-  //   //     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high));
-  //   return await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-  // }
-
-//   _getCurrentLatLong() async {
-//     var position = await _myPosition();
-//     setState(() {
-//       _currentLat = position.latitude;
-//       _currentLong = position.longitude;
-// // Cameraposion set on currentLat and CurrentLong
-//       _cameraPosition =
-//           CameraPosition(target: LatLng(_currentLat, _currentLong), zoom: 7);
-//     });
-//   }
 
   List<Place> items = [
     for (int i = 0; i < 100; i++)
@@ -156,25 +133,25 @@ class _NearByScreenState extends State<NearByScreen> {
     _manager = _initClusterManager();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
-      isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
-      setState(() {});
-      log(isUserSignedIn.toString());
+
       Provider.of<UIProvider>(context, listen: false).loaderFalse();
     });
-    _appSharedPrefrence = AppSharedPrefrence();
+
     super.initState();
   }
 
-  bool get isSignIn => isUserSignedIn ?? false;
+  bool get isSignIn => (AppSharedPrefrence().userData == null ||
+          AppSharedPrefrence().userData!.isEmpty)
+      ? false
+      : true;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      drawer: drawer(
-        context: context,
-        isUserSignedIn: isUserSignedIn,
+      drawer: AppDrawer(
+        isUserSignedIn: isSignIn,
         backgroundHeight: size.height * 0.18,
       ),
       appBar: AppBar(
@@ -192,7 +169,9 @@ class _NearByScreenState extends State<NearByScreen> {
           // Favorites
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.myListScreen);
+              !isSignIn
+                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                  : Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
             child: SizedBox(
               width: 26,
@@ -233,7 +212,9 @@ class _NearByScreenState extends State<NearByScreen> {
           // Notifications
           InkWell(
             onTap: () {
-              log('Notifications');
+              !isSignIn
+                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                  : log('Notifications');
             },
             child: SizedBox(
               width: 26,
@@ -274,76 +255,91 @@ class _NearByScreenState extends State<NearByScreen> {
         ],
       ),
       body: Consumer<UIProvider>(builder: (context, uiProvider, child) {
-        return Stack(
-          children: [
-            ListView(
-              primary: false,
-              padding: const EdgeInsets.only(
-                  top: 18, bottom: 30, left: 21, right: 19),
-              children: [
-                Container(
-                  height: size.height * 0.60,
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: GoogleMap(
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    mapType: MapType.normal,
-                    initialCameraPosition: _cameraPosition,
-                    markers: markers,
-                    onMapCreated: (GoogleMapController controller) {
-                      setState(() {
-                        mapController = controller;
-                        _controller.complete(controller);
-                        _manager.setMapId(controller.mapId);
-                      });
-                      mapController?.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            target: LatLng(_currentLat, _currentLong),
-                            zoom: 7,
+        return (isSignIn == false)
+            ? const UserNotFoundErrorWidget()
+            : SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 18, bottom: 30, left: 21, right: 19),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: size.height * 0.60,
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: GoogleMap(
+                              myLocationEnabled: true,
+                              myLocationButtonEnabled: true,
+                              mapType: MapType.normal,
+                              initialCameraPosition: _cameraPosition,
+                              markers: markers,
+                              onMapCreated: (GoogleMapController controller) {
+                                setState(() {
+                                  mapController = controller;
+                                  _controller.complete(controller);
+                                  _manager.setMapId(controller.mapId);
+                                });
+                                mapController?.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                      target: LatLng(
+                                          AppSharedPrefrence()
+                                                  .currentPosition
+                                                  ?.latitude ??
+                                              0,
+                                          AppSharedPrefrence()
+                                                  .currentPosition
+                                                  ?.longitude ??
+                                              0),
+                                      zoom: 7,
+                                    ),
+                                  ),
+                                );
+                              },
+                              onCameraMove: _manager.onCameraMove,
+                              onCameraIdle: _manager.updateMap,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    onCameraMove: _manager.onCameraMove,
-                    onCameraIdle: _manager.updateMap,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  "Selected Location",
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Bhangel, Greater Noida, 201306",
-                  style: GoogleFonts.montserrat(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.black,
-                  ),
-                ),
-              ],
-            ),
-            uiProvider.loading
-                ? Container(
-                    height: size.height,
-                    color: AppColors.whiteBackground.withOpacity(0.4),
-                    child: const Center(
-                      child:
-                          CircularProgressIndicator(color: AppColors.navyBlue),
+                          const SizedBox(height: 18),
+                          Text(
+                            "Selected Location",
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Bhangel, Greater Noida, 201306",
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: AppColors.black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                : const SizedBox()
-          ],
-        );
+                    uiProvider.loading
+                        ? Container(
+                            height: size.height,
+                            color: AppColors.whiteBackground.withOpacity(0.4),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.navyBlue),
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                ),
+              );
       }),
     );
   }

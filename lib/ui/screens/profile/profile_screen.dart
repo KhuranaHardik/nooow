@@ -7,8 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/api_services_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
+import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
 import 'package:nooow/ui/components/drawer.dart';
+import 'package:nooow/ui/components/user_not_found_error.dart';
+import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -29,26 +32,48 @@ class _ProfileScreensState extends State<ProfileScreens> {
   late FocusNode _emailFocusNode;
   late TextEditingController _locationTextController;
   late FocusNode _locationFocusNode;
-  late AppSharedPrefrence _appSharedPrefrence;
-  bool? isUserSignedIn = false;
+
+  bool? isUserSignedIn;
   bool signedIn = false;
   int sliderIndex = 0;
+  bool _isEdit = false;
+  bool _uploadImage = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
-      isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
-      setState(() {});
-      log(isUserSignedIn.toString());
+
       Provider.of<UIProvider>(context, listen: false).loaderFalse();
     });
-    _appSharedPrefrence = AppSharedPrefrence();
-    _nameTextController = TextEditingController();
-    _mobileTextController = TextEditingController();
-    _emailTextController = TextEditingController();
-    _locationTextController = TextEditingController();
+//  required String userId,
+//       required String userName,
+//       required String userProfile,
+//       required String userAddress,
+//       required String mobileNumber,
+//       required String email
+    _nameTextController = TextEditingController()
+      ..text = (AppSharedPrefrence().userData == null ||
+              AppSharedPrefrence().userData?[1] == 'null')
+          ? ''
+          : AppSharedPrefrence().userData?[1] ?? '';
+    _mobileTextController = TextEditingController()
+      ..text = (AppSharedPrefrence().userData == null ||
+              AppSharedPrefrence().userData?[4] == 'null')
+          ? ''
+          : AppSharedPrefrence().userData?[4] ?? '';
+    _emailTextController = TextEditingController()
+      ..text = (AppSharedPrefrence().userData == null ||
+              AppSharedPrefrence().userData?[5] == 'null')
+          ? ''
+          : AppSharedPrefrence().userData?[5] ?? '';
+    _locationTextController = TextEditingController()
+      ..text = (AppSharedPrefrence().userData == null ||
+              AppSharedPrefrence().userData!.isEmpty ||
+              AppSharedPrefrence().userData?[3] == 'null')
+          ? ''
+          : AppSharedPrefrence().userData?[3] ?? '';
     _nameFocusNode = FocusNode();
     _mobileFocusNode = FocusNode();
     _emailFocusNode = FocusNode();
@@ -68,15 +93,23 @@ class _ProfileScreensState extends State<ProfileScreens> {
     super.dispose();
   }
 
-  bool get isSignIn => isUserSignedIn ?? false;
+  bool get isSignIn => (AppSharedPrefrence().userData == null ||
+          AppSharedPrefrence().userData!.isEmpty)
+      ? false
+      : true;
 
   @override
   Widget build(BuildContext context) {
+    print((AppSharedPrefrence().userData == null ||
+            AppSharedPrefrence().userData!.isEmpty ||
+            AppSharedPrefrence().userData?[3] == 'null')
+        ? ''
+        : AppSharedPrefrence().userData?[3] ?? '');
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      drawer: drawer(
-        context: context,
-        isUserSignedIn: isUserSignedIn,
+      drawer: AppDrawer(
+        isUserSignedIn: isSignIn,
         backgroundHeight: size.height * 0.18,
       ),
       backgroundColor: AppColors.white,
@@ -96,7 +129,9 @@ class _ProfileScreensState extends State<ProfileScreens> {
           InkWell(
             radius: 10,
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.myListScreen);
+              !isSignIn
+                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                  : Navigator.pushNamed(context, AppRoutes.myListScreen);
             },
             child: SizedBox(
               width: 26,
@@ -137,7 +172,9 @@ class _ProfileScreensState extends State<ProfileScreens> {
           // Notifications
           InkWell(
             onTap: () {
-              log('Notifications');
+              !isSignIn
+                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                  : log('Notifications');
             },
             child: SizedBox(
               width: 26,
@@ -179,163 +216,272 @@ class _ProfileScreensState extends State<ProfileScreens> {
       ),
       body: Consumer2<UIProvider, ApiServiceProvider>(
         builder: (context, uiProvider, apiServiceProvider, child) {
-          return Stack(
-            children: [
-              ListView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 21, vertical: 33),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 13, vertical: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: const Color.fromRGBO(219, 219, 219, 1)),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+          return (isSignIn == false)
+              ? const UserNotFoundErrorWidget()
+              : Stack(
+                  children: [
+                    ListView(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 21, vertical: 33),
                       children: [
-                        // Profile and Menu
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 13, vertical: 16),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color.fromRGBO(219, 219, 219, 1)),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Profile and Menu
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                offset: const Offset(0, 6),
+                                                blurRadius: 9,
+                                                color: AppColors.black
+                                                    .withOpacity(0.19),
+                                              ),
+                                            ],
+                                            image: DecorationImage(
+                                                image: (AppSharedPrefrence()
+                                                                .userData ==
+                                                            null ||
+                                                        AppSharedPrefrence()
+                                                            .userData!
+                                                            .isEmpty ||
+                                                        AppSharedPrefrence()
+                                                                .userData?[2] ==
+                                                            'null')
+                                                    ? const AssetImage(
+                                                            AppAssetImages
+                                                                .defaultProfile)
+                                                        as ImageProvider
+                                                    : NetworkImage(
+                                                        AppSharedPrefrence()
+                                                            .userData![2]))),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      (_isEdit || _uploadImage)
+                                          ? GestureDetector(
+                                              onTap: () {},
+                                              child: Text('Change Image',
+                                                  style: GoogleFonts.montserrat(
+                                                      fontSize: 14,
+                                                      color: AppColors.navyBlue,
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                            )
+                                          : const SizedBox.shrink()
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  (_isEdit || _uploadImage)
+                                      ? CustomElevatedButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isEdit = false;
+                                              _uploadImage = false;
+                                            });
+                                            Map<String, dynamic> body = {};
+                                            body['user_id'] =
+                                                AppSharedPrefrence()
+                                                    .userData?[0];
+                                            body['name'] =
+                                                _nameTextController.text.trim();
+                                            body['contact'] =
+                                                _mobileTextController.text
+                                                    .trim();
+                                            body['email'] = _emailTextController
+                                                .text
+                                                .trim();
+                                            body['address'] =
+                                                _locationTextController.text
+                                                    .trim();
+                                            body['pincode'] = '000000';
+                                            body['profile_image'] = '';
+                                            uiProvider.loaderTrue();
+                                            await ApiServiceProvider()
+                                                .updateUser(context, body);
+                                            uiProvider.loaderFalse();
+                                          },
+                                          buttonColor: AppColors.navyBlue,
+                                          borderColor: AppColors.navyBlue,
+                                          child: const Text('Update'))
+                                      : PopupMenuButton(
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      _uploadImage = true;
+                                                    });
+                                                  },
+                                                  child: const Center(
+                                                      child:
+                                                          Text('Add Photo'))),
+                                            ),
+                                            PopupMenuItem(
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      _isEdit = true;
+                                                    });
+                                                  },
+                                                  child: const Center(
+                                                      child: Text('Edit'))),
+                                            ),
+                                          ],
+                                        )
+                                ],
                               ),
-                              color: const Color.fromRGBO(210, 210, 210, 1),
-                              child: const CircleAvatar(radius: 32),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.more_vert),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 19),
-                        CustomTextField(
-                          controller: _nameTextController,
-                          focusNode: _nameFocusNode,
-                          textInputAction: TextInputAction.next,
-                          readOnly: false,
-                          placeholder: "Name",
-                          borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                          isObscure: false,
-                        ),
-                        const SizedBox(height: 17),
-                        CustomTextField(
-                          controller: _mobileTextController,
-                          focusNode: _mobileFocusNode,
-                          textInputAction: TextInputAction.next,
-                          readOnly: false,
-                          placeholder: "Mobile",
-                          borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                          isObscure: false,
-                        ),
-                        const SizedBox(height: 17),
-                        CustomTextField(
-                          controller: _emailTextController,
-                          focusNode: _emailFocusNode,
-                          textInputAction: TextInputAction.next,
-                          readOnly: false,
-                          placeholder: "Email",
-                          borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                          isObscure: false,
-                        ),
-                        const SizedBox(height: 17),
-                        CustomTextField(
-                          controller: _locationTextController,
-                          focusNode: _locationFocusNode,
-                          textInputAction: TextInputAction.next,
-                          readOnly: false,
-                          placeholder: "Location",
-                          borderColor: const Color.fromRGBO(219, 219, 219, 1),
-                          isObscure: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 22),
-                  Container(
-                    padding: const EdgeInsets.all(19),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: const Color.fromRGBO(219, 219, 219, 1)),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListView(
-                      primary: false,
-                      shrinkWrap: true,
-                      children: [
-                        Text(
-                          'Offers & Coupons',
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: AppColors.black,
+                              const SizedBox(height: 25),
+                              CustomTextField(
+                                controller: _nameTextController,
+                                focusNode: _nameFocusNode,
+                                textInputAction: TextInputAction.next,
+                                readOnly: !_isEdit,
+                                placeholder: "Name",
+                                borderColor:
+                                    const Color.fromRGBO(219, 219, 219, 1),
+                                isObscure: false,
+                              ),
+                              const SizedBox(height: 17),
+                              CustomTextField(
+                                controller: _mobileTextController,
+                                focusNode: _mobileFocusNode,
+                                textInputAction: TextInputAction.next,
+                                readOnly: !_isEdit,
+                                placeholder: "Mobile",
+                                borderColor:
+                                    const Color.fromRGBO(219, 219, 219, 1),
+                                isObscure: false,
+                              ),
+                              const SizedBox(height: 17),
+                              CustomTextField(
+                                controller: _emailTextController,
+                                focusNode: _emailFocusNode,
+                                textInputAction: TextInputAction.next,
+                                readOnly: true,
+                                placeholder: "Email",
+                                borderColor:
+                                    const Color.fromRGBO(219, 219, 219, 1),
+                                isObscure: false,
+                              ),
+                              const SizedBox(height: 17),
+                              CustomTextField(
+                                controller: _locationTextController,
+                                focusNode: _locationFocusNode,
+                                textInputAction: TextInputAction.next,
+                                readOnly: !_isEdit,
+                                placeholder: "Location",
+                                borderColor:
+                                    const Color.fromRGBO(219, 219, 219, 1),
+                                isObscure: false,
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Column(
-                          children: List.generate(
-                            5,
-                            (index) => Padding(
-                              padding: const EdgeInsets.only(bottom: 13.0),
-                              child: DottedBorder(
-                                radius: const Radius.circular(7),
-                                color: const Color.fromRGBO(210, 210, 210, 1),
-                                padding: EdgeInsets.only(
-                                  top: 6,
-                                  bottom: 9,
-                                  left: 9,
-                                  right: size.width * 0.30,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'Christmas Coupon offer',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Coupon Code : MTK1278',
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color:
-                                            AppColors.black.withOpacity(0.75),
-                                      ),
-                                    )
-                                  ],
+                        const SizedBox(height: 22),
+                        Container(
+                          padding: const EdgeInsets.all(19),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color.fromRGBO(219, 219, 219, 1)),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: ListView(
+                            primary: false,
+                            shrinkWrap: true,
+                            children: [
+                              Text(
+                                'Offers & Coupons',
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: AppColors.black,
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 16),
+                              Column(
+                                children: List.generate(
+                                  5,
+                                  (index) => Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 13.0),
+                                    child: DottedBorder(
+                                      dashPattern: const [5, 5],
+                                      radius: const Radius.circular(7),
+                                      color: const Color.fromRGBO(
+                                          210, 210, 210, 1),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 15),
+                                      child: Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text(
+                                                'Christmas Coupon offer',
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                'Coupon Code : MTK1278',
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 14,
+                                                  color: AppColors.black
+                                                      .withOpacity(0.75),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       ],
                     ),
-                  )
-                ],
-              ),
-              // Loading Screen
-              uiProvider.loading
-                  ? Container(
-                      height: size.height,
-                      color: AppColors.whiteBackground.withOpacity(0.4),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                            color: AppColors.navyBlue),
-                      ),
-                    )
-                  : const SizedBox()
-            ],
-          );
+                    // Loading Screen
+                    uiProvider.loading
+                        ? Container(
+                            height: size.height,
+                            color: AppColors.whiteBackground.withOpacity(0.4),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.navyBlue),
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                );
         },
       ),
     );

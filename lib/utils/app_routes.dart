@@ -22,7 +22,7 @@ abstract class AppRoutes {
   static const String enterOtpSignUpScreen = '/enterOtpSignUpScreen';
   static const String resetPasswordScreen = '/resetPasswordScreen';
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
-  static const String homeScreen = '/homeScreen';
+  static const String homeScreen = '/';
   static const String nearByScreen = '/nearByScreen';
   static const String hotDealsScreen = '/hotDealsScreen';
   static const String storesScreen = '/storesScreen';
@@ -82,11 +82,6 @@ abstract class AppRoutes {
           builder: (context) => ResetPasswordScreen(
             email: arg,
           ),
-        );
-
-      case homeScreen:
-        return MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
         );
 
       case nearByScreen:

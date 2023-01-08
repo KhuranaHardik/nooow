@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class UIProvider extends ChangeNotifier {
   // For bottom navigation bar.
   int onTap(int index) {
+    loading = false;
     int currentIndex = index;
     notifyListeners();
     return currentIndex;

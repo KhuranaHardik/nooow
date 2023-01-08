@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154292797169",
+    "project_id": "booow-app",
+    "storage_bucket": "booow-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154292797169:android:bea3bba9b22fc197203350",
+        "android_client_info": {
+          "package_name": "com.example.nooow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154292797169-sipgbbbdh2ftcfg834hm7dvmmqcdkkv6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2JTIVJNQdYUTTY0hX171XnyikFpdKC7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154292797169-sipgbbbdh2ftcfg834hm7dvmmqcdkkv6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

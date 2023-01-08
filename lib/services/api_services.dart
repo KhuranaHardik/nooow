@@ -210,7 +210,13 @@ class ApiServices {
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());
 
-      return data;
+      if (data['status']) {
+        return data;
+      } else {
+        AppCommonSnackBar().appCommonSnackbar(context, data['message']);
+
+        return null;
+      }
     } on TimeoutException {
       AppCommonSnackBar().appCommonSnackbar(context, "It Takes to  much time");
     } on SocketException catch (e) {
@@ -218,7 +224,7 @@ class ApiServices {
       log(e.message.toString());
     } catch (e) {
       AppCommonSnackBar().appCommonSnackbar(context, "Server Error");
-      log(e.toString());
+      log('post ${e.toString()}');
     }
     return null;
   }

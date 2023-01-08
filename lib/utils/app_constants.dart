@@ -77,8 +77,6 @@ abstract class ApiEndPoints {
       "http://nooow.com/testing.nooow.com/api/Api/verify_forgot_password";
   static const String signup =
       'http://nooow.com/testing.nooow.com/api/Api/user_registration';
-  static const String updateUserProfile =
-      "http://nooow.com/testing.nooow.com/api/Api/update_user_profile";
   static const String login =
       'http://nooow.com/testing.nooow.com/api/Api/user_login';
   static const String forgotPassword =
@@ -98,5 +96,9 @@ abstract class ApiEndPoints {
   static const String resetPasswordUrl =
       "http://nooow.com/testing.nooow.com/api/Api/change_forgot_password";
   static const String offerListurl = "http://testing.nooow.com/api/Api/offers";
-  static const String topBrandsUrl = "https://testing.nooow.com/api/Api/brands";
+  static const String topBrandsUrl = "http://testing.nooow.com/api/Api/brands";
+  static const String vendorOfferListUrl =
+      "http://testing.nooow.com/api/Api/vendor_offers_list";
+  static const String updateProfileUrl =
+      "https://nooow.com/testing.nooow.com/api/Api/update_user_profile";
 }

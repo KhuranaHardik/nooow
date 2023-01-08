@@ -24,7 +24,7 @@ class AdContainerWidget extends StatelessWidget {
             image: image == null
                 ? const AssetImage(AppAssetImages.appLogo)
                 : NetworkImage(image!) as ImageProvider,
-            fit: BoxFit.fill),
+            fit: image == null ? null : BoxFit.fill),
       ),
     );
   }

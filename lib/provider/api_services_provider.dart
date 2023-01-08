@@ -42,15 +42,16 @@ class ApiServiceProvider extends ChangeNotifier {
                   : "<------------ ${result.information!.profileImage.toString()} --------------->",
         );
         await AppSharedPrefrence().saveUserData(
-          userId: result.information!.id.toString(),
-          userName: result.information!.name.toString(),
-          userProfile: result.information!.profileImage.toString(),
-          userAddress: result.information!.address.toString(),
-          mobileNumber: result.information!.contact.toString(),
-        );
+            userId: result.information!.id.toString(),
+            userName: result.information!.name.toString(),
+            userProfile: result.information!.profileImage.toString(),
+            userAddress: result.information!.address.toString(),
+            mobileNumber: result.information!.contact.toString(),
+            email: result.information!.email.toString());
+        await AppSharedPrefrence().getUserData();
         Navigator.pushNamedAndRemoveUntil(
           context,
-          "/",
+          AppRoutes.homeScreen,
           (route) => false,
         );
       } else {
@@ -102,6 +103,16 @@ class ApiServiceProvider extends ChangeNotifier {
       AppCommonSnackBar().appCommonSnackbar(context, data!['message']);
     } else {
       if (data['status']) {
+        log('-----otp signup succssefull-----\n$data');
+        await AppSharedPrefrence().saveUserData(
+          userId: data['information']['user']['id'],
+          userName: data['information']['user']['name'],
+          userProfile: data['information']['user']['profile_image'],
+          userAddress: data['information']['user']['address'],
+          mobileNumber: data['information']['user']['contact'],
+          email: data['information']['user']['email'],
+        );
+        await AppSharedPrefrence().getUserData();
         Navigator.pushNamedAndRemoveUntil(
             context, AppRoutes.homeScreen, (route) => false);
       } else {
@@ -269,6 +280,72 @@ class ApiServiceProvider extends ChangeNotifier {
       }
     } catch (e) {
       log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  List<Map<String, dynamic>?>? vendorList;
+  Future<void> ventorListApi(
+    BuildContext context,
+  ) async {
+    Map<String, dynamic> body = {};
+
+    if (AppSharedPrefrence().userData == null ||
+        AppSharedPrefrence().userData!.isEmpty) {
+      null;
+    } else {
+      body['vendor_id'] = AppSharedPrefrence().userData?[0];
+    }
+    // ignore: curly_braces_in_flow_control_structures
+    try {
+      Map<String, dynamic>? data = await apiServices.postApi(
+          context: context, url: ApiEndPoints.vendorOfferListUrl, body: body);
+      if (data == null || data.isEmpty) {
+        vendorList = [];
+        notifyListeners();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
+      } else {
+        vendorList =
+            (data['information'] as List).cast<Map<String, dynamic>?>();
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  // update user
+  Future<void> updateUser(
+      BuildContext context, Map<String, dynamic> body) async {
+    // ignore: curly_braces_in_flow_control_structures
+    try {
+      Map<String, dynamic>? data = await apiServices.postApi(
+          context: context, url: ApiEndPoints.updateProfileUrl, body: body);
+      if (data == null || data.isEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
+      } else {
+        if (data['status']) {
+          await AppSharedPrefrence().saveUserData(
+            userId: data['information']['id'] ?? 'null',
+            userName: data['information']['name'] ?? 'null',
+            userProfile: data['information']['profile_image'] ?? 'null',
+            userAddress: data['information']['address'] ?? 'null',
+            mobileNumber: data['information']['contact'] ?? 'null',
+            email: data['information']['email'] ?? 'null',
+          );
+          await AppSharedPrefrence().getUserData();
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: data['message']));
+        }
+      }
+    } catch (e) {
+      log('yhi to hi ${e.toString()}');
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Server Error')));
     }

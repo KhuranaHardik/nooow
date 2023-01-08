@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     this.textInputType = TextInputType.name,
-    this.placeholder = "",
+    required this.placeholder,
     this.validator,
     this.inputFormatter,
     required this.textInputAction,
@@ -28,7 +28,7 @@ class CustomTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final TextInputType textInputType;
-  final String placeholder;
+  final String? placeholder;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatter;
   final TextInputAction textInputAction;
@@ -62,11 +62,6 @@ class CustomTextField extends StatelessWidget {
               labelStyle: GoogleFonts.montserrat(
                 color: AppColors.black,
                 fontWeight: FontWeight.w600,
-              ),
-              hintText: placeholder,
-              hintStyle: GoogleFonts.montserrat(
-                color: AppColors.black,
-                fontWeight: FontWeight.w400,
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: borderColor),

@@ -167,6 +167,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
+                        isObscure: true,
+                        isPasswordField: true,
                         controller: _passwordTextEditingController,
                         focusNode: _passwordFocus,
                         textInputAction: TextInputAction.next,
@@ -174,7 +176,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         placeholder: AppString.password,
                         validator: PasswordValidator().validatePassword,
                         borderColor: AppColors.navyBlue,
-                        isObscure: false,
                       ),
                       const SizedBox(height: 18),
                       CustomTextField(
@@ -184,7 +185,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         readOnly: false,
                         placeholder: AppString.confirmPassword,
                         borderColor: AppColors.navyBlue,
-                        isObscure: false,
+                        isObscure: true,
+                        isPasswordField: true,
                         validator: (val) {
                           if (val!.isEmpty) {
                             return "Password Required*";
