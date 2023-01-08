@@ -8,7 +8,23 @@ import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class HotOfferDetailScreen extends StatefulWidget {
-  const HotOfferDetailScreen({super.key});
+  final String offerName;
+  final String expiry;
+  final int discountPercent;
+  final String offerTitle;
+  final String couponCode;
+  final String stepsToAvailOffer;
+  final String aboutStore;
+  const HotOfferDetailScreen({
+    super.key,
+    required this.offerName,
+    required this.expiry,
+    required this.discountPercent,
+    required this.offerTitle,
+    required this.couponCode,
+    required this.stepsToAvailOffer,
+    required this.aboutStore,
+  });
 
   @override
   State<HotOfferDetailScreen> createState() => _HotOfferDetailScreenState();
@@ -24,7 +40,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
         elevation: 0.0,
         titleSpacing: 0.0,
         title: Text(
-          'Christmas Offer',
+          widget.offerName,
           style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -58,7 +74,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        'Expires on:04 Jan 2023, 23:59 PM',
+                        'Expires on : ${widget.expiry}',
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
@@ -92,7 +108,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        'Christmas Offer',
+                        widget.offerName,
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -101,7 +117,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Upto 50% Off',
+                        'Upto ${widget.discountPercent}% Off',
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
@@ -112,7 +128,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Order pizzas now & win amazing prizes',
+                    widget.offerTitle,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
@@ -128,7 +144,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                     radius: const Radius.circular(6),
                     child: Center(
                       child: Text(
-                        'Coupon Code : MPK1986',
+                        'Coupon Code : ${widget.couponCode}',
                         style: GoogleFonts.montserrat(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -200,7 +216,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                   ),
                   const SizedBox(height: 7),
                   Text(
-                    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum',
+                    widget.stepsToAvailOffer,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
@@ -218,7 +234,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                   ),
                   const SizedBox(height: 7),
                   Text(
-                    'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum',
+                    widget.aboutStore,
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 14,

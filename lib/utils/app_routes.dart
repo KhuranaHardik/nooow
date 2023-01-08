@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nooow/ui/screens/bottom_navigation_screen.dart';
-import 'package:nooow/ui/screens/home/home_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offer_details_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offers_screen.dart';
 import 'package:nooow/ui/screens/my_list/my_list_screen.dart';
@@ -105,8 +104,24 @@ abstract class AppRoutes {
         );
 
       case hotOfferDetailsScreen:
+        Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+        String offerName = args["offerName"];
+        String expiry = args["expiry"];
+        int discountPercent = args["discountPercent"];
+        String offerTitle = args["offerTitle"];
+        String couponCode = args["couponCode"];
+        String stepsToAvailOffer = args["stepsToAvailOffer"];
+        String aboutStore = args["aboutStore"];
         return MaterialPageRoute(
-          builder: (context) => const HotOfferDetailScreen(),
+          builder: (context) => HotOfferDetailScreen(
+            offerName: offerName,
+            expiry: expiry,
+            discountPercent: discountPercent,
+            offerTitle: offerTitle,
+            couponCode: couponCode,
+            stepsToAvailOffer: stepsToAvailOffer,
+            aboutStore: aboutStore,
+          ),
         );
 
       case myListScreen:
