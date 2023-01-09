@@ -51,7 +51,7 @@ class AppSharedPrefrence {
     pref.setBool("userSignedIn", isUserSignedIn);
   }
 
-  // Setting user as signed in.
+  // Getting if user is signed in.
   Future<bool?> getUserSignedIn() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool("userSignedIn");
@@ -106,21 +106,31 @@ class AppSharedPrefrence {
       _handleLocationPermission(context);
       return false;
     }
-
     if (permission == LocationPermission.deniedForever) {
       return false;
     }
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services')));
-
+              'Location services are disabled. Please enable the services'),
+        ),
+      );
       return false;
     }
-
     return true;
   }
-// ge
+
+  // Saving theme
+  Future<void> saveTheme(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("theme", value);
+  }
+
+  // Getting theme
+  Future<String?> getTheme() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("theme");
+  }
 }
