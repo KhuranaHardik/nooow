@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -10,8 +11,6 @@ import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/category_container.dart';
-import 'package:nooow/ui/components/custom_elevated_button.dart';
-import 'package:nooow/ui/components/custom_text_form_field.dart';
 import 'package:nooow/ui/components/drawer.dart';
 import 'package:nooow/ui/screens/home/components/food_brand_widget.dart';
 import 'package:nooow/ui/screens/home/components/offers_container.dart';
@@ -45,10 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int sliderIndex = 0;
   int offerIndex = 0;
   int index = 0;
+  int _cuurentIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     _uiProvider = Provider.of<UIProvider>(context, listen: false);
     _apiServiceProvider =
         Provider.of<ApiServiceProvider>(context, listen: false);
@@ -57,8 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await _async(context);
       _uiProvider.loaderFalse();
     });
+    _automaticScroll();
 
-    _pageController = PageController();
     _searchTextEditingController = TextEditingController();
     _subscribeTextEditingController = TextEditingController();
     _searchFocus = FocusNode();
@@ -72,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _subscribeTextEditingController.dispose();
     _searchFocus.dispose();
     _subscribeNode.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -85,6 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
     await _apiServiceProvider.categoryList(context1);
     await _apiServiceProvider.offerListApi(context1);
     await _apiServiceProvider.topFoodBradListApi(context1);
+  }
+
+  Future<void> _automaticScroll() async {
+    _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) async {
+      if (ApiServiceProvider().sliderList == null ||
+          ApiServiceProvider().sliderList!.isEmpty) {
+        null;
+      } else {
+        if (_cuurentIndex < ApiServiceProvider().sliderList!.length) {
+          _cuurentIndex++;
+        } else {
+          _cuurentIndex = 0;
+        }
+        await _pageController.animateToPage(_cuurentIndex,
+            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      }
+    });
   }
 
   @override
@@ -403,84 +423,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         const SizedBox(height: 38),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 21),
-                          child: Container(
-                            width: size.width - 42,
-                            padding: const EdgeInsets.only(
-                              left: 17,
-                              right: 17,
-                              top: 13,
-                              bottom: 31,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: AppColors.lightBlue,
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppAssetImages.hotDeals,
-                                      height: 22,
-                                    ),
-                                    const SizedBox(width: 7.67),
-                                    Text(
-                                      AppString.cashbackVoucherReviews,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  AppString.getLatestOffersNews,
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(6.0),
-                                  ),
-                                  child: CustomTextField(
-                                    controller: _subscribeTextEditingController,
-                                    focusNode: _subscribeNode,
-                                    textInputAction: TextInputAction.done,
-                                    readOnly: false,
-                                    placeholder:
-                                        AppString.enterEmailAddressHere,
-                                    borderColor: AppColors.navyBlue,
-                                    isObscure: false,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                CustomElevatedButton(
-                                  elevation: 0.0,
-                                  borderRadius: 11,
-                                  buttonSize: Size(size.width, 60),
-                                  buttonColor: AppColors.navyBlue,
-                                  onPressed: () {},
-                                  borderColor: AppColors.transparent,
-                                  child: Text(
-                                    AppString.submit,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

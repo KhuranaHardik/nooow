@@ -285,31 +285,72 @@ class ApiServiceProvider extends ChangeNotifier {
     }
   }
 
-  List<Map<String, dynamic>?>? vendorList;
-  Future<void> ventorListApi(
+  List<Map<String, dynamic>?>? vendorSliderList;
+  Future<void> ventorSliderListApi(
     BuildContext context,
   ) async {
     Map<String, dynamic> body = {};
 
-    if (AppSharedPrefrence().userData == null ||
-        AppSharedPrefrence().userData!.isEmpty) {
+    if (AppSharedPrefrence().currentPosition == null) {
       null;
     } else {
-      body['vendor_id'] = AppSharedPrefrence().userData?[0];
+      body['latitude'] =
+          AppSharedPrefrence().currentPosition?.latitude.toString();
+      body['longitude'] =
+          AppSharedPrefrence().currentPosition?.longitude.toString();
     }
     // ignore: curly_braces_in_flow_control_structures
     try {
       Map<String, dynamic>? data = await apiServices.postApi(
-          context: context, url: ApiEndPoints.vendorOfferListUrl, body: body);
+          context: context, url: ApiEndPoints.vendorSliderList, body: body);
+      log('Vendor slider data\n$data');
       if (data == null || data.isEmpty) {
-        vendorList = [];
+        vendorSliderList = [];
         notifyListeners();
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Server Error')));
       } else {
-        vendorList =
+        vendorSliderList =
             (data['information'] as List).cast<Map<String, dynamic>?>();
         notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    }
+  }
+
+  List<Map<String, dynamic>?>? vendorDataList;
+  Future<void> vendorData(
+    BuildContext context,
+  ) async {
+    Map<String, dynamic> body = {};
+
+    if (AppSharedPrefrence().currentPosition == null) {
+      null;
+    } else {
+      body['latitude'] =
+          AppSharedPrefrence().currentPosition?.latitude.toString();
+      body['longitude'] =
+          AppSharedPrefrence().currentPosition?.longitude.toString();
+    }
+    // ignore: curly_braces_in_flow_control_structures
+    try {
+      if (vendorDataList == null || vendorDataList!.isEmpty) {
+        Map<String, dynamic>? data = await apiServices.postApi(
+            context: context, url: ApiEndPoints.vendorShopAndData, body: body);
+        if (data == null || data.isEmpty) {
+          vendorDataList = [];
+          log('Vendor data\n$data');
+          notifyListeners();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Server Error')));
+        } else {
+          vendorDataList =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
+          notifyListeners();
+        }
       }
     } catch (e) {
       log(e.toString());

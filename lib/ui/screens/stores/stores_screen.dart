@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -33,29 +34,49 @@ class _StoresScreenState extends State<StoresScreen> {
   bool signedIn = false;
   int sliderIndex = 0;
   int index = 0;
+  int _cuurentIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
-      // isUserSignedIn = await _appSharedPrefrence.getUserSignedIn();
+
       ApiServiceProvider apiServiceProvider =
           Provider.of<ApiServiceProvider>(context, listen: false);
-      apiServiceProvider.ventorListApi(
+      await apiServiceProvider.ventorSliderListApi(
         context,
       );
 
       Provider.of<UIProvider>(context, listen: false).loaderFalse();
+      _automaticScroll();
     });
-
-    _pageController = PageController();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _automaticScroll() async {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
+      if (ApiServiceProvider().vendorSliderList == null ||
+          ApiServiceProvider().vendorSliderList!.isEmpty) {
+        null;
+      } else {
+        if (_cuurentIndex < ApiServiceProvider().vendorSliderList!.length) {
+          _cuurentIndex++;
+        } else {
+          _cuurentIndex = 0;
+        }
+        await _pageController.animateToPage(_cuurentIndex,
+            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      }
+    });
   }
 
   bool get isSignIn => (AppSharedPrefrence().userData == null ||

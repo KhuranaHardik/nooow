@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD2JTIVJNQdYUTTY0hX171XnyikFpdKC7U',
-    appId: '1:154292797169:android:bea3bba9b22fc197203350',
-    messagingSenderId: '154292797169',
-    projectId: 'booow-app',
-    storageBucket: 'booow-app.appspot.com',
+    apiKey: 'AIzaSyC6irCK83Zb9C1Oo__VbCqnurafUWOAbtE',
+    appId: '1:857357845499:android:78b7404733a1ea8b34015e',
+    messagingSenderId: '857357845499',
+    projectId: 'nooow-3cbbc',
+    storageBucket: 'nooow-3cbbc.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBfufPBYNoImF6aWKAATqRTA9HtWOMFevc',
-    appId: '1:154292797169:ios:39e3e1cb75b042c5203350',
-    messagingSenderId: '154292797169',
-    projectId: 'booow-app',
-    storageBucket: 'booow-app.appspot.com',
-    iosClientId: '154292797169-c2shid2m5jreqtjtr1khcijomcdfihrq.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDoW6PCAhw3kIPklO0VLt9SVHBfeVCWIzY',
+    appId: '1:857357845499:ios:90602e6bbe37894b34015e',
+    messagingSenderId: '857357845499',
+    projectId: 'nooow-3cbbc',
+    storageBucket: 'nooow-3cbbc.appspot.com',
+    iosClientId: '857357845499-dc5j5mvb7bdt8ieneda4voqad6e1dve1.apps.googleusercontent.com',
     iosBundleId: 'com.example.nooow',
   );
 }
