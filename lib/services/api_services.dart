@@ -31,7 +31,7 @@ class ApiServices {
       );
 
       Map<String, dynamic> data = jsonDecode(response.body);
-      log('dsjbcKAS;LLCDSN;DW;LASMKLDSANLVDMSFA;V $data');
+      log('$data');
 
       return LoginModel(
         information: Information(

@@ -32,7 +32,7 @@ class Information {
   String? password;
   String? newsletter;
   String? profileImage;
-  int? pincode;
+  String? pincode;
   String? address;
   String? verify;
   String? suspended;

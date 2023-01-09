@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/drawer.dart';
-import 'package:nooow/ui/components/user_not_found_error.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
 import 'package:nooow/utils/app_asset_images.dart';
@@ -30,23 +30,25 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
   bool signedIn = false;
   int sliderIndex = 0;
   int index = 0;
+  int _cuurentIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
 
-      log(isUserSignedIn.toString());
       Provider.of<UIProvider>(context, listen: false).loaderFalse();
+      _automaticScroll();
     });
-
-    _pageController = PageController();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -54,6 +56,23 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
           AppSharedPrefrence().userData!.isEmpty)
       ? false
       : true;
+
+  Future<void> _automaticScroll() async {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
+      if (ApiServiceProvider().sliderList == null ||
+          ApiServiceProvider().sliderList!.isEmpty) {
+        null;
+      } else {
+        if (_cuurentIndex < ApiServiceProvider().sliderList!.length) {
+          _cuurentIndex++;
+        } else {
+          _cuurentIndex = 0;
+        }
+        await _pageController.animateToPage(_cuurentIndex,
+            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,147 +186,141 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
         ),
         body: Consumer<UIProvider>(
           builder: (context, uiProvider, child) {
-            return (isSignIn == false)
-                ? const UserNotFoundErrorWidget()
-                : Stack(
-                    children: [
-                      ListView(
-                        padding: const EdgeInsets.only(bottom: 20),
+            return Stack(
+              children: [
+                ListView(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  children: [
+                    const SizedBox(height: 19),
+                    // Advertisements
+                    SizedBox(
+                      height: 180,
+                      child: Column(
                         children: [
-                          const SizedBox(height: 19),
-                          // Advertisements
                           SizedBox(
-                            height: 180,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 160,
-                                  child: PageView.builder(
-                                    itemCount: apiServices.sliderList?.length,
-                                    onPageChanged: (value) {
-                                      setState(() {
-                                        index = value;
-                                      });
-                                    },
-                                    controller: _pageController,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return AdContainerWidget(
-                                        width: size.width - 42,
-                                        image: apiServices.sliderList?[index]
-                                            ?['slider'],
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 21.0),
-                                  child: Row(
-                                    children: List.generate(
-                                      apiServices.sliderList?.length ?? 0,
-                                      (i) {
-                                        return AdMarkerWidget(
-                                            color: index == i
-                                                ? AppColors.navyBlue
-                                                : AppColors.lightGrey);
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          // Categories
-                          SizedBox(
-                            height: 54,
-                            child: ListView(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
+                            height: 160,
+                            child: PageView.builder(
+                              itemCount: apiServices.sliderList?.length,
+                              onPageChanged: (value) {
+                                setState(() {
+                                  index = value;
+                                });
+                              },
+                              controller: _pageController,
                               scrollDirection: Axis.horizontal,
-                              children: const [
-                                HotDealsCategoryWidget(
-                                  isSelected: true,
-                                  categoryImage: AppAssetImages.mostPopular,
-                                  categoryName: "Most Popular",
-                                ),
-                                SizedBox(width: 15),
-                                HotDealsCategoryWidget(
-                                  isSelected: false,
-                                  categoryImage: AppAssetImages.travel,
-                                  categoryName: "Travel",
-                                ),
-                                SizedBox(width: 15),
-                                HotDealsCategoryWidget(
-                                  isSelected: false,
-                                  categoryImage: AppAssetImages.fashion,
-                                  categoryName: "Fashion",
-                                ),
-                                SizedBox(width: 15),
-                                HotDealsCategoryWidget(
-                                  isSelected: false,
-                                  categoryImage: AppAssetImages.food,
-                                  categoryName: "Food",
-                                ),
-                                SizedBox(width: 15),
-                                HotDealsCategoryWidget(
-                                  isSelected: false,
-                                  categoryImage: AppAssetImages.electronic,
-                                  categoryName: "Electronic",
-                                ),
-                              ],
+                              itemBuilder: (context, index) {
+                                return AdContainerWidget(
+                                  width: size.width - 42,
+                                  image: apiServices.sliderList?[index]
+                                      ?['slider'],
+                                );
+                              },
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          GridView.builder(
-                            primary: false,
-                            shrinkWrap: true,
-                            itemCount: 10,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 19,
-                              mainAxisExtent: size.height * 0.30,
+                          const SizedBox(height: 14),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 21.0),
+                            child: Row(
+                              children: List.generate(
+                                apiServices.sliderList?.length ?? 0,
+                                (i) {
+                                  return AdMarkerWidget(
+                                      color: index == i
+                                          ? AppColors.navyBlue
+                                          : AppColors.lightGrey);
+                                },
+                              ),
                             ),
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: const Color.fromRGBO(
-                                          210, 210, 210, 1)),
-                                ),
-                                child: HotDealsOfferCard(
-                                  height: size.height,
-                                  saveOnTap: () {
-                                    log('Save');
-                                  },
-                                  seeDetailsOnTap: () {
-                                    Navigator.pushNamed(context,
-                                        AppRoutes.hotOfferDetailsScreen);
-                                  },
-                                ),
-                              );
-                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    // Categories
+                    SizedBox(
+                      height: 54,
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        scrollDirection: Axis.horizontal,
+                        children: const [
+                          HotDealsCategoryWidget(
+                            isSelected: true,
+                            categoryImage: AppAssetImages.mostPopular,
+                            categoryName: "Most Popular",
+                          ),
+                          SizedBox(width: 15),
+                          HotDealsCategoryWidget(
+                            isSelected: false,
+                            categoryImage: AppAssetImages.travel,
+                            categoryName: "Travel",
+                          ),
+                          SizedBox(width: 15),
+                          HotDealsCategoryWidget(
+                            isSelected: false,
+                            categoryImage: AppAssetImages.fashion,
+                            categoryName: "Fashion",
+                          ),
+                          SizedBox(width: 15),
+                          HotDealsCategoryWidget(
+                            isSelected: false,
+                            categoryImage: AppAssetImages.food,
+                            categoryName: "Food",
+                          ),
+                          SizedBox(width: 15),
+                          HotDealsCategoryWidget(
+                            isSelected: false,
+                            categoryImage: AppAssetImages.electronic,
+                            categoryName: "Electronic",
                           ),
                         ],
                       ),
-                      uiProvider.loading
-                          ? Container(
-                              height: size.height,
-                              color: AppColors.whiteBackground.withOpacity(0.4),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                    color: AppColors.navyBlue),
-                              ),
-                            )
-                          : const SizedBox()
-                    ],
-                  );
+                    ),
+                    const SizedBox(height: 20),
+                    GridView.builder(
+                      primary: false,
+                      shrinkWrap: true,
+                      itemCount: 10,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 19,
+                        mainAxisExtent: size.height * 0.30,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: const Color.fromRGBO(210, 210, 210, 1)),
+                          ),
+                          child: HotDealsOfferCard(
+                            height: size.height,
+                            saveOnTap: () {
+                              log('Save');
+                            },
+                            seeDetailsOnTap: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.hotOfferDetailsScreen);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                uiProvider.loading
+                    ? Container(
+                        height: size.height,
+                        color: AppColors.whiteBackground.withOpacity(0.4),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.navyBlue),
+                        ),
+                      )
+                    : const SizedBox()
+              ],
+            );
           },
         ),
       );

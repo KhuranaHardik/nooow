@@ -45,6 +45,7 @@ dependencies:
   google_maps_cluster_manager: ^3.0.0+1
   geolocator: ^9.0.2
   firebase_core: ^2.4.1
+  geocoding: ^2.0.5
 
 dev_dependencies:
   flutter_test:

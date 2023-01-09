@@ -5,9 +5,11 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nooow/provider/api_services_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/drawer.dart';
@@ -27,9 +29,8 @@ class NearByScreen extends StatefulWidget {
 class _NearByScreenState extends State<NearByScreen> {
   bool? isUserSignedIn = false;
   bool signedIn = false;
+  Placemark? currentAddress;
 
-  final double _currentLat = 0.0;
-  final double _currentLong = 0.0;
   final CameraPosition _cameraPosition =
       const CameraPosition(target: LatLng(0, 0), zoom: 2);
   GoogleMapController? mapController;
@@ -134,6 +135,20 @@ class _NearByScreenState extends State<NearByScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
 
+      if (AppSharedPrefrence().currentPosition == null) {
+        null;
+      } else {
+        List<Placemark>? address = await placemarkFromCoordinates(
+            AppSharedPrefrence().currentPosition!.latitude,
+            AppSharedPrefrence().currentPosition!.longitude,
+            localeIdentifier: 'en');
+        await ApiServiceProvider().vendorData(context);
+
+        if (address.isEmpty) {
+        } else {
+          currentAddress = address[0];
+        }
+      }
       Provider.of<UIProvider>(context, listen: false).loaderFalse();
     });
 
@@ -149,6 +164,7 @@ class _NearByScreenState extends State<NearByScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    log('Address is\n${AppSharedPrefrence().currentPosition}');
     return Scaffold(
       drawer: AppDrawer(
         isUserSignedIn: isSignIn,
@@ -308,7 +324,7 @@ class _NearByScreenState extends State<NearByScreen> {
                           ),
                           const SizedBox(height: 18),
                           Text(
-                            "Selected Location",
+                            "Current Location",
                             style: GoogleFonts.montserrat(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -316,14 +332,16 @@ class _NearByScreenState extends State<NearByScreen> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            "Bhangel, Greater Noida, 201306",
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.black,
-                            ),
-                          ),
+                          currentAddress == null
+                              ? const SizedBox.shrink()
+                              : Text(
+                                  "${currentAddress?.street}, ${currentAddress?.administrativeArea}, ${currentAddress?.subLocality}, ${currentAddress?.country}, ${currentAddress?.postalCode}",
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: AppColors.black,
+                                  ),
+                                ),
                         ],
                       ),
                     ),
