@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:nooow/utils/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,49 +76,5 @@ class AppSharedPrefrence {
     userData = pref.getStringList('userData');
   }
 
-  // location
-  Position? currentPosition;
-  Future<Position?>? getCurrentPosition(BuildContext context) async {
-    final bool hasPermission = await _handleLocationPermission(context);
-    if (!hasPermission) {
-      return null;
-    }
-    return await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      currentPosition = position;
-      return position;
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
-
-  // handling loaction acces
-  Future<bool> _handleLocationPermission(BuildContext context) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      _handleLocationPermission(context);
-      return false;
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return false;
-    }
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
-
-      return false;
-    }
-
-    return true;
-  }
 // ge
 }

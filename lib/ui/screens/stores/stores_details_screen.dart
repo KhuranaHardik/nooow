@@ -11,7 +11,11 @@ import 'package:nooow/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class StoresDetailScreen extends StatefulWidget {
-  const StoresDetailScreen({super.key});
+  final String vendorId;
+  final String storeName;
+
+  const StoresDetailScreen(
+      {super.key, required this.vendorId, required this.storeName});
 
   @override
   State<StoresDetailScreen> createState() => _StoresDetailScreenState();
@@ -28,7 +32,7 @@ class _StoresDetailScreenState extends State<StoresDetailScreen> {
         elevation: 0.0,
         backgroundColor: AppColors.navyBlue,
         title: Text(
-          'Store Name',
+          widget.storeName,
           style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w600,
             fontSize: 16,

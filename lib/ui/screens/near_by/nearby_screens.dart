@@ -135,12 +135,12 @@ class _NearByScreenState extends State<NearByScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Provider.of<UIProvider>(context, listen: false).loaderTrue();
 
-      if (AppSharedPrefrence().currentPosition == null) {
-        null;
+      if (ApiServiceProvider().currentPosition == null) {
+        await ApiServiceProvider().getCurrentPosition(context);
       } else {
         List<Placemark>? address = await placemarkFromCoordinates(
-            AppSharedPrefrence().currentPosition!.latitude,
-            AppSharedPrefrence().currentPosition!.longitude,
+            ApiServiceProvider().currentPosition!.latitude,
+            ApiServiceProvider().currentPosition!.longitude,
             localeIdentifier: 'en');
         await ApiServiceProvider().vendorData(context);
 
@@ -164,7 +164,7 @@ class _NearByScreenState extends State<NearByScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    log('Address is\n${AppSharedPrefrence().currentPosition}');
+    log('Address is\n${ApiServiceProvider().currentPosition}');
     return Scaffold(
       drawer: AppDrawer(
         isUserSignedIn: isSignIn,
@@ -305,11 +305,11 @@ class _NearByScreenState extends State<NearByScreen> {
                                   CameraUpdate.newCameraPosition(
                                     CameraPosition(
                                       target: LatLng(
-                                          AppSharedPrefrence()
+                                          ApiServiceProvider()
                                                   .currentPosition
                                                   ?.latitude ??
                                               0,
-                                          AppSharedPrefrence()
+                                          ApiServiceProvider()
                                                   .currentPosition
                                                   ?.longitude ??
                                               0),
