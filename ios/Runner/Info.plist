@@ -3,13 +3,16 @@
 <plist version="1.0">
 <dict>
 	<!-- <string>This app needs location when in use</string> -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is used in background</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is used in background</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Always and when in use!</string>
     <key>NSLocationUsageDescription</key>
     <string>Older devices need location.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Can I have location always?</string>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
