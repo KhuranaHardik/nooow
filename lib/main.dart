@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nooow/provider/api_services_provider.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/utils/app_constants.dart';
@@ -11,7 +12,12 @@ void main() async {
   await AppSharedPrefrence().getInitialRoute();
   await AppSharedPrefrence().getUserData();
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UIProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,11 +29,17 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => UIProvider()),
         ChangeNotifierProvider(create: (context) => ApiServiceProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: AppKeys.appName,
-        onGenerateRoute: AppRoutes.generateRoute,
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            theme: themeProvider.getTheme(),
+            debugShowCheckedModeBanner: false,
+            title: AppKeys.appName,
+            onGenerateRoute: AppRoutes.generateRoute,
+          );
+        },
       ),
     );
   }

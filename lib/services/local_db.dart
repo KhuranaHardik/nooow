@@ -49,7 +49,7 @@ class AppSharedPrefrence {
     pref.setBool("userSignedIn", isUserSignedIn);
   }
 
-  // Setting user as signed in.
+  // Getting if user is signed in.
   Future<bool?> getUserSignedIn() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool("userSignedIn");
@@ -77,4 +77,16 @@ class AppSharedPrefrence {
   }
 
 // ge
+
+  // Saving theme
+  Future<void> saveTheme(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("theme", value);
+  }
+
+  // Getting theme
+  Future<String?> getTheme() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("theme");
+  }
 }
