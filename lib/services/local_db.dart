@@ -76,8 +76,6 @@ class AppSharedPrefrence {
     userData = pref.getStringList('userData');
   }
 
-// ge
-
   // Saving theme
   Future<void> saveTheme(String value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

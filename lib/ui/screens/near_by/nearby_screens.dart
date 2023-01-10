@@ -30,6 +30,7 @@ class _NearByScreenState extends State<NearByScreen> {
   bool? isUserSignedIn = false;
   bool signedIn = false;
   Placemark? currentAddress;
+  late UIProvider _uiProvider;
 
   final CameraPosition _cameraPosition =
       const CameraPosition(target: LatLng(0, 0), zoom: 2);
@@ -72,9 +73,10 @@ class _NearByScreenState extends State<NearByScreen> {
       painter.text = TextSpan(
         text: text,
         style: TextStyle(
-            fontSize: size / 3,
-            color: Colors.white,
-            fontWeight: FontWeight.normal),
+          fontSize: size / 3,
+          color: Colors.white,
+          fontWeight: FontWeight.normal,
+        ),
       );
       painter.layout();
       painter.paint(

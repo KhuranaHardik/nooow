@@ -145,16 +145,14 @@ class AppDrawer extends StatelessWidget {
                         );
                       },
                     )
-                  : Center(
-                      child: CustomElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(context, AppRoutes.signInScreen);
-                        },
-                        buttonColor: AppColors.navyBlue,
-                        borderColor: AppColors.navyBlue,
-                        child: const Text(AppString.signInSignUp),
-                      ),
+                  : CustomElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, AppRoutes.signInScreen);
+                      },
+                      buttonColor: AppColors.navyBlue,
+                      borderColor: AppColors.navyBlue,
+                      child: const Text(AppString.signInSignUp),
                     )
             ],
           ),

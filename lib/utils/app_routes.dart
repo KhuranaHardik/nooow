@@ -4,6 +4,10 @@ import 'package:nooow/ui/screens/hot_offers/hot_offer_details_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offers_screen.dart';
 import 'package:nooow/ui/screens/my_list/my_list_screen.dart';
 import 'package:nooow/ui/screens/near_by/nearby_screens.dart';
+import 'package:nooow/ui/screens/profile/change_password_screen.dart';
+import 'package:nooow/ui/screens/profile/edit_profile_screen.dart';
+import 'package:nooow/ui/screens/profile/my_coupons_screen.dart';
+import 'package:nooow/ui/screens/profile/notifications_screen.dart';
 import 'package:nooow/ui/screens/profile/profile_screen.dart';
 import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/ui/screens/stores/stores_screen.dart';
@@ -27,6 +31,10 @@ abstract class AppRoutes {
   static const String hotDealsScreen = '/hotDealsScreen';
   static const String storesScreen = '/storesScreen';
   static const String profileScreen = '/profileScreen';
+  static const String editProfileScreen = '/editProfileScreen';
+  static const String myCouponsScreen = '/myCouponsScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
+  static const String notificationScreen = '/notificationScreen';
   static const String hotOfferDetailsScreen = '/hotOfferDetailsScreen';
   static const String myListScreen = '/myListScreen';
   static const String storeDetailScreen = '/storeDetailScreen';
@@ -103,6 +111,26 @@ abstract class AppRoutes {
       case profileScreen:
         return MaterialPageRoute(
           builder: (context) => const ProfileScreens(),
+        );
+
+      case editProfileScreen:
+        return MaterialPageRoute(
+          builder: (context) => const EditProfileScreen(),
+        );
+
+      case myCouponsScreen:
+        return MaterialPageRoute(
+          builder: (context) => const MyCouponsScreen(),
+        );
+
+      case changePasswordScreen:
+        return MaterialPageRoute(
+          builder: (context) => const ChangePasswordScreen(),
+        );
+
+      case notificationScreen:
+        return MaterialPageRoute(
+          builder: (context) => const NotificationScreen(),
         );
 
       case hotOfferDetailsScreen:

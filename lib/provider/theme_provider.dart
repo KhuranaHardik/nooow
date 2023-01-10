@@ -29,7 +29,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeProvider() {
     AppSharedPrefrence().getTheme().then((value) {
       log('value read from storage: $value');
-      // _themeData = lightTheme;
+      _themeData = lightTheme;
       String themeMode = value ?? 'light';
       if (themeMode == 'light') {
         _themeData = lightTheme;
