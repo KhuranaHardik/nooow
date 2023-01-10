@@ -120,7 +120,7 @@ class _MyCouponsScreenState extends State<MyCouponsScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 2)
+          const SizedBox(width: 10)
         ],
       ),
       body: ListView(

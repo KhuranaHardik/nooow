@@ -8,6 +8,7 @@ import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
 import 'package:nooow/ui/components/user_not_found_error.dart';
+import 'package:nooow/ui/screens/profile/components/tile_card.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
@@ -231,8 +232,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Profile and Menu
+                              // Profile Pic & Edit
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -384,16 +386,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 isObscure: false,
                               ),
                               const SizedBox(height: 17),
-                              CustomTextField(
-                                controller: _locationTextController,
-                                focusNode: _locationFocusNode,
-                                textInputAction: TextInputAction.next,
-                                readOnly: !_isEdit,
-                                placeholder: "Location",
-                                borderColor:
-                                    const Color.fromRGBO(219, 219, 219, 1),
-                                isObscure: false,
+                              // CustomTextField(
+                              //   controller: _locationTextController,
+                              //   focusNode: _locationFocusNode,
+                              //   textInputAction: TextInputAction.next,
+                              //   readOnly: !_isEdit,
+                              //   placeholder: "Location",
+                              //   borderColor:
+                              //       const Color.fromRGBO(219, 219, 219, 1),
+                              //   isObscure: false,
+                              // ),
+                              Text(
+                                "Privacy & Security",
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
                               ),
+                              TileCardWidget(
+                                isThemeButton: false,
+                                onTap: () {},
+                                name: "Change Password",
+                                icon: AppAssetImages.password,
+                                isLogOutButton: false,
+                              )
                             ],
                           ),
                         ),

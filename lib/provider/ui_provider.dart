@@ -39,7 +39,7 @@ class UIProvider extends ChangeNotifier {
   // Theme Switch (Profile Screen)
   bool updateSwitch(bool switchValue) {
     switchValue = !switchValue;
-    notifyListeners();
+    // notifyListeners();
     return switchValue;
   }
 }

@@ -33,6 +33,7 @@ class AppAssetImages {
   static const String food = 'assets/food.png';
   static const String home = 'assets/home.png';
   static const String hot = 'assets/hot.png';
+  static const String intrests = 'assets/intrests.png';
   static const String appLogo = 'assets/logo.png';
   static const String mostPopular = 'assets/most_popular.png';
   static const String myList = 'assets/mylist.png';

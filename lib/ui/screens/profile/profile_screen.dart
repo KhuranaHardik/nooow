@@ -30,17 +30,11 @@ class _ProfileScreensState extends State<ProfileScreens> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    //   Provider.of<UIProvider>(context, listen: false).loaderTrue();
 
-      Provider.of<UIProvider>(context, listen: false).loaderFalse();
-    });
-//  required String userId,
-//       required String userName,
-//       required String userProfile,
-//       required String userAddress,
-//       required String mobileNumber,
-//       required String email
+    //   Provider.of<UIProvider>(context, listen: false).loaderFalse();
+    // });
   }
 
   @override
@@ -166,7 +160,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
               ),
             ),
           ),
-          const SizedBox(width: 2)
+          const SizedBox(width: 10)
         ],
       ),
       body: Consumer2<UIProvider, ApiServiceProvider>(
@@ -189,18 +183,19 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           },
                           name: "Profile",
                           icon: AppAssetImages.profile,
+                          isLogOutButton: false,
                         ),
                         const SizedBox(height: 5),
-                        TileCardWidget(
-                          isThemeButton: false,
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.changePasswordScreen);
-                          },
-                          name: "Change Password",
-                          icon: AppAssetImages.password,
-                        ),
-                        const SizedBox(height: 5),
+                        // TileCardWidget(
+                        //   isThemeButton: false,
+                        //   onTap: () {
+                        //     // Navigator.pushNamed(
+                        //     //     context, AppRoutes.changePasswordScreen);
+                        //   },
+                        //   name: "Privacy & Security",
+                        //   icon: AppAssetImages.password,
+                        // ),
+                        // const SizedBox(height: 5),
                         TileCardWidget(
                           isThemeButton: false,
                           onTap: () {
@@ -209,6 +204,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           },
                           name: "Notifications",
                           icon: AppAssetImages.notification,
+                          isLogOutButton: false,
                         ),
                         const SizedBox(height: 5),
                         TileCardWidget(
@@ -219,6 +215,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           },
                           name: "My Coupons",
                           icon: AppAssetImages.mostPopular,
+                          isLogOutButton: false,
                         ),
                         const SizedBox(height: 5),
                         TileCardWidget(
@@ -226,6 +223,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           onTap: () {},
                           name: "Dark Mode",
                           icon: AppAssetImages.profile,
+                          isLogOutButton: false,
                         ),
                         const SizedBox(height: 5),
                         TileCardWidget(
@@ -265,6 +263,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           },
                           name: "Logout",
                           icon: AppAssetImages.drawerLogOut,
+                          isLogOutButton: true,
                         ),
                       ],
                     ),

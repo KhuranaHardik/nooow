@@ -12,12 +12,14 @@ class TileCardWidget extends StatefulWidget {
   Function()? onTap;
   String name;
   String icon;
+  bool isLogOutButton = false;
   TileCardWidget({
     super.key,
     required this.isThemeButton,
     required this.onTap,
     required this.name,
     required this.icon,
+    required this.isLogOutButton,
   });
 
   @override
@@ -26,12 +28,14 @@ class TileCardWidget extends StatefulWidget {
 
 class _TileCardWidgetState extends State<TileCardWidget> {
   bool isSwitchOn = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       String? theme = await AppSharedPrefrence().getTheme();
-      isSwitchOn = theme == 'light' ? false : true;
+      isSwitchOn = (theme == 'light' || theme == null) ? false : true;
+      setState(() {});
     });
   }
 
@@ -49,7 +53,9 @@ class _TileCardWidgetState extends State<TileCardWidget> {
                 backgroundColor: AppColors.navyBlue,
                 child: Image.asset(
                   widget.icon,
-                  color: AppColors.white,
+                  color: widget.isLogOutButton
+                      ? AppColors.notificationsColor
+                      : AppColors.white,
                   width: 15,
                   height: 15,
                 ),
@@ -68,7 +74,7 @@ class _TileCardWidgetState extends State<TileCardWidget> {
                         uiProvider.loaderFalse();
                       },
                     )
-                  : const SizedBox.shrink(),
+                  : null,
             ),
           ),
         );
