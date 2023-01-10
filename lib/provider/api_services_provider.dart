@@ -228,32 +228,22 @@ class ApiServiceProvider extends ChangeNotifier {
   List<Map<String, dynamic>?>? categorylist;
 
   Future<void> categoryList(BuildContext context) async {
-    if (categorylist == null ||
-        categorylist!.isEmpty ||
-        currentPosition !=
-            await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high,
-                timeLimit: const Duration(minutes: 1))) {
-      try {
-        Map<String, dynamic>? data = await apiServices.getApi(
-            context: context, url: ApiEndPoints.categoryList);
-        if (data == null || data.isEmpty) {
-          categorylist = [];
-          notifyListeners();
-        } else {
-          categorylist =
-              (data['information'] as List).cast<Map<String, dynamic>?>();
+    try {
+      Map<String, dynamic>? data = await apiServices.getApi(
+          context: context, url: ApiEndPoints.categoryList);
+      if (data == null || data.isEmpty) {
+        categorylist = [];
+        notifyListeners();
+      } else {
+        categorylist =
+            (data['information'] as List).cast<Map<String, dynamic>?>();
 
-          notifyListeners();
-        }
-      } catch (e) {
-        log(e.toString());
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Server Error')));
+        notifyListeners();
       }
-    } else {
-      categorylist = categorylist;
-      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Server Error')));
     }
   }
 
