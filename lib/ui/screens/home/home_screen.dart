@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 2)
+              const SizedBox(width: 10)
             ],
             elevation: 0.0,
             backgroundColor: AppColors.whiteBackground,
@@ -329,34 +329,56 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 26),
-
+                        // Popular Categories having view all button
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 21),
-                          child: Text(
-                            AppString.popularCategories,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                AppString.popularCategories,
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton(
+                                style: const ButtonStyle(
+                                    splashFactory: NoSplash.splashFactory),
+                                onPressed: () {},
+                                child: Row(
+                                  children: const [
+                                    Text('View all'),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 14,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         // Popular Categories
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 18.38,
-                          runSpacing: 17,
-                          children: List.generate(
-                            apiServices.categorylist?.length ?? 0,
-                            (index) => CategoryContainerWidget(
-                              categoryName: apiServices.categorylist?[index]
-                                  ?['title'],
-                              categoryImage: apiServices.categorylist?[index]
-                                  ?['image'],
-                              width: size.width * 0.188,
+                        SizedBox(
+                          height: 105,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.only(left: 21),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: apiServices.categorylist?.length ?? 0,
+                            itemBuilder: (context, index) => IntrinsicHeight(
+                              child: CategoryContainerWidget(
+                                categoryName: apiServices.categorylist?[index]
+                                    ?['title'],
+                                categoryImage: apiServices.categorylist?[index]
+                                    ?['image'],
+                              ),
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 30),
                         // Offers you will love
                         Padding(

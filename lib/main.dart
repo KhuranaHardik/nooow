@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppSharedPrefrence().getInitialRoute();
   await AppSharedPrefrence().getUserData();
+  await AppSharedPrefrence().getTheme();
 
   runApp(
     ChangeNotifierProvider(

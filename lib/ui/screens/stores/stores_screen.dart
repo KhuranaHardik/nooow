@@ -27,7 +27,6 @@ class StoresScreen extends StatefulWidget {
 
 class _StoresScreenState extends State<StoresScreen> {
   late PageController _pageController;
-  final ApiServiceProvider apiServices = ApiServiceProvider();
 
   bool signedIn = false;
   int sliderIndex = 0;
@@ -35,19 +34,18 @@ class _StoresScreenState extends State<StoresScreen> {
   int _cuurentIndex = 0;
   Timer? _timer;
   late UIProvider _uiProvider;
+  late ApiServiceProvider apiServices;
 
   @override
   void initState() {
     super.initState();
     _uiProvider = Provider.of<UIProvider>(context, listen: false);
+    apiServices = Provider.of<ApiServiceProvider>(context, listen: false);
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _uiProvider.loaderTrue();
-
-      ApiServiceProvider apiServiceProvider =
-          Provider.of<ApiServiceProvider>(context, listen: false);
-      await ApiServiceProvider().getCurrentPosition(context);
-      await apiServiceProvider.ventorSliderListApi(
+      await apiServices.getCurrentPosition(context);
+      await apiServices.ventorSliderListApi(
         context,
       );
 
@@ -194,7 +192,7 @@ class _StoresScreenState extends State<StoresScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 2)
+            const SizedBox(width: 10)
           ],
         ),
         body: Stack(

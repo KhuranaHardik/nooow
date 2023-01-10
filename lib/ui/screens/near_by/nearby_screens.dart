@@ -31,6 +31,7 @@ class _NearByScreenState extends State<NearByScreen> {
   bool signedIn = false;
   Placemark? currentAddress;
   late UIProvider _uiProvider;
+  late ApiServiceProvider _apiServiceProvider;
 
   final CameraPosition _cameraPosition =
       const CameraPosition(target: LatLng(0, 0), zoom: 2);
@@ -38,22 +39,26 @@ class _NearByScreenState extends State<NearByScreen> {
   late ClusterManager _manager;
   final Completer<GoogleMapController> _controller = Completer();
   Set<Marker> markers = {};
+  var vendorsList;
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
       (cluster) async {
         return Marker(
-            markerId: MarkerId(cluster.getId()),
-            position: cluster.location,
-            onTap: () {
-              log('---- $cluster');
-              for (Place p in cluster.items) {
-                log(p.toString());
-              }
-            },
-            icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
-                text: cluster.isMultiple ? cluster.count.toString() : null),
-            infoWindow: InfoWindow(
-              title: cluster.items.toString(),
-            ));
+          markerId: MarkerId(cluster.getId()),
+          position: cluster.location,
+          onTap: () {
+            log('---- $cluster');
+            for (Place p in cluster.items) {
+              log(p.toString());
+            }
+          },
+          icon: await _getMarkerBitmap(
+            cluster.isMultiple ? 125 : 75,
+            text: cluster.isMultiple ? cluster.count.toString() : null,
+          ),
+          infoWindow: InfoWindow(
+            title: cluster.items.toString(),
+          ),
+        );
       };
 
   Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
@@ -96,36 +101,39 @@ class _NearByScreenState extends State<NearByScreen> {
       Place(
           name: 'Theater $i',
           latLng: LatLng(28.6074 + i * 0.001, 77.2363 + i * 0.001)),
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Restaurant $i',
-          // isClosed: i % 2 == 0,
-          latLng: LatLng(31.9365 + i * 0.001, 77.5430 + i * 0.001)),
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Bar $i',
-          latLng: LatLng(29.2057 + i * 0.001, 74.7934 + i * 0.001)),
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Hotel $i',
-          latLng: LatLng(29.6871 + i * 0.001, 76.7645 + i * 0.001)),
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Mall $i',
-          latLng: LatLng(30.7834 + i * 0.001, 78.3463 + i * 0.001)),
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Theka $i',
-          latLng: LatLng(29.3032 + i * 0.001, 79.5692 + i * 0.001)),
+    // for (int i = 0; i < 100; i++)
+    //   Place(
+    //       name: 'Restaurant $i',
+    //       // isClosed: i % 2 == 0,
+    //       latLng: LatLng(31.9365 + i * 0.001, 77.5430 + i * 0.001)),
+    // for (int i = 0; i < 100; i++)
+    //   Place(
+    //       name: 'Bar $i',
+    //       latLng: LatLng(29.2057 + i * 0.001, 74.7934 + i * 0.001)),
+    // for (int i = 0; i < 100; i++)
+    //   Place(
+    //       name: 'Hotel $i',
+    //       latLng: LatLng(29.6871 + i * 0.001, 76.7645 + i * 0.001)),
+    // for (int i = 0; i < 100; i++)
+    //   Place(
+    //       name: 'Mall $i',
+    //       latLng: LatLng(30.7834 + i * 0.001, 78.3463 + i * 0.001)),
+    // for (int i = 0; i < 100; i++)
+    //   Place(
+    //       name: 'Theka $i',
+    //       latLng: LatLng(29.3032 + i * 0.001, 79.5692 + i * 0.001)),
   ];
 
   ClusterManager _initClusterManager() {
-    return ClusterManager<Place>(items, _updateMarkers,
-        markerBuilder: _markerBuilder);
+    return ClusterManager<Place>(
+      items,
+      _updateMarkers,
+      markerBuilder: _markerBuilder,
+    );
   }
 
   void _updateMarkers(Set<Marker> markers) {
-    log('Updated ${markers.length} markers');
+    // log('Updated ${markers.length} markers');
     setState(() {
       this.markers = markers;
     });
@@ -133,27 +141,36 @@ class _NearByScreenState extends State<NearByScreen> {
 
   @override
   void initState() {
+    _uiProvider = Provider.of<UIProvider>(context, listen: false);
+    _apiServiceProvider =
+        Provider.of<ApiServiceProvider>(context, listen: false);
     _manager = _initClusterManager();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+      _uiProvider.loaderTrue();
 
-      if (ApiServiceProvider().currentPosition == null) {
-        await ApiServiceProvider().getCurrentPosition(context);
+      if (_apiServiceProvider.currentPosition == null) {
+        await _apiServiceProvider.getCurrentPosition(context);
       } else {
         List<Placemark>? address = await placemarkFromCoordinates(
-            ApiServiceProvider().currentPosition!.latitude,
-            ApiServiceProvider().currentPosition!.longitude,
-            localeIdentifier: 'en');
-        await ApiServiceProvider().vendorData(context);
+          _apiServiceProvider.currentPosition!.latitude,
+          _apiServiceProvider.currentPosition!.longitude,
+          localeIdentifier: 'en',
+        );
+        await _apiServiceProvider.vendorData(context);
+        List<Map<String, dynamic>?>? vendorsList =
+            _apiServiceProvider.vendorDataList;
+
+        log("Nearby data --->    ${_apiServiceProvider.vendorDataList.runtimeType}");
+
+        log(vendorsList.toString());
 
         if (address.isEmpty) {
         } else {
           currentAddress = address[0];
         }
       }
-      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+      _uiProvider.loaderFalse();
     });
-
     super.initState();
   }
 
@@ -165,8 +182,7 @@ class _NearByScreenState extends State<NearByScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    log('Address is\n${ApiServiceProvider().currentPosition}');
+    // log('Address is\n${ApiServiceProvider().currentPosition}');
     return Scaffold(
       drawer: AppDrawer(
         isUserSignedIn: isSignIn,
@@ -269,7 +285,7 @@ class _NearByScreenState extends State<NearByScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 2)
+          const SizedBox(width: 10)
         ],
       ),
       body: Consumer<UIProvider>(builder: (context, uiProvider, child) {

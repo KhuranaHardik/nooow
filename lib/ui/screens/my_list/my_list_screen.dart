@@ -72,7 +72,7 @@ class _MyListScreenState extends State<MyListScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 2)
+          const SizedBox(width: 10)
         ],
       ),
       body: Consumer<UIProvider>(

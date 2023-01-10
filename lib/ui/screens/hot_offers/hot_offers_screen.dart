@@ -180,7 +180,7 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 2)
+            const SizedBox(width: 10)
           ],
         ),
         body: Consumer<UIProvider>(
