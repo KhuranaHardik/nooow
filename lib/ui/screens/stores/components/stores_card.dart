@@ -4,10 +4,18 @@ import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 
 class StoresCard extends StatelessWidget {
+  final String? image;
+  final String? companyName;
+  final String? flyers;
+  final String? offers;
   final double width;
   const StoresCard({
     super.key,
     required this.width,
+    this.image,
+    this.companyName,
+    this.flyers,
+    this.offers,
   });
 
   @override
@@ -24,21 +32,23 @@ class StoresCard extends StatelessWidget {
         children: [
           Container(
             height: 93,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
               image: DecorationImage(
-                image: AssetImage(AppAssetImages.banner2),
-                fit: BoxFit.contain,
+                image: (image == null || image!.isEmpty)
+                    ? const AssetImage(AppAssetImages.banner2) as ImageProvider
+                    : NetworkImage(image!),
+                fit: BoxFit.cover,
               ),
             ),
           ),
           const SizedBox(height: 4),
           // Details
           Text(
-            "Comapany Name",
+            companyName ?? '',
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w600,
               fontSize: 10,
@@ -62,7 +72,7 @@ class StoresCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "4 Offers",
+                    "$offers Offers",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 10,
@@ -85,7 +95,7 @@ class StoresCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "5 Flyers",
+                    "$flyers Flyers",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w400,
                       fontSize: 10,

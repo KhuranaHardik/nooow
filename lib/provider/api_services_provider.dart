@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nooow/model/login_model.dart';
 import 'package:nooow/services/api_services.dart';
 import 'package:nooow/services/local_db.dart';
@@ -195,21 +196,31 @@ class ApiServiceProvider extends ChangeNotifier {
   List<Map<String, dynamic>?>? sliderList;
 
   Future<void> slider(BuildContext context) async {
-    try {
-      Map<String, dynamic>? data = await apiServices.getApi(
-          context: context, url: ApiEndPoints.sliderList);
-      if (data == null || data.isEmpty) {
-        sliderList = [];
-        notifyListeners();
-      } else {
-        sliderList =
-            (data['information'] as List).cast<Map<String, dynamic>?>();
-        notifyListeners();
+    if (sliderList == null ||
+        sliderList!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      try {
+        Map<String, dynamic>? data = await apiServices.getApi(
+            context: context, url: ApiEndPoints.sliderList);
+        if (data == null || data.isEmpty) {
+          sliderList = [];
+          notifyListeners();
+        } else {
+          sliderList =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
+          notifyListeners();
+        }
+      } catch (e) {
+        log(e.toString());
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    } else {
+      sliderList = sliderList;
+      notifyListeners();
     }
   }
 
@@ -217,22 +228,32 @@ class ApiServiceProvider extends ChangeNotifier {
   List<Map<String, dynamic>?>? categorylist;
 
   Future<void> categoryList(BuildContext context) async {
-    try {
-      Map<String, dynamic>? data = await apiServices.getApi(
-          context: context, url: ApiEndPoints.categoryList);
-      if (data == null || data.isEmpty) {
-        categorylist = [];
-        notifyListeners();
-      } else {
-        categorylist =
-            (data['information'] as List).cast<Map<String, dynamic>?>();
+    if (categorylist == null ||
+        categorylist!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      try {
+        Map<String, dynamic>? data = await apiServices.getApi(
+            context: context, url: ApiEndPoints.categoryList);
+        if (data == null || data.isEmpty) {
+          categorylist = [];
+          notifyListeners();
+        } else {
+          categorylist =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
 
-        notifyListeners();
+          notifyListeners();
+        }
+      } catch (e) {
+        log(e.toString());
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    } else {
+      categorylist = categorylist;
+      notifyListeners();
     }
   }
 
@@ -240,23 +261,34 @@ class ApiServiceProvider extends ChangeNotifier {
   List<Map<String, dynamic>?>? offerList;
 
   Future<void> offerListApi(BuildContext context) async {
-    try {
-      Map<String, dynamic>? data = await apiServices.getApi(
-          context: context, url: ApiEndPoints.offerListurl);
-      if (data == null || data.isEmpty) {
-        offerList = [];
-        notifyListeners();
+    if (offerList == null ||
+        offerList!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      try {
+        Map<String, dynamic>? data = await apiServices.getApi(
+            context: context, url: ApiEndPoints.offerListurl);
+        if (data == null || data.isEmpty) {
+          offerList = [];
+          notifyListeners();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Server Error')));
+        } else {
+          offerList =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
+
+          notifyListeners();
+        }
+      } catch (e) {
+        log(e.toString());
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Server Error')));
-      } else {
-        offerList = (data['information'] as List).cast<Map<String, dynamic>?>();
-
-        notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    } else {
+      offerList = offerList;
+      notifyListeners();
     }
   }
 
@@ -264,24 +296,34 @@ class ApiServiceProvider extends ChangeNotifier {
   List<Map<String, dynamic>?>? topFoodBrandList;
 
   Future<void> topFoodBradListApi(BuildContext context) async {
-    try {
-      Map<String, dynamic>? data = await apiServices.getApi(
-          context: context, url: ApiEndPoints.topBrandsUrl);
-      if (data == null || data.isEmpty) {
-        topFoodBrandList = [];
-        notifyListeners();
+    if (topFoodBrandList == null ||
+        topFoodBrandList!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      try {
+        Map<String, dynamic>? data = await apiServices.getApi(
+            context: context, url: ApiEndPoints.topBrandsUrl);
+        if (data == null || data.isEmpty) {
+          topFoodBrandList = [];
+          notifyListeners();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Server Error')));
+        } else {
+          topFoodBrandList =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
+
+          notifyListeners();
+        }
+      } catch (e) {
+        log(e.toString());
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Server Error')));
-      } else {
-        topFoodBrandList =
-            (data['information'] as List).cast<Map<String, dynamic>?>();
-
-        notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
+    } else {
+      topFoodBrandList = topFoodBrandList;
+      notifyListeners();
     }
   }
 
@@ -289,35 +331,40 @@ class ApiServiceProvider extends ChangeNotifier {
   Future<void> ventorSliderListApi(
     BuildContext context,
   ) async {
-    Map<String, dynamic> body = {};
+    if (vendorSliderList == null ||
+        vendorSliderList!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      Map<String, dynamic> body = {};
 
-    if (AppSharedPrefrence().currentPosition == null) {
-      null;
-    } else {
-      body['latitude'] =
-          AppSharedPrefrence().currentPosition?.latitude.toString();
-      body['longitude'] =
-          AppSharedPrefrence().currentPosition?.longitude.toString();
-    }
-    // ignore: curly_braces_in_flow_control_structures
-    try {
-      Map<String, dynamic>? data = await apiServices.postApi(
-          context: context, url: ApiEndPoints.vendorSliderList, body: body);
-      log('Vendor slider data\n$data');
-      if (data == null || data.isEmpty) {
-        vendorSliderList = [];
-        notifyListeners();
+      if (currentPosition == null) {
+        null;
+      } else {
+        body['latitude'] = currentPosition?.latitude.toString();
+        body['longitude'] = currentPosition?.longitude.toString();
+      }
+      // ignore: curly_braces_in_flow_control_structures
+      try {
+        Map<String, dynamic>? data = await apiServices.postApi(
+            context: context, url: ApiEndPoints.vendorSliderList, body: body);
+        log('Vendor slider data\n$data');
+        if (data == null || data.isEmpty) {
+          vendorSliderList = [];
+          notifyListeners();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Server Error')));
+        } else {
+          vendorSliderList =
+              (data['information'] as List).cast<Map<String, dynamic>?>();
+          notifyListeners();
+        }
+      } catch (e) {
+        log(e.toString());
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Server Error')));
-      } else {
-        vendorSliderList =
-            (data['information'] as List).cast<Map<String, dynamic>?>();
-        notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
     }
   }
 
@@ -325,37 +372,44 @@ class ApiServiceProvider extends ChangeNotifier {
   Future<void> vendorData(
     BuildContext context,
   ) async {
-    Map<String, dynamic> body = {};
+    if (vendorDataList == null ||
+        vendorDataList!.isEmpty ||
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      Map<String, dynamic> body = {};
 
-    if (AppSharedPrefrence().currentPosition == null) {
-      null;
-    } else {
-      body['latitude'] =
-          AppSharedPrefrence().currentPosition?.latitude.toString();
-      body['longitude'] =
-          AppSharedPrefrence().currentPosition?.longitude.toString();
-    }
-    // ignore: curly_braces_in_flow_control_structures
-    try {
-      if (vendorDataList == null || vendorDataList!.isEmpty) {
-        Map<String, dynamic>? data = await apiServices.postApi(
-            context: context, url: ApiEndPoints.vendorShopAndData, body: body);
-        if (data == null || data.isEmpty) {
-          vendorDataList = [];
-          log('Vendor data\n$data');
-          notifyListeners();
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Server Error')));
-        } else {
-          vendorDataList =
-              (data['information'] as List).cast<Map<String, dynamic>?>();
-          notifyListeners();
-        }
+      if (currentPosition == null) {
+        null;
+      } else {
+        body['latitude'] = currentPosition?.latitude.toString();
+        body['longitude'] = currentPosition?.longitude.toString();
       }
-    } catch (e) {
-      log(e.toString());
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Server Error')));
+      // ignore: curly_braces_in_flow_control_structures
+      try {
+        if (vendorDataList == null || vendorDataList!.isEmpty) {
+          Map<String, dynamic>? data = await apiServices.postApi(
+              context: context,
+              url: ApiEndPoints.vendorShopAndData,
+              body: body);
+          if (data == null || data.isEmpty) {
+            vendorDataList = [];
+            log('Vendor data\n$data');
+            notifyListeners();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('Server Error')));
+          } else {
+            vendorDataList =
+                (data['information'] as List).cast<Map<String, dynamic>?>();
+            notifyListeners();
+          }
+        }
+      } catch (e) {
+        log(e.toString());
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Server Error')));
+      }
     }
   }
 
@@ -390,5 +444,64 @@ class ApiServiceProvider extends ChangeNotifier {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Server Error')));
     }
+  }
+
+  // location
+  Position? currentPosition;
+  Future<Position?>? getCurrentPosition(BuildContext context) async {
+    final bool hasPermission = await handleLocationPermission(context);
+    if (!hasPermission) {
+      return null;
+    }
+
+    if (currentPosition != null &&
+        currentPosition !=
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                timeLimit: const Duration(minutes: 1))) {
+      return await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) {
+        currentPosition = position;
+      }).catchError((e) {
+        debugPrint(e);
+      });
+    } else {
+      return await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) {
+        currentPosition = position;
+      }).catchError((e) {
+        debugPrint(e);
+      });
+    }
+  }
+
+  // handling loaction acces
+  Future<bool> handleLocationPermission(BuildContext context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      handleLocationPermission(context);
+      return false;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+
+      return false;
+    }
+
+    return true;
   }
 }

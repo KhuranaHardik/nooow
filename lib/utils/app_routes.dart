@@ -9,6 +9,7 @@ import 'package:nooow/ui/screens/profile/edit_profile_screen.dart';
 import 'package:nooow/ui/screens/profile/my_coupons_screen.dart';
 import 'package:nooow/ui/screens/profile/notifications_screen.dart';
 import 'package:nooow/ui/screens/profile/profile_screen.dart';
+import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/ui/screens/stores/stores_screen.dart';
 import 'package:nooow/ui/screens/on_boarding/enter_otp_forgot_password_screen.dart';
 import 'package:nooow/ui/screens/on_boarding/enter_otp_sign_up_screen.dart';
@@ -36,6 +37,7 @@ abstract class AppRoutes {
   static const String notificationScreen = '/notificationScreen';
   static const String hotOfferDetailsScreen = '/hotOfferDetailsScreen';
   static const String myListScreen = '/myListScreen';
+  static const String storeDetailScreen = '/storeDetailScreen';
 
   // static const String / = '/splashScreen';
 
@@ -155,6 +157,14 @@ abstract class AppRoutes {
       case myListScreen:
         return MaterialPageRoute(
           builder: (context) => const MyListScreen(),
+        );
+      case storeDetailScreen:
+        Map<String, dynamic> arg = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => StoresDetailScreen(
+            vendorId: arg['id'],
+            storeName: arg['storeName'],
+          ),
         );
 
       default:

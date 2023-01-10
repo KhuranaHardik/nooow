@@ -91,32 +91,6 @@ class _NearByScreenState extends State<NearByScreen> {
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
 
-  @override
-  void initState() {
-    _uiProvider = Provider.of<UIProvider>(context, listen: false);
-    _manager = _initClusterManager();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      _uiProvider.loaderTrue();
-      if (AppSharedPrefrence().currentPosition == null) {
-        null;
-      } else {
-        List<Placemark>? address = await placemarkFromCoordinates(
-          AppSharedPrefrence().currentPosition!.latitude,
-          AppSharedPrefrence().currentPosition!.longitude,
-          localeIdentifier: 'en',
-        );
-        await ApiServiceProvider().vendorData(context);
-        log(address.toString());
-        if (address.isEmpty) {
-        } else {
-          currentAddress = address[0];
-        }
-      }
-      _uiProvider.loaderFalse();
-    });
-    super.initState();
-  }
-
   List<Place> items = [
     for (int i = 0; i < 100; i++)
       Place(
@@ -157,6 +131,32 @@ class _NearByScreenState extends State<NearByScreen> {
     });
   }
 
+  @override
+  void initState() {
+    _manager = _initClusterManager();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+
+      if (ApiServiceProvider().currentPosition == null) {
+        await ApiServiceProvider().getCurrentPosition(context);
+      } else {
+        List<Placemark>? address = await placemarkFromCoordinates(
+            ApiServiceProvider().currentPosition!.latitude,
+            ApiServiceProvider().currentPosition!.longitude,
+            localeIdentifier: 'en');
+        await ApiServiceProvider().vendorData(context);
+
+        if (address.isEmpty) {
+        } else {
+          currentAddress = address[0];
+        }
+      }
+      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+    });
+
+    super.initState();
+  }
+
   bool get isSignIn => (AppSharedPrefrence().userData == null ||
           AppSharedPrefrence().userData!.isEmpty)
       ? false
@@ -166,7 +166,7 @@ class _NearByScreenState extends State<NearByScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    log('Address is\n${AppSharedPrefrence().currentPosition}');
+    log('Address is\n${ApiServiceProvider().currentPosition}');
     return Scaffold(
       drawer: AppDrawer(
         isUserSignedIn: isSignIn,
@@ -307,11 +307,11 @@ class _NearByScreenState extends State<NearByScreen> {
                                   CameraUpdate.newCameraPosition(
                                     CameraPosition(
                                       target: LatLng(
-                                          AppSharedPrefrence()
+                                          ApiServiceProvider()
                                                   .currentPosition
                                                   ?.latitude ??
                                               0,
-                                          AppSharedPrefrence()
+                                          ApiServiceProvider()
                                                   .currentPosition
                                                   ?.longitude ??
                                               0),

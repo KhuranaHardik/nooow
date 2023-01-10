@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ? false
       : true;
   Future<void> _async(BuildContext context1) async {
-    await AppSharedPrefrence().getCurrentPosition(context1);
+    await _apiServiceProvider.getCurrentPosition(context1);
     await _apiServiceProvider.slider(context1);
     await _apiServiceProvider.categoryList(context1);
     await _apiServiceProvider.offerListApi(context1);

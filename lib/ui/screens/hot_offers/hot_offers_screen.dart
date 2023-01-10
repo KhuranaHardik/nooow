@@ -26,7 +26,6 @@ class HotDealsScreen extends StatefulWidget {
 class _HotDealsScreenState extends State<HotDealsScreen> {
   late PageController _pageController;
 
-  bool? isUserSignedIn = false;
   bool signedIn = false;
   int sliderIndex = 0;
   int index = 0;
@@ -81,7 +80,7 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
     return Consumer<ApiServiceProvider>(builder: (context, apiServices, child) {
       return Scaffold(
         drawer: AppDrawer(
-          isUserSignedIn: isUserSignedIn ?? false,
+          isUserSignedIn: isSignIn,
           backgroundHeight: size.height * 0.18,
         ),
         appBar: AppBar(

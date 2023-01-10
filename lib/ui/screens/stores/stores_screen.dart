@@ -11,10 +11,8 @@ import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
 import 'package:nooow/ui/components/ad_marker.dart';
 import 'package:nooow/ui/components/drawer.dart';
-import 'package:nooow/ui/components/user_not_found_error.dart';
 import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart';
 import 'package:nooow/ui/screens/stores/components/stores_card.dart';
-import 'package:nooow/ui/screens/stores/stores_details_screen.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
@@ -29,8 +27,8 @@ class StoresScreen extends StatefulWidget {
 
 class _StoresScreenState extends State<StoresScreen> {
   late PageController _pageController;
+  final ApiServiceProvider apiServices = ApiServiceProvider();
 
-  bool? isUserSignedIn = false;
   bool signedIn = false;
   int sliderIndex = 0;
   int index = 0;
@@ -48,13 +46,14 @@ class _StoresScreenState extends State<StoresScreen> {
 
       ApiServiceProvider apiServiceProvider =
           Provider.of<ApiServiceProvider>(context, listen: false);
+      await ApiServiceProvider().getCurrentPosition(context);
       await apiServiceProvider.ventorSliderListApi(
         context,
       );
 
-      _uiProvider.loaderFalse();
-      _automaticScroll();
+      Provider.of<UIProvider>(context, listen: false).loaderFalse();
     });
+    _automaticScroll();
   }
 
   @override
@@ -95,7 +94,7 @@ class _StoresScreenState extends State<StoresScreen> {
     return Consumer<ApiServiceProvider>(builder: (context, apiServices, child) {
       return Scaffold(
         drawer: AppDrawer(
-          isUserSignedIn: isUserSignedIn ?? false,
+          isUserSignedIn: isSignIn,
           backgroundHeight: size.height * 0.18,
         ),
         appBar: AppBar(
@@ -198,130 +197,152 @@ class _StoresScreenState extends State<StoresScreen> {
             const SizedBox(width: 2)
           ],
         ),
-        body: (isSignIn == false)
-            ? const UserNotFoundErrorWidget()
-            : ListView(
-                children: [
-                  const SizedBox(height: 19),
-                  // Advertisements
-                  SizedBox(
-                    height: 180,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 160,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: apiServices.sliderList?.length,
-                            onPageChanged: (value) {
-                              setState(() {
-                                index = value;
-                              });
-                            },
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return AdContainerWidget(
-                                width: size.width - 42,
-                                image: apiServices.sliderList?[index]
-                                    ?['slider'],
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 21.0),
-                          child: Row(
-                            children: List.generate(
-                              apiServices.sliderList?.length ?? 0,
-                              (i) {
-                                return AdMarkerWidget(
-                                    color: index == i
-                                        ? AppColors.navyBlue
-                                        : AppColors.lightGrey);
-                              },
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  // Categories
-                  SizedBox(
-                    height: 54,
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      scrollDirection: Axis.horizontal,
-                      children: const [
-                        HotDealsCategoryWidget(
-                          isSelected: true,
-                          categoryImage: AppAssetImages.mostPopular,
-                          categoryName: "Most Popular",
-                        ),
-                        SizedBox(width: 15),
-                        HotDealsCategoryWidget(
-                          isSelected: false,
-                          categoryImage: AppAssetImages.travel,
-                          categoryName: "Travel",
-                        ),
-                        SizedBox(width: 15),
-                        HotDealsCategoryWidget(
-                          isSelected: false,
-                          categoryImage: AppAssetImages.fashion,
-                          categoryName: "Fashion",
-                        ),
-                        SizedBox(width: 15),
-                        HotDealsCategoryWidget(
-                          isSelected: false,
-                          categoryImage: AppAssetImages.food,
-                          categoryName: "Food",
-                        ),
-                        SizedBox(width: 15),
-                        HotDealsCategoryWidget(
-                          isSelected: false,
-                          categoryImage: AppAssetImages.electronic,
-                          categoryName: "Electronic",
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Consumer<UIProvider>(
-                    builder: (context, uiProvider, child) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.5),
-                        child: GridView.builder(
-                          primary: false,
-                          shrinkWrap: true,
-                          itemCount: 10,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 17,
-                            crossAxisSpacing: 16,
-                          ),
+        body: Stack(
+          children: [
+            ListView(
+              children: [
+                const SizedBox(height: 19),
+                // Advertisements
+                SizedBox(
+                  height: 180,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 160,
+                        child: PageView.builder(
+                          itemCount: apiServices.sliderList?.length,
+                          onPageChanged: (value) {
+                            setState(() {
+                              index = value;
+                            });
+                          },
+                          controller: _pageController,
+                          scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const StoresDetailScreen(),
-                                  ),
-                                );
-                              },
-                              child: StoresCard(width: size.width * 0.42),
+                            return AdContainerWidget(
+                              width: size.width - 42,
+                              image: apiServices.sliderList?[index]?['slider'],
                             );
                           },
                         ),
-                      );
-                    },
+                      ),
+                      const SizedBox(height: 14),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 21.0),
+                        child: Row(
+                          children: List.generate(
+                            apiServices.sliderList?.length ?? 0,
+                            (i) {
+                              return AdMarkerWidget(
+                                  color: index == i
+                                      ? AppColors.navyBlue
+                                      : AppColors.lightGrey);
+                            },
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                ],
-              ),
+                ),
+                const SizedBox(height: 28),
+                // Categories
+                SizedBox(
+                  height: 54,
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    scrollDirection: Axis.horizontal,
+                    children: const [
+                      HotDealsCategoryWidget(
+                        isSelected: true,
+                        categoryImage: AppAssetImages.mostPopular,
+                        categoryName: "Most Popular",
+                      ),
+                      SizedBox(width: 15),
+                      HotDealsCategoryWidget(
+                        isSelected: false,
+                        categoryImage: AppAssetImages.travel,
+                        categoryName: "Travel",
+                      ),
+                      SizedBox(width: 15),
+                      HotDealsCategoryWidget(
+                        isSelected: false,
+                        categoryImage: AppAssetImages.fashion,
+                        categoryName: "Fashion",
+                      ),
+                      SizedBox(width: 15),
+                      HotDealsCategoryWidget(
+                        isSelected: false,
+                        categoryImage: AppAssetImages.food,
+                        categoryName: "Food",
+                      ),
+                      SizedBox(width: 15),
+                      HotDealsCategoryWidget(
+                        isSelected: false,
+                        categoryImage: AppAssetImages.electronic,
+                        categoryName: "Electronic",
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Consumer<UIProvider>(
+                  builder: (context, uiProvider, child) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.5),
+                      child: GridView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: apiServices.vendorSliderList?.length ?? 0,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 17,
+                          crossAxisSpacing: 16,
+                        ),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.storeDetailScreen,
+                                  arguments: {
+                                    'id': apiServices.vendorSliderList?[index]
+                                        ?['vendor'],
+                                    'storeName': apiServices
+                                        .vendorSliderList?[index]?['title']
+                                  });
+                            },
+                            child: StoresCard(
+                              width: size.width * 0.42,
+                              image: apiServices.vendorSliderList?[index]
+                                  ?['slider'],
+                              flyers: '4',
+                              offers: '5',
+                              companyName: apiServices.vendorSliderList?[index]
+                                  ?['title'],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+            Consumer<UIProvider>(
+                builder: (context, uiProvider, child) => uiProvider.loading
+                    ? Container(
+                        width: size.width,
+                        height: size.height,
+                        color: AppColors.white.withOpacity(0.8),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.navyBlue,
+                          ),
+                        ))
+                    : const SizedBox.shrink())
+          ],
+        ),
       );
     });
   }
