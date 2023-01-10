@@ -51,7 +51,7 @@ class _StoresScreenState extends State<StoresScreen> {
         context,
       );
 
-      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+      _uiProvider.loaderFalse();
     });
     _automaticScroll();
   }
