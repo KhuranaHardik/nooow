@@ -16,9 +16,7 @@ class UserNotFoundErrorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(AppAssetImages.userNotFound),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         Text(
           'User Not Found',
           textAlign: TextAlign.center,
@@ -28,9 +26,7 @@ class UserNotFoundErrorWidget extends StatelessWidget {
             fontSize: 14,
           ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: CustomElevatedButton(

@@ -30,6 +30,7 @@ class _NearByScreenState extends State<NearByScreen> {
   bool? isUserSignedIn = false;
   bool signedIn = false;
   Placemark? currentAddress;
+  late UIProvider _uiProvider;
 
   final CameraPosition _cameraPosition =
       const CameraPosition(target: LatLng(0, 0), zoom: 2);
@@ -72,9 +73,10 @@ class _NearByScreenState extends State<NearByScreen> {
       painter.text = TextSpan(
         text: text,
         style: TextStyle(
-            fontSize: size / 3,
-            color: Colors.white,
-            fontWeight: FontWeight.normal),
+          fontSize: size / 3,
+          color: Colors.white,
+          fontWeight: FontWeight.normal,
+        ),
       );
       painter.layout();
       painter.paint(
@@ -87,6 +89,32 @@ class _NearByScreenState extends State<NearByScreen> {
     final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
 
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  }
+
+  @override
+  void initState() {
+    _uiProvider = Provider.of<UIProvider>(context, listen: false);
+    _manager = _initClusterManager();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      _uiProvider.loaderTrue();
+      if (AppSharedPrefrence().currentPosition == null) {
+        null;
+      } else {
+        List<Placemark>? address = await placemarkFromCoordinates(
+          AppSharedPrefrence().currentPosition!.latitude,
+          AppSharedPrefrence().currentPosition!.longitude,
+          localeIdentifier: 'en',
+        );
+        await ApiServiceProvider().vendorData(context);
+        log(address.toString());
+        if (address.isEmpty) {
+        } else {
+          currentAddress = address[0];
+        }
+      }
+      _uiProvider.loaderFalse();
+    });
+    super.initState();
   }
 
   List<Place> items = [
@@ -127,32 +155,6 @@ class _NearByScreenState extends State<NearByScreen> {
     setState(() {
       this.markers = markers;
     });
-  }
-
-  @override
-  void initState() {
-    _manager = _initClusterManager();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Provider.of<UIProvider>(context, listen: false).loaderTrue();
-
-      if (AppSharedPrefrence().currentPosition == null) {
-        null;
-      } else {
-        List<Placemark>? address = await placemarkFromCoordinates(
-            AppSharedPrefrence().currentPosition!.latitude,
-            AppSharedPrefrence().currentPosition!.longitude,
-            localeIdentifier: 'en');
-        await ApiServiceProvider().vendorData(context);
-
-        if (address.isEmpty) {
-        } else {
-          currentAddress = address[0];
-        }
-      }
-      Provider.of<UIProvider>(context, listen: false).loaderFalse();
-    });
-
-    super.initState();
   }
 
   bool get isSignIn => (AppSharedPrefrence().userData == null ||

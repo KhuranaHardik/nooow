@@ -36,13 +36,15 @@ class _StoresScreenState extends State<StoresScreen> {
   int index = 0;
   int _cuurentIndex = 0;
   Timer? _timer;
+  late UIProvider _uiProvider;
 
   @override
   void initState() {
     super.initState();
+    _uiProvider = Provider.of<UIProvider>(context, listen: false);
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Provider.of<UIProvider>(context, listen: false).loaderTrue();
+      _uiProvider.loaderTrue();
 
       ApiServiceProvider apiServiceProvider =
           Provider.of<ApiServiceProvider>(context, listen: false);
@@ -50,7 +52,7 @@ class _StoresScreenState extends State<StoresScreen> {
         context,
       );
 
-      Provider.of<UIProvider>(context, listen: false).loaderFalse();
+      _uiProvider.loaderFalse();
       _automaticScroll();
     });
   }
@@ -73,8 +75,10 @@ class _StoresScreenState extends State<StoresScreen> {
         } else {
           _cuurentIndex = 0;
         }
-        await _pageController.animateToPage(_cuurentIndex,
-            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        if (_pageController.hasClients) {
+          await _pageController.animateToPage(_cuurentIndex,
+              duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        }
       }
     });
   }
@@ -207,13 +211,13 @@ class _StoresScreenState extends State<StoresScreen> {
                         SizedBox(
                           height: 160,
                           child: PageView.builder(
+                            controller: _pageController,
                             itemCount: apiServices.sliderList?.length,
                             onPageChanged: (value) {
                               setState(() {
                                 index = value;
                               });
                             },
-                            controller: _pageController,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return AdContainerWidget(

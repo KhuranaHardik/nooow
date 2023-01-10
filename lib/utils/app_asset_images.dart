@@ -39,6 +39,7 @@ class AppAssetImages {
   static const String nearBy = 'assets/nearby.png';
   static const String notification = 'assets/notification.png';
   static const String offers = 'assets/offers.png';
+  static const String password = 'assets/password.png';
   static const String profile = 'assets/profile.png';
   static const String sort = 'assets/sort.png';
   static const String stores = 'assets/stores.png';

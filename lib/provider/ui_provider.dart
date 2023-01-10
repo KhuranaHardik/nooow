@@ -35,6 +35,13 @@ class UIProvider extends ChangeNotifier {
     loading = false;
     notifyListeners();
   }
+
+  // Theme Switch (Profile Screen)
+  bool updateSwitch(bool switchValue) {
+    switchValue = !switchValue;
+    notifyListeners();
+    return switchValue;
+  }
 }
 
 class ObscureIconProvider extends ChangeNotifier {

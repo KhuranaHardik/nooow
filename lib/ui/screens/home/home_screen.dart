@@ -101,8 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           _cuurentIndex = 0;
         }
-        await _pageController.animateToPage(_cuurentIndex,
-            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        if (_pageController.hasClients) {
+          await _pageController.animateToPage(_cuurentIndex,
+              duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        }
       }
     });
   }
@@ -315,9 +317,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     apiServices.sliderList?.length ?? 0,
                                     (i) {
                                       return AdMarkerWidget(
-                                          color: index == i
-                                              ? AppColors.navyBlue
-                                              : AppColors.lightGrey);
+                                        color: index == i
+                                            ? AppColors.navyBlue
+                                            : AppColors.lightGrey,
+                                      );
                                     },
                                   ),
                                 ),
