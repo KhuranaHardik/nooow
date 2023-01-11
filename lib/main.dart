@@ -38,7 +38,6 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.getTheme(),
             debugShowCheckedModeBanner: false,
             title: AppKeys.appName,
-            initialRoute: AppRoutes.selectIntrestScreen,
             onGenerateRoute: AppRoutes.generateRoute,
           );
         },

@@ -24,11 +24,13 @@ class ApiServices {
   Future<LoginModel?> login(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.login),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.login),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log('$data');
@@ -69,11 +71,13 @@ class ApiServices {
   Future<Map<String, dynamic>?> signup(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.signup),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.signup),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log("Sign Up  ${data.toString()}");
@@ -95,11 +99,13 @@ class ApiServices {
   Future<Map<String, dynamic>?> otpForSignUp(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.otpForSignup),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.otpForSignup),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(" OTP for signup --> ${data.toString()}");
@@ -121,11 +127,13 @@ class ApiServices {
   Future<Map<String, dynamic>?> forgotPassword(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.forgotPassword),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.forgotPassword),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());
@@ -147,11 +155,13 @@ class ApiServices {
   Future<Map<String, dynamic>?> otpVerificationForgotPassword(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.forgotOtpVerificationUrl),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.forgotOtpVerificationUrl),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());
@@ -173,11 +183,13 @@ class ApiServices {
   Future<Map<String, dynamic>?> resetPassword(
       {Map<String, dynamic>? body, required BuildContext context}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(ApiEndPoints.resetPasswordUrl),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(ApiEndPoints.resetPasswordUrl),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());
@@ -201,11 +213,13 @@ class ApiServices {
       required BuildContext context,
       required String url}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse(url),
-        headers: {'fake-key': 'Nooow9876543210'},
-        body: body,
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(url),
+            headers: {'fake-key': 'Nooow9876543210'},
+            body: body,
+          )
+          .timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());
@@ -236,7 +250,7 @@ class ApiServices {
       http.Response response = await http.get(
         Uri.parse(url),
         headers: {'fake-key': 'Nooow9876543210'},
-      );
+      ).timeout(const Duration(minutes: 2));
 
       Map<String, dynamic> data = jsonDecode(response.body);
       log(data.toString());

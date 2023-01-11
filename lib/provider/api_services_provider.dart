@@ -114,8 +114,7 @@ class ApiServiceProvider extends ChangeNotifier {
           email: data['information']['user']['email'],
         );
         await AppSharedPrefrence().getUserData();
-        Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.homeScreen, (route) => false);
+        Navigator.pushNamed(context, AppRoutes.selectIntrestScreen);
       } else {
         AppCommonSnackBar().appCommonSnackbar(context, data['message']);
       }
@@ -439,7 +438,7 @@ class ApiServiceProvider extends ChangeNotifier {
   // location
   Position? currentPosition;
   Future<Position?>? getCurrentPosition(BuildContext context) async {
-    final bool hasPermission = await handleLocationPermission(context);
+    final bool hasPermission = await _handleLocationPermission(context);
     if (!hasPermission) {
       return null;
     }
@@ -468,18 +467,19 @@ class ApiServiceProvider extends ChangeNotifier {
   }
 
   // handling loaction acces
-  Future<bool> handleLocationPermission(BuildContext context) async {
+  Future<bool> _handleLocationPermission(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      handleLocationPermission(context);
+      _handleLocationPermission(context);
       return false;
     }
 
     if (permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
       return false;
     }
 
