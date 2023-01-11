@@ -88,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await _apiServiceProvider.categoryList(context1);
     await _apiServiceProvider.offerListApi(context1);
     await _apiServiceProvider.topFoodBradListApi(context1);
+    await _apiServiceProvider.vendorData(context1);
   }
 
   Future<void> _automaticScroll() async {
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           appBar: AppBar(
             automaticallyImplyLeading: true,
-            foregroundColor: AppColors.black,
+            // foregroundColor: AppColors.black,
             systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               systemStatusBarContrastEnforced: true,
@@ -345,7 +346,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               TextButton(
                                 style: const ButtonStyle(
                                     splashFactory: NoSplash.splashFactory),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context,
+                                      AppRoutes.popularCategoriesScreen);
+                                },
                                 child: Row(
                                   children: const [
                                     Text('View all'),

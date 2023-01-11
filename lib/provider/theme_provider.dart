@@ -1,9 +1,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:nooow/services/local_db.dart';
+import 'package:nooow/utils/app_colors.dart';
 
 class ThemeProvider with ChangeNotifier {
   final ThemeData darkTheme = ThemeData(
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.black,
+      foregroundColor: AppColors.white,
+    ),
     primaryColor: Colors.black,
     backgroundColor: const Color(0xFF212121),
     dividerColor: Colors.black12,

@@ -5,6 +5,7 @@ import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class SelectIntrestScreen extends StatefulWidget {
@@ -15,13 +16,17 @@ class SelectIntrestScreen extends StatefulWidget {
 }
 
 class _SelectIntrestScreenState extends State<SelectIntrestScreen> {
-  final ApiServiceProvider _apiServiceProvider = ApiServiceProvider();
-  final UIProvider _uiProvider = UIProvider();
+  late final ApiServiceProvider _apiServiceProvider;
+  late final UIProvider _uiProvider;
+  final List<String> _selectCategory = [];
   @override
   void initState() {
     super.initState();
+    _apiServiceProvider =
+        Provider.of<ApiServiceProvider>(context, listen: false);
+    _uiProvider = Provider.of<UIProvider>(context, listen: false);
 
-    WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _uiProvider.loaderTrue();
       await _apiServiceProvider.categoryList(context);
       _uiProvider.loaderFalse();
@@ -44,83 +49,191 @@ class _SelectIntrestScreenState extends State<SelectIntrestScreen> {
             color: AppColors.white,
           ),
         ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.homeScreen);
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(right: 18),
+              child: Center(
+                child: Text(
+                  "Skip",
+                  style: TextStyle(
+                      color: Colors.red,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
-          ListView(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-            children: [
-              Text(
-                'Choose Categories',
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Select Your Intrested Categories and Get Exciting Offers',
-                style: GoogleFonts.montserrat(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Choose Categories',
+                  style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.grey,
-                    fontSize: 14,
-                    height: 1.5),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Wrap(
-                children: List.generate(
-                  _apiServiceProvider.categorylist?.length ?? 0,
-                  (index) => Container(
-                    // width: 20,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: AppColors.lightGrey,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      (_apiServiceProvider.categorylist ==
-                                                  null ||
-                                              _apiServiceProvider
-                                                      .categorylist ==
-                                                  null ||
-                                              _apiServiceProvider
-                                                  .categorylist!.isEmpty)
-                                          ? const AssetImage(
-                                                  AppAssetImages.fashion)
-                                              as ImageProvider
-                                          : NetworkImage(_apiServiceProvider
-                                                  .categorylist?[index]
-                                              ?['slider']))),
-                        )
-                      ],
-                    ),
+                    fontSize: 18,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              CustomElevatedButton(
-                onPressed: () {},
-                buttonColor: AppColors.navyBlue,
-                borderColor: AppColors.navyBlue,
-                child: Text(
-                  'Save & Continue',
-                  style: GoogleFonts.montserrat(color: AppColors.white),
+                const SizedBox(
+                  height: 10,
                 ),
-              )
-            ],
+                Text(
+                  'Select Your Intrested Categories and Get Exciting Offers',
+                  style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.grey,
+                      fontSize: 14,
+                      height: 1.5),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Consumer<ApiServiceProvider>(
+                  builder: (context, apiServiceConsumer, child) {
+                    return Center(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 15,
+                        runSpacing: 20,
+                        children: List.generate(
+                          apiServiceConsumer.categorylist?.length ?? 0,
+                          (index) => Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (_selectCategory.contains(
+                                      apiServiceConsumer.categorylist?[index]
+                                          ?['id'])) {
+                                    setState(() {
+                                      _selectCategory.remove(apiServiceConsumer
+                                          .categorylist?[index]?['id']);
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _selectCategory.add(apiServiceConsumer
+                                          .categorylist?[index]?['id']);
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin:
+                                      const EdgeInsets.only(top: 10, right: 10),
+                                  width: 90,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.lighterGrey,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                            color: AppColors.lightGrey,
+                                          ),
+                                        ),
+                                        child: Container(
+                                          height: 64,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image:
+                                                  (apiServiceConsumer
+                                                                  .categorylist ==
+                                                              null ||
+                                                          apiServiceConsumer
+                                                                  .categorylist ==
+                                                              null ||
+                                                          apiServiceConsumer
+                                                              .categorylist!
+                                                              .isEmpty)
+                                                      ? const AssetImage(
+                                                              AppAssetImages
+                                                                  .fashion)
+                                                          as ImageProvider
+                                                      : NetworkImage(
+                                                          apiServiceConsumer
+                                                                  .categorylist?[
+                                                              index]?['image'],
+                                                        ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 9.47),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              apiServiceConsumer
+                                                      .categorylist?[index]
+                                                  ?['title'],
+                                              textAlign: TextAlign.center,
+                                              maxLines: 2,
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              _selectCategory.contains(apiServiceConsumer
+                                      .categorylist?[index]?['id'])
+                                  ? const Positioned(
+                                      right: 0,
+                                      child: CircleAvatar(
+                                        radius: 12,
+                                        backgroundColor: Colors.red,
+                                        child: Icon(
+                                          Icons.done,
+                                          color: AppColors.white,
+                                          size: 17,
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Spacer(),
+                CustomElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, AppRoutes.homeScreen, (route) => false);
+                  },
+                  buttonColor: AppColors.navyBlue,
+                  borderColor: AppColors.navyBlue,
+                  child: Text(
+                    'Save & Continue',
+                    style: GoogleFonts.montserrat(color: AppColors.white),
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
           ),
           Consumer<UIProvider>(
             builder: (context, uiProvider, child) => uiProvider.loading

@@ -2,8 +2,6 @@
 
 import 'dart:async';
 import 'dart:developer';
-import 'dart:ui';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,113 +25,115 @@ class NearByScreen extends StatefulWidget {
 }
 
 class _NearByScreenState extends State<NearByScreen> {
-  bool? isUserSignedIn = false;
-  bool signedIn = false;
+  // bool? isUserSignedIn = false;
+  // bool signedIn = false;
   Placemark? currentAddress;
   late UIProvider _uiProvider;
   late ApiServiceProvider _apiServiceProvider;
-
+  late List<Place> items;
   final CameraPosition _cameraPosition =
       const CameraPosition(target: LatLng(0, 0), zoom: 2);
   GoogleMapController? mapController;
   late ClusterManager _manager;
   final Completer<GoogleMapController> _controller = Completer();
   Set<Marker> markers = {};
-  var vendorsList;
+  // var vendorsList;
+  List<Map<String, dynamic>?>? vendorsList;
+
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
       (cluster) async {
         return Marker(
-          markerId: MarkerId(cluster.getId()),
-          position: cluster.location,
-          onTap: () {
-            log('---- $cluster');
-            for (Place p in cluster.items) {
-              log(p.toString());
-            }
-          },
-          icon: await _getMarkerBitmap(
-            cluster.isMultiple ? 125 : 75,
-            text: cluster.isMultiple ? cluster.count.toString() : null,
-          ),
-          infoWindow: InfoWindow(
-            title: cluster.items.toString(),
-          ),
-        );
+            markerId: MarkerId(cluster.getId()),
+            position: cluster.location,
+            onTap: () {
+              log('---- $cluster');
+              for (Place p in cluster.items) {
+                log(p.toString());
+              }
+            },
+            infoWindow: InfoWindow(
+              title: cluster.items.toString(),
+            ),
+            icon: BitmapDescriptor.defaultMarker
+            // icon: await _getMarkerBitmap(
+            //   cluster.isMultiple ? 125 : 75,
+            //   text: cluster.isMultiple ? cluster.count.toString() : null,
+            // ),
+            );
       };
 
-  Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
-    if (kIsWeb) size = (size / 2).floor();
+  // Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
+  //   if (kIsWeb) size = (size / 2).floor();
 
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = Colors.red;
-    final Paint paint2 = Paint()..color = Colors.white;
+  //   final PictureRecorder pictureRecorder = PictureRecorder();
+  //   final Canvas canvas = Canvas(pictureRecorder);
+  //   final Paint paint1 = Paint()..color = Colors.red;
+  //   final Paint paint2 = Paint()..color = Colors.white;
 
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
+  //   canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
+  //   canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
+  //   canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
 
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: size / 3,
-          color: Colors.white,
-          fontWeight: FontWeight.normal,
-        ),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
-      );
-    }
+  //   if (text != null) {
+  //     TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
+  //     painter.text = TextSpan(
+  //       text: text,
+  //       style: TextStyle(
+  //         fontSize: size / 3,
+  //         color: Colors.white,
+  //         fontWeight: FontWeight.normal,
+  //       ),
+  //     );
+  //     painter.layout();
+  //     painter.paint(
+  //       canvas,
+  //       Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
+  //     );
+  //   }
 
-    final img = await pictureRecorder.endRecording().toImage(size, size);
-    final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
+  //   final img = await pictureRecorder.endRecording().toImage(size, size);
+  //   final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
 
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
-  }
+  //   return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  // }
 
-  List<Place> items = [
-    for (int i = 0; i < 100; i++)
-      Place(
-          name: 'Theater $i',
-          latLng: LatLng(28.6074 + i * 0.001, 77.2363 + i * 0.001)),
-    // for (int i = 0; i < 100; i++)
-    //   Place(
-    //       name: 'Restaurant $i',
-    //       // isClosed: i % 2 == 0,
-    //       latLng: LatLng(31.9365 + i * 0.001, 77.5430 + i * 0.001)),
-    // for (int i = 0; i < 100; i++)
-    //   Place(
-    //       name: 'Bar $i',
-    //       latLng: LatLng(29.2057 + i * 0.001, 74.7934 + i * 0.001)),
-    // for (int i = 0; i < 100; i++)
-    //   Place(
-    //       name: 'Hotel $i',
-    //       latLng: LatLng(29.6871 + i * 0.001, 76.7645 + i * 0.001)),
-    // for (int i = 0; i < 100; i++)
-    //   Place(
-    //       name: 'Mall $i',
-    //       latLng: LatLng(30.7834 + i * 0.001, 78.3463 + i * 0.001)),
-    // for (int i = 0; i < 100; i++)
-    //   Place(
-    //       name: 'Theka $i',
-    //       latLng: LatLng(29.3032 + i * 0.001, 79.5692 + i * 0.001)),
-  ];
+  // List<Place> items = [
+  //   for (int i = 0; i < 100; i++)
+  //     Place(
+  //         name: 'Theater $i',
+  //         latLng: LatLng(28.6074 + i * 0.001, 77.2363 + i * 0.001)),
+  //   // for (int i = 0; i < 100; i++)
+  //   //   Place(
+  //   //       name: 'Restaurant $i',
+  //   //       // isClosed: i % 2 == 0,
+  //   //       latLng: LatLng(31.9365 + i * 0.001, 77.5430 + i * 0.001)),
+  //   // for (int i = 0; i < 100; i++)
+  //   //   Place(
+  //   //       name: 'Bar $i',
+  //   //       latLng: LatLng(29.2057 + i * 0.001, 74.7934 + i * 0.001)),
+  //   // for (int i = 0; i < 100; i++)
+  //   //   Place(
+  //   //       name: 'Hotel $i',
+  //   //       latLng: LatLng(29.6871 + i * 0.001, 76.7645 + i * 0.001)),
+  //   // for (int i = 0; i < 100; i++)
+  //   //   Place(
+  //   //       name: 'Mall $i',
+  //   //       latLng: LatLng(30.7834 + i * 0.001, 78.3463 + i * 0.001)),
+  //   // for (int i = 0; i < 100; i++)
+  //   //   Place(
+  //   //       name: 'Theka $i',
+  //   //       latLng: LatLng(29.3032 + i * 0.001, 79.5692 + i * 0.001)),
+  // ];
 
-  ClusterManager _initClusterManager() {
+  ClusterManager _initClusterManager(List<Place> placesList) {
     return ClusterManager<Place>(
-      items,
+      placesList,
       _updateMarkers,
       markerBuilder: _markerBuilder,
     );
   }
 
   void _updateMarkers(Set<Marker> markers) {
-    // log('Updated ${markers.length} markers');
     setState(() {
       this.markers = markers;
     });
@@ -144,31 +144,45 @@ class _NearByScreenState extends State<NearByScreen> {
     _uiProvider = Provider.of<UIProvider>(context, listen: false);
     _apiServiceProvider =
         Provider.of<ApiServiceProvider>(context, listen: false);
-    _manager = _initClusterManager();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _uiProvider.loaderTrue();
+      vendorsList = _apiServiceProvider.vendorDataList;
+      // if (_apiServiceProvider.currentPosition == null) {
+      //   await _apiServiceProvider.getCurrentPosition(context);
+      // } else {
+      List<Placemark>? address = await placemarkFromCoordinates(
+        _apiServiceProvider.currentPosition!.latitude,
+        _apiServiceProvider.currentPosition!.longitude,
+        localeIdentifier: 'en',
+      );
+      // await _apiServiceProvider.vendorData(context);
+      // log("Nearby data --->    ${_apiServiceProvider.vendorDataList.runtimeType}");
 
-      if (_apiServiceProvider.currentPosition == null) {
-        await _apiServiceProvider.getCurrentPosition(context);
+      log(" latt =-=-=-=-==-=-=-=-=-=-=-=-=-=- ${vendorsList.runtimeType}");
+
+      items = [
+        for (int i = 0; i < _apiServiceProvider.vendorDataList!.length; i++)
+          Place(
+            name: _apiServiceProvider.vendorDataList![i]!['vendor_details']
+                ['name'],
+            latLng: LatLng(
+              28.6074 + i * 0.001,
+              77.2363 + i * 0.001,
+            ),
+          ),
+      ];
+
+      if (vendorsList!.isEmpty) {
+        // _manager = _initClusterManager();
       } else {
-        List<Placemark>? address = await placemarkFromCoordinates(
-          _apiServiceProvider.currentPosition!.latitude,
-          _apiServiceProvider.currentPosition!.longitude,
-          localeIdentifier: 'en',
-        );
-        await _apiServiceProvider.vendorData(context);
-        List<Map<String, dynamic>?>? vendorsList =
-            _apiServiceProvider.vendorDataList;
-
-        log("Nearby data --->    ${_apiServiceProvider.vendorDataList.runtimeType}");
-
-        log(vendorsList.toString());
-
-        if (address.isEmpty) {
-        } else {
-          currentAddress = address[0];
-        }
+        _manager = _initClusterManager(items);
       }
+
+      if (address.isEmpty) {
+      } else {
+        currentAddress = address[0];
+      }
+
       _uiProvider.loaderFalse();
     });
     super.initState();
@@ -288,95 +302,97 @@ class _NearByScreenState extends State<NearByScreen> {
           const SizedBox(width: 10)
         ],
       ),
-      body: Consumer<UIProvider>(builder: (context, uiProvider, child) {
-        return (isSignIn == false)
-            ? const UserNotFoundErrorWidget()
-            : SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 18, bottom: 30, left: 21, right: 19),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: size.height * 0.60,
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(10),
+      body: Consumer<UIProvider>(
+        builder: (context, uiProvider, child) {
+          return (isSignIn == false)
+              ? const UserNotFoundErrorWidget()
+              : SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 18, bottom: 30, left: 21, right: 19),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: size.height * 0.60,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: GoogleMap(
+                                myLocationEnabled: true,
+                                myLocationButtonEnabled: true,
+                                mapType: MapType.normal,
+                                initialCameraPosition: _cameraPosition,
+                                markers: markers,
+                                onMapCreated: (GoogleMapController controller) {
+                                  setState(() {
+                                    mapController = controller;
+                                    _controller.complete(controller);
+                                    _manager.setMapId(controller.mapId);
+                                  });
+                                  mapController?.animateCamera(
+                                    CameraUpdate.newCameraPosition(
+                                      CameraPosition(
+                                        target: LatLng(
+                                            ApiServiceProvider()
+                                                    .currentPosition
+                                                    ?.latitude ??
+                                                0,
+                                            ApiServiceProvider()
+                                                    .currentPosition
+                                                    ?.longitude ??
+                                                0),
+                                        zoom: 7,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                onCameraMove: _manager.onCameraMove,
+                                onCameraIdle: _manager.updateMap,
+                              ),
                             ),
-                            child: GoogleMap(
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: true,
-                              mapType: MapType.normal,
-                              initialCameraPosition: _cameraPosition,
-                              markers: markers,
-                              onMapCreated: (GoogleMapController controller) {
-                                setState(() {
-                                  mapController = controller;
-                                  _controller.complete(controller);
-                                  _manager.setMapId(controller.mapId);
-                                });
-                                mapController?.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      target: LatLng(
-                                          ApiServiceProvider()
-                                                  .currentPosition
-                                                  ?.latitude ??
-                                              0,
-                                          ApiServiceProvider()
-                                                  .currentPosition
-                                                  ?.longitude ??
-                                              0),
-                                      zoom: 7,
+                            const SizedBox(height: 18),
+                            Text(
+                              "Current Location",
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            currentAddress == null
+                                ? const SizedBox.shrink()
+                                : Text(
+                                    "${currentAddress?.street}, ${currentAddress?.administrativeArea}, ${currentAddress?.subLocality}, ${currentAddress?.country}, ${currentAddress?.postalCode}",
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: AppColors.black,
                                     ),
                                   ),
-                                );
-                              },
-                              onCameraMove: _manager.onCameraMove,
-                              onCameraIdle: _manager.updateMap,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          Text(
-                            "Current Location",
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          currentAddress == null
-                              ? const SizedBox.shrink()
-                              : Text(
-                                  "${currentAddress?.street}, ${currentAddress?.administrativeArea}, ${currentAddress?.subLocality}, ${currentAddress?.country}, ${currentAddress?.postalCode}",
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    uiProvider.loading
-                        ? Container(
-                            height: size.height,
-                            color: AppColors.whiteBackground.withOpacity(0.4),
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                  color: AppColors.navyBlue),
-                            ),
-                          )
-                        : const SizedBox()
-                  ],
-                ),
-              );
-      }),
+                      uiProvider.loading
+                          ? Container(
+                              height: size.height,
+                              color: AppColors.whiteBackground.withOpacity(0.4),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                    color: AppColors.navyBlue),
+                              ),
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                );
+        },
+      ),
     );
   }
 }

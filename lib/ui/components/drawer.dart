@@ -73,15 +73,7 @@ class AppDrawer extends StatelessWidget {
                             onTap: () {},
                           ),
                           const SizedBox(height: 11),
-                          // // Coupons
-                          // DrawerListTile(
-                          //   isLogoutButton: false,
-                          //   iconPath: AppAssetImages.mostPopular,
-                          //   tileTitle: 'Coupons',
-                          //   onTap: () {},
-                          // ),
-                          // const SizedBox(height: 11),
-                          // Favorites
+
                           DrawerListTile(
                             isLogoutButton: false,
                             iconPath: AppAssetImages.settings,
@@ -94,7 +86,11 @@ class AppDrawer extends StatelessWidget {
                             isLogoutButton: false,
                             iconPath: AppAssetImages.intrests,
                             tileTitle: 'Intrests',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                  context, AppRoutes.selectIntrestScreen);
+                            },
                           ),
                           const SizedBox(height: 11),
                           // All Categories
