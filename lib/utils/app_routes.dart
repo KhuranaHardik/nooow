@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nooow/ui/screens/bottom_navigation_screen.dart';
+import 'package:nooow/ui/screens/home/popular_categories_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offer_details_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offers_screen.dart';
 import 'package:nooow/ui/screens/my_list/my_list_screen.dart';
@@ -40,6 +41,7 @@ abstract class AppRoutes {
   static const String myListScreen = '/myListScreen';
   static const String storeDetailScreen = '/storeDetailScreen';
   static const String selectIntrestScreen = '/selectIntrestScreen';
+  static const String popularCategoriesScreen = '/popularCategoriesScreen';
 
   // static const String / = '/splashScreen';
 
@@ -160,6 +162,7 @@ abstract class AppRoutes {
         return MaterialPageRoute(
           builder: (context) => const MyListScreen(),
         );
+
       case storeDetailScreen:
         Map<String, dynamic> arg = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
@@ -168,10 +171,17 @@ abstract class AppRoutes {
             storeName: arg['storeName'],
           ),
         );
+
       case selectIntrestScreen:
         return MaterialPageRoute(
           builder: (context) => const SelectIntrestScreen(),
         );
+
+      case popularCategoriesScreen:
+        return MaterialPageRoute(
+          builder: (context) => const PopularCategoriesScreen(),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (context) {

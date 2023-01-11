@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/api_services_provider.dart';
@@ -28,8 +26,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late FocusNode _mobileFocusNode;
   late TextEditingController _emailTextController;
   late FocusNode _emailFocusNode;
-  late TextEditingController _locationTextController;
-  late FocusNode _locationFocusNode;
 
   bool? isUserSignedIn;
   bool signedIn = false;
@@ -51,6 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //       required String userAddress,
 //       required String mobileNumber,
 //       required String email
+// [userId, userName, userProfile, mobileNumber, email]
     _nameTextController = TextEditingController()
       ..text = (AppSharedPrefrence().userData == null ||
               AppSharedPrefrence().userData?[1] == 'null')
@@ -58,24 +55,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           : AppSharedPrefrence().userData?[1] ?? '';
     _mobileTextController = TextEditingController()
       ..text = (AppSharedPrefrence().userData == null ||
-              AppSharedPrefrence().userData?[4] == 'null')
-          ? ''
-          : AppSharedPrefrence().userData?[4] ?? '';
-    _emailTextController = TextEditingController()
-      ..text = (AppSharedPrefrence().userData == null ||
-              AppSharedPrefrence().userData?[5] == 'null')
-          ? ''
-          : AppSharedPrefrence().userData?[5] ?? '';
-    _locationTextController = TextEditingController()
-      ..text = (AppSharedPrefrence().userData == null ||
-              AppSharedPrefrence().userData!.isEmpty ||
               AppSharedPrefrence().userData?[3] == 'null')
           ? ''
           : AppSharedPrefrence().userData?[3] ?? '';
+    _emailTextController = TextEditingController()
+      ..text = (AppSharedPrefrence().userData == null ||
+              AppSharedPrefrence().userData?[4] == 'null')
+          ? ''
+          : AppSharedPrefrence().userData?[4] ?? '';
+
     _nameFocusNode = FocusNode();
     _mobileFocusNode = FocusNode();
     _emailFocusNode = FocusNode();
-    _locationFocusNode = FocusNode();
   }
 
   @override
@@ -83,11 +74,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameTextController.dispose();
     _mobileTextController.dispose();
     _emailTextController.dispose();
-    _locationTextController.dispose();
+
     _nameFocusNode.dispose();
     _mobileFocusNode.dispose();
     _emailFocusNode.dispose();
-    _locationFocusNode.dispose();
+
     super.dispose();
   }
 
@@ -98,11 +89,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print((AppSharedPrefrence().userData == null ||
-            AppSharedPrefrence().userData!.isEmpty ||
-            AppSharedPrefrence().userData?[3] == 'null')
-        ? ''
-        : AppSharedPrefrence().userData?[3] ?? '');
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -172,7 +158,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onTap: () {
               !isSignIn
                   ? Navigator.pushNamed(context, AppRoutes.signInScreen)
-                  : log('Notifications');
+                  : Navigator.pushNamed(context, AppRoutes.notificationScreen);
             },
             child: SizedBox(
               width: 26,
@@ -310,11 +296,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             body['email'] = _emailTextController
                                                 .text
                                                 .trim();
-                                            body['address'] =
-                                                _locationTextController.text
-                                                    .trim();
-                                            body['pincode'] = '000000';
-                                            body['profile_image'] = '';
+                                            // body['address'] =
+                                            //     _locationTextController.text
+                                            //         .trim();
+                                            // body['pincode'] = '000000';
+                                            // body['profile_image'] = '';
                                             uiProvider.loaderTrue();
                                             await ApiServiceProvider()
                                                 .updateUser(context, body);
@@ -386,34 +372,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 isObscure: false,
                               ),
                               const SizedBox(height: 17),
-                              // CustomTextField(
-                              //   controller: _locationTextController,
-                              //   focusNode: _locationFocusNode,
-                              //   textInputAction: TextInputAction.next,
-                              //   readOnly: !_isEdit,
-                              //   placeholder: "Location",
-                              //   borderColor:
-                              //       const Color.fromRGBO(219, 219, 219, 1),
-                              //   isObscure: false,
-                              // ),
-                              Text(
-                                "Privacy & Security",
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TileCardWidget(
-                                isThemeButton: false,
-                                onTap: () {},
-                                name: "Change Password",
-                                icon: AppAssetImages.password,
-                                isLogOutButton: false,
-                              )
                             ],
                           ),
                         ),
                         const SizedBox(height: 22),
+                        Text(
+                          "Privacy & Security",
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TileCardWidget(
+                          isThemeButton: false,
+                          onTap: () {},
+                          name: "Change Password",
+                          icon: AppAssetImages.password,
+                          isLogOutButton: false,
+                        )
                       ],
                     ),
                     // Loading Screen

@@ -67,7 +67,7 @@ class _StoresScreenState extends State<StoresScreen> {
           ApiServiceProvider().vendorSliderList!.isEmpty) {
         null;
       } else {
-        if (_cuurentIndex < ApiServiceProvider().vendorSliderList!.length) {
+        if (_cuurentIndex < ApiServiceProvider().vendorSliderList!.length - 1) {
           _cuurentIndex++;
         } else {
           _cuurentIndex = 0;

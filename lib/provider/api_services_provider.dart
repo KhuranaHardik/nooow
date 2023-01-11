@@ -46,7 +46,6 @@ class ApiServiceProvider extends ChangeNotifier {
             userId: result.information!.id.toString(),
             userName: result.information!.name.toString(),
             userProfile: result.information!.profileImage.toString(),
-            userAddress: result.information!.address.toString(),
             mobileNumber: result.information!.contact.toString(),
             email: result.information!.email.toString());
         await AppSharedPrefrence().getUserData();
@@ -108,8 +107,7 @@ class ApiServiceProvider extends ChangeNotifier {
         await AppSharedPrefrence().saveUserData(
           userId: data['information']['user']['id'],
           userName: data['information']['user']['name'],
-          userProfile: data['information']['user']['profile_image'],
-          userAddress: data['information']['user']['address'],
+          userProfile: data['information']['user']['profile_image'] ?? '',
           mobileNumber: data['information']['user']['contact'],
           email: data['information']['user']['email'],
         );
@@ -418,7 +416,6 @@ class ApiServiceProvider extends ChangeNotifier {
             userId: data['information']['id'] ?? 'null',
             userName: data['information']['name'] ?? 'null',
             userProfile: data['information']['profile_image'] ?? 'null',
-            userAddress: data['information']['address'] ?? 'null',
             mobileNumber: data['information']['contact'] ?? 'null',
             email: data['information']['email'] ?? 'null',
           );

@@ -73,7 +73,7 @@ class _SelectIntrestScreenState extends State<SelectIntrestScreen> {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,124 +99,133 @@ class _SelectIntrestScreenState extends State<SelectIntrestScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Consumer<ApiServiceProvider>(
-                  builder: (context, apiServiceConsumer, child) {
-                    return Center(
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 15,
-                        runSpacing: 20,
-                        children: List.generate(
-                          apiServiceConsumer.categorylist?.length ?? 0,
-                          (index) => Stack(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (_selectCategory.contains(
-                                      apiServiceConsumer.categorylist?[index]
-                                          ?['id'])) {
-                                    setState(() {
-                                      _selectCategory.remove(apiServiceConsumer
-                                          .categorylist?[index]?['id']);
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _selectCategory.add(apiServiceConsumer
-                                          .categorylist?[index]?['id']);
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  margin:
-                                      const EdgeInsets.only(top: 10, right: 10),
-                                  width: 90,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.lighterGrey,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: AppColors.lightGrey,
-                                          ),
-                                        ),
-                                        child: Container(
-                                          height: 64,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  (apiServiceConsumer
-                                                                  .categorylist ==
-                                                              null ||
-                                                          apiServiceConsumer
-                                                                  .categorylist ==
-                                                              null ||
-                                                          apiServiceConsumer
-                                                              .categorylist!
-                                                              .isEmpty)
-                                                      ? const AssetImage(
-                                                              AppAssetImages
-                                                                  .fashion)
-                                                          as ImageProvider
-                                                      : NetworkImage(
-                                                          apiServiceConsumer
-                                                                  .categorylist?[
-                                                              index]?['image'],
-                                                        ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 9.47),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Consumer<ApiServiceProvider>(
+                      builder: (context, apiServiceConsumer, child) {
+                        return Center(
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 15,
+                            runSpacing: 20,
+                            children: List.generate(
+                              apiServiceConsumer.categorylist?.length ?? 0,
+                              (index) => Stack(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (_selectCategory.contains(
+                                          apiServiceConsumer
+                                              .categorylist?[index]?['id'])) {
+                                        setState(() {
+                                          _selectCategory.remove(
                                               apiServiceConsumer
-                                                      .categorylist?[index]
-                                                  ?['title'],
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12,
+                                                  .categorylist?[index]?['id']);
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _selectCategory.add(apiServiceConsumer
+                                              .categorylist?[index]?['id']);
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.only(
+                                          top: 10, right: 10),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.2,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.lighterGrey,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: AppColors.lightGrey,
+                                              ),
+                                            ),
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.15,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image:
+                                                      (apiServiceConsumer
+                                                                      .categorylist ==
+                                                                  null ||
+                                                              apiServiceConsumer
+                                                                      .categorylist ==
+                                                                  null ||
+                                                              apiServiceConsumer
+                                                                  .categorylist!
+                                                                  .isEmpty)
+                                                          ? const AssetImage(
+                                                                  AppAssetImages
+                                                                      .fashion)
+                                                              as ImageProvider
+                                                          : NetworkImage(
+                                                              apiServiceConsumer
+                                                                      .categorylist?[
+                                                                  index]?['image'],
+                                                            ),
+                                                ),
                                               ),
                                             ),
                                           ),
+                                          const SizedBox(height: 9.47),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  apiServiceConsumer
+                                                          .categorylist?[index]
+                                                      ?['title'],
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  _selectCategory.contains(apiServiceConsumer
+                                          .categorylist?[index]?['id'])
+                                      ? const Positioned(
+                                          right: 0,
+                                          child: CircleAvatar(
+                                            radius: 12,
+                                            backgroundColor: Colors.red,
+                                            child: Icon(
+                                              Icons.done,
+                                              color: AppColors.white,
+                                              size: 17,
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink()
+                                ],
                               ),
-                              _selectCategory.contains(apiServiceConsumer
-                                      .categorylist?[index]?['id'])
-                                  ? const Positioned(
-                                      right: 0,
-                                      child: CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: Colors.red,
-                                        child: Icon(
-                                          Icons.done,
-                                          color: AppColors.white,
-                                          size: 17,
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink()
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
+                        );
+                      },
+                    ),
+                  ),
                 ),
-                const Spacer(),
+                // const Spacer(),
                 CustomElevatedButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
@@ -228,9 +237,6 @@ class _SelectIntrestScreenState extends State<SelectIntrestScreen> {
                     'Save & Continue',
                     style: GoogleFonts.montserrat(color: AppColors.white),
                   ),
-                ),
-                const SizedBox(
-                  height: 50,
                 ),
               ],
             ),

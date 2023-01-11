@@ -62,12 +62,11 @@ class AppSharedPrefrence {
       {required String userId,
       required String userName,
       required String userProfile,
-      required String userAddress,
       required String mobileNumber,
       required String email}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setStringList('userData',
-        [userId, userName, userProfile, userAddress, mobileNumber, email]);
+    pref.setStringList(
+        'userData', [userId, userName, userProfile, mobileNumber, email]);
   }
 
   // Getting User Details

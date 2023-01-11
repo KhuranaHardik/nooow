@@ -1,12 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/api_services_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
-import 'package:nooow/ui/components/drawer.dart';
 import 'package:nooow/ui/components/user_not_found_error.dart';
 import 'package:nooow/ui/screens/profile/components/tile_card.dart';
 import 'package:nooow/utils/app_asset_images.dart';
@@ -24,17 +22,9 @@ class ProfileScreens extends StatefulWidget {
 }
 
 class _ProfileScreensState extends State<ProfileScreens> {
-  // final bool _isEdit = false;
-  // final bool _uploadImage = false;
-
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    //   Provider.of<UIProvider>(context, listen: false).loaderTrue();
-
-    //   Provider.of<UIProvider>(context, listen: false).loaderFalse();
-    // });
   }
 
   @override
@@ -49,24 +39,16 @@ class _ProfileScreensState extends State<ProfileScreens> {
 
   @override
   Widget build(BuildContext context) {
-    print((AppSharedPrefrence().userData == null ||
-            AppSharedPrefrence().userData!.isEmpty ||
-            AppSharedPrefrence().userData?[3] == 'null')
-        ? ''
-        : AppSharedPrefrence().userData?[3] ?? '');
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      drawer: AppDrawer(
-        isUserSignedIn: isSignIn,
-        backgroundHeight: size.height * 0.18,
-      ),
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        leading: const SizedBox.shrink(),
         backgroundColor: AppColors.navyBlue,
         elevation: 0.0,
         title: Text(
-          'Profile',
+          'Settings',
           style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -123,7 +105,7 @@ class _ProfileScreensState extends State<ProfileScreens> {
             onTap: () {
               !isSignIn
                   ? Navigator.pushNamed(context, AppRoutes.signInScreen)
-                  : log('Notifications');
+                  : Navigator.pushNamed(context, AppRoutes.notificationScreen);
             },
             child: SizedBox(
               width: 26,
@@ -186,16 +168,6 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           isLogOutButton: false,
                         ),
                         const SizedBox(height: 5),
-                        // TileCardWidget(
-                        //   isThemeButton: false,
-                        //   onTap: () {
-                        //     // Navigator.pushNamed(
-                        //     //     context, AppRoutes.changePasswordScreen);
-                        //   },
-                        //   name: "Privacy & Security",
-                        //   icon: AppAssetImages.password,
-                        // ),
-                        // const SizedBox(height: 5),
                         TileCardWidget(
                           isThemeButton: false,
                           onTap: () {
@@ -206,17 +178,17 @@ class _ProfileScreensState extends State<ProfileScreens> {
                           icon: AppAssetImages.notification,
                           isLogOutButton: false,
                         ),
-                        const SizedBox(height: 5),
-                        TileCardWidget(
-                          isThemeButton: false,
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.myCouponsScreen);
-                          },
-                          name: "My Coupons",
-                          icon: AppAssetImages.mostPopular,
-                          isLogOutButton: false,
-                        ),
+                        // const SizedBox(height: 5),
+                        // TileCardWidget(
+                        //   isThemeButton: false,
+                        //   onTap: () {
+                        //     Navigator.pushNamed(
+                        //         context, AppRoutes.myCouponsScreen);
+                        //   },
+                        //   name: "Intrest",
+                        //   icon: AppAssetImages.mostPopular,
+                        //   isLogOutButton: false,
+                        // ),
                         const SizedBox(height: 5),
                         TileCardWidget(
                           isThemeButton: true,

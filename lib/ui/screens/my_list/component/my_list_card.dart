@@ -6,22 +6,22 @@ import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_strings.dart';
 
-class HotDealsOfferCard extends StatelessWidget {
+class MyListCard extends StatelessWidget {
   String offerName;
   String discount;
   String offerDescription;
   final double height;
-  Function()? seeDetailsOnTap;
+  Function()? deleteOnTap;
   Function()? saveOnTap;
 
-  HotDealsOfferCard({
+  MyListCard({
     super.key,
     required this.offerName,
     required this.discount,
     required this.offerDescription,
     required this.height,
-    this.seeDetailsOnTap,
-    this.saveOnTap,
+    required this.deleteOnTap,
+    required this.saveOnTap,
   });
 
   @override
@@ -82,50 +82,46 @@ class HotDealsOfferCard extends StatelessWidget {
               ),
               const SizedBox(height: 11),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: saveOnTap,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 4.5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        color: AppColors.navyBlue,
-                        border: Border.all(
-                          color: const Color.fromRGBO(210, 210, 210, 1),
+                  Expanded(
+                    child: InkWell(
+                      onTap: deleteOnTap,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 7, vertical: 4.5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          color: const Color.fromRGBO(244, 205, 69, 1),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          AppString.save,
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 10,
-                            color: AppColors.white,
+                        child: Center(
+                          child: Text(
+                            AppString.seeDetails,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 10,
+                              color: AppColors.black,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   InkWell(
-                    onTap: seeDetailsOnTap,
+                    onTap: deleteOnTap,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 4.5),
+                          horizontal: 5.75, vertical: 4.25),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(3),
-                        color: const Color.fromRGBO(244, 205, 69, 1),
+                        color: AppColors.notificationsColor,
                       ),
-                      child: Center(
-                        child: Text(
-                          AppString.seeDetails,
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 10,
-                            color: AppColors.black,
-                          ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.delete_outline_outlined,
+                          color: AppColors.white,
+                          size: 13,
                         ),
                       ),
                     ),

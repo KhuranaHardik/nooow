@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/ui_provider.dart';
-import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
+import 'package:nooow/ui/screens/my_list/component/my_list_card.dart';
 import 'package:nooow/ui/screens/stores/components/flyer_card.dart';
 import 'package:nooow/utils/app_colors.dart';
+import 'package:nooow/utils/app_strings.dart';
 import 'package:provider/provider.dart';
 
 class MyListScreen extends StatefulWidget {
@@ -136,7 +137,14 @@ class _MyListScreenState extends State<MyListScreen> {
                                           210, 210, 210, 1),
                                     ),
                                   ),
-                                  child: HotDealsOfferCard(height: size.height),
+                                  child: MyListCard(
+                                    height: size.height,
+                                    offerName: AppString.christmasOffer,
+                                    discount: AppString.upto50PercentOff,
+                                    offerDescription: AppString.orderPizzasNow,
+                                    deleteOnTap: () {},
+                                    saveOnTap: () {},
+                                  ),
                                 );
                               },
                             ),

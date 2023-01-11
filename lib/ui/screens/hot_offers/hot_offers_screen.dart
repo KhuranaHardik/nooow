@@ -14,6 +14,7 @@ import 'package:nooow/ui/screens/hot_offers/components/hot_offers_category.dart'
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
+import 'package:nooow/utils/app_strings.dart';
 import 'package:provider/provider.dart';
 
 class HotDealsScreen extends StatefulWidget {
@@ -62,13 +63,15 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
           ApiServiceProvider().sliderList!.isEmpty) {
         null;
       } else {
-        if (_cuurentIndex < ApiServiceProvider().sliderList!.length) {
+        if (_cuurentIndex < ApiServiceProvider().sliderList!.length - 1) {
           _cuurentIndex++;
         } else {
           _cuurentIndex = 0;
         }
-        await _pageController.animateToPage(_cuurentIndex,
-            duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        if (_pageController.hasClients) {
+          await _pageController.animateToPage(_cuurentIndex,
+              duration: const Duration(milliseconds: 500), curve: Curves.ease);
+        }
       }
     });
   }
@@ -294,13 +297,28 @@ class _HotDealsScreenState extends State<HotDealsScreen> {
                                 color: const Color.fromRGBO(210, 210, 210, 1)),
                           ),
                           child: HotDealsOfferCard(
+                            offerName: AppString.christmasOffer,
+                            discount: AppString.upto50PercentOff,
+                            offerDescription: AppString.orderPizzasNow,
                             height: size.height,
                             saveOnTap: () {
                               log('Save');
                             },
                             seeDetailsOnTap: () {
                               Navigator.pushNamed(
-                                  context, AppRoutes.hotOfferDetailsScreen);
+                                context,
+                                AppRoutes.hotOfferDetailsScreen,
+                                arguments: {
+                                  "offerName": AppString.christmasOffer,
+                                  "expiry": "expiry",
+                                  "discountPercent": 50,
+                                  "offerTitle": AppString.orderPizzasNow,
+                                  "couponCode": "Coupon Code",
+                                  "stepsToAvailOffer":
+                                      "Steps to avail the offer",
+                                  "aboutStore": "About the store",
+                                },
+                              );
                             },
                           ),
                         );

@@ -8,6 +8,7 @@ import 'package:nooow/ui/screens/hot_offers/components/hot_offers_card.dart';
 import 'package:nooow/ui/screens/stores/components/flyer_card.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:nooow/utils/app_routes.dart';
+import 'package:nooow/utils/app_strings.dart';
 import 'package:provider/provider.dart';
 
 class StoresDetailScreen extends StatefulWidget {
@@ -227,7 +228,29 @@ class _StoresDetailScreenState extends State<StoresDetailScreen> {
                                           210, 210, 210, 1),
                                     ),
                                   ),
-                                  child: HotDealsOfferCard(height: size.height),
+                                  child: HotDealsOfferCard(
+                                    height: size.height,
+                                    offerName: AppString.christmasOffer,
+                                    discount: AppString.upto50PercentOff,
+                                    offerDescription: AppString.orderPizzasNow,
+                                    seeDetailsOnTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.hotOfferDetailsScreen,
+                                        arguments: {
+                                          "offerName": AppString.christmasOffer,
+                                          "expiry": "expiry",
+                                          "discountPercent": 50,
+                                          "offerTitle":
+                                              AppString.orderPizzasNow,
+                                          "couponCode": "Coupon Code",
+                                          "stepsToAvailOffer":
+                                              "Steps to avail the offer",
+                                          "aboutStore": "About the store",
+                                        },
+                                      );
+                                    },
+                                  ),
                                 );
                               },
                             ),
