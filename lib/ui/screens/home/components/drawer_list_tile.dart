@@ -32,9 +32,7 @@ class _DrawerListTileState extends State<DrawerListTile> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      String? theme = await AppSharedPrefrence().getTheme();
-      isSwitchOn = (theme == 'light' || theme == null) ? false : true;
-      setState(() {});
+      isSwitchOn = await AppSharedPrefrence().getTheme();
     });
   }
 
@@ -46,6 +44,7 @@ class _DrawerListTileState extends State<DrawerListTile> {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
           ),
+          // TODO:Colour change hoga is darkmode ke basis pr
           tileColor: AppColors.drawerListItemColor,
           title: Row(
             children: [
@@ -73,10 +72,10 @@ class _DrawerListTileState extends State<DrawerListTile> {
                   value: isSwitchOn,
                   onChanged: (val) {
                     uiProvider.loaderTrue();
-                    isSwitchOn = uiProvider.updateSwitch(isSwitchOn);
-                    isSwitchOn
-                        ? themeProvider.setDarkMode()
-                        : themeProvider.setLightMode();
+                    isSwitchOn = uiProvider.updateSwitch(val);
+                    themeProvider.isDark
+                        ? themeProvider.setDarkMode(false)
+                        : themeProvider.setDarkMode(true);
                     uiProvider.loaderFalse();
                   },
                 )

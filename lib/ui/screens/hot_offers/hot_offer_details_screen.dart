@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
@@ -48,8 +49,8 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
           ),
         ),
       ),
-      body: Consumer<UIProvider>(
-        builder: (context, uiProvider, child) {
+      body: Consumer2<UIProvider, ThemeProvider>(
+        builder: (context, uiProvider, themeProvider, child) {
           return Stack(
             children: [
               ListView(
@@ -62,6 +63,7 @@ class _HotOfferDetailScreenState extends State<HotOfferDetailScreen> {
                       width: size.width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
+                        // TODO:Colour change hoga is darkmode ke basis pr
                         color: AppColors.navyBlue,
                         image: const DecorationImage(
                           image: AssetImage(AppAssetImages.banner),

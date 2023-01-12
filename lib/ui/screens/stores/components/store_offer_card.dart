@@ -9,11 +9,13 @@ class StoreOffersCard extends StatelessWidget {
   final double height;
   Function()? seeDetailsOnTap;
   Function()? saveOnTap;
+  final bool isDarkMode;
   StoreOffersCard({
     super.key,
     required this.height,
     this.seeDetailsOnTap,
     this.saveOnTap,
+    required this.isDarkMode,
   });
 
   @override
@@ -48,6 +50,7 @@ class StoreOffersCard extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w400,
                   fontSize: 10,
+                  // TODO:Colour change hoga is darkmode ke basis pr
                   color: AppColors.black,
                 ),
               ),

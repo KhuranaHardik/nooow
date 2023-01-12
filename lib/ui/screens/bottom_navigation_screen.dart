@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/screens/home/home_screen.dart';
 import 'package:nooow/ui/screens/hot_offers/hot_offers_screen.dart';
@@ -30,8 +31,8 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Consumer<UIProvider>(
-      builder: (context, uiProvider, child) {
+    return Consumer2<UIProvider, ThemeProvider>(
+      builder: (context, uiProvider, themeProvider, child) {
         return WillPopScope(
           onWillPop: () async {
             if (_selectedIndex != 0) {
@@ -50,6 +51,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _selectedIndex,
               type: BottomNavigationBarType.fixed,
+              // TODO:Colour change hoga is darkmode ke basis pr
               selectedItemColor: AppColors.black,
               unselectedItemColor: const Color.fromRGBO(122, 122, 122, 1),
               onTap: (index) {

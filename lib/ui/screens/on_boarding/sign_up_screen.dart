@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nooow/provider/api_services_provider.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/components/custom_elevated_button.dart';
 import 'package:nooow/ui/components/custom_text_form_field.dart';
@@ -78,215 +79,226 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double appBarHeight = AppBar().preferredSize.height;
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        foregroundColor: AppColors.black,
-        elevation: 0.0,
-        backgroundColor: AppColors.whiteBackground,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          systemStatusBarContrastEnforced: true,
-        ),
-      ),
-      backgroundColor: AppColors.whiteBackground,
-      body: Consumer2<UIProvider, ApiServiceProvider>(
-        builder: (context, uiProvider, apiServiceProvider, child) {
-          return Stack(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _nameFocus.unfocus();
-                  _phoneFocus.unfocus();
-                  _emailFocus.unfocus();
-                  _passwordFocus.unfocus();
-                  _confirmPasswordFocus.unfocus();
-                },
-                child: Form(
-                  key: _formKey,
-                  onChanged: () {
-                    _isFieldsEmpty =
-                        uiProvider.buttonColorChange(_controllerList);
-                  },
-                  child: ListView(
-                    padding: EdgeInsets.only(
-                      left: 35,
-                      right: 35,
-                      bottom: appBarHeight,
-                    ),
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            AppAssetImages.appLogo,
-                            height: 29,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 56),
-                      Text(
-                        AppString.signUp,
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 28,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            // TODO:Colour change hoga is darkmode ke basis pr
+            foregroundColor: AppColors.black,
+            elevation: 0.0,
+            backgroundColor: AppColors.whiteBackground,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              systemStatusBarContrastEnforced: true,
+            ),
+          ),
+          backgroundColor: AppColors.whiteBackground,
+          body: Consumer2<UIProvider, ApiServiceProvider>(
+            builder: (context, uiProvider, apiServiceProvider, child) {
+              return Stack(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _nameFocus.unfocus();
+                      _phoneFocus.unfocus();
+                      _emailFocus.unfocus();
+                      _passwordFocus.unfocus();
+                      _confirmPasswordFocus.unfocus();
+                    },
+                    child: Form(
+                      key: _formKey,
+                      onChanged: () {
+                        _isFieldsEmpty =
+                            uiProvider.buttonColorChange(_controllerList);
+                      },
+                      child: ListView(
+                        padding: EdgeInsets.only(
+                          left: 35,
+                          right: 35,
+                          bottom: appBarHeight,
                         ),
-                      ),
-                      const SizedBox(height: 41),
-                      CustomTextField(
-                        controller: _nameTextEditingController,
-                        focusNode: _nameFocus,
-                        textInputAction: TextInputAction.next,
-                        readOnly: false,
-                        placeholder: AppString.name,
-                        validator: UserNameValidator().validateUserName,
-                        borderColor: AppColors.navyBlue,
-                        isObscure: false,
-                      ),
-                      const SizedBox(height: 18),
-                      CustomTextField(
-                        controller: _phoneTextEditingController,
-                        focusNode: _phoneFocus,
-                        textInputAction: TextInputAction.next,
-                        readOnly: false,
-                        placeholder: AppString.phoneNumber,
-                        validator: PhoneNoValidator().phoneNoValidation,
-                        inputFormatter: [LengthLimitingTextInputFormatter(10)],
-                        borderColor: AppColors.navyBlue,
-                        isObscure: false,
-                      ),
-                      const SizedBox(height: 18),
-                      CustomTextField(
-                        controller: _emailTextEditingController,
-                        focusNode: _emailFocus,
-                        textInputAction: TextInputAction.next,
-                        readOnly: false,
-                        placeholder: AppString.emailAddress,
-                        validator: EmailValidator().validateEmail,
-                        borderColor: AppColors.navyBlue,
-                        isObscure: false,
-                      ),
-                      const SizedBox(height: 18),
-                      CustomTextField(
-                        isObscure: true,
-                        isPasswordField: true,
-                        controller: _passwordTextEditingController,
-                        focusNode: _passwordFocus,
-                        textInputAction: TextInputAction.next,
-                        readOnly: false,
-                        placeholder: AppString.password,
-                        validator: PasswordValidator().validatePassword,
-                        borderColor: AppColors.navyBlue,
-                      ),
-                      const SizedBox(height: 18),
-                      CustomTextField(
-                        controller: _confirmPasswordTextEditingController,
-                        focusNode: _confirmPasswordFocus,
-                        textInputAction: TextInputAction.next,
-                        readOnly: false,
-                        placeholder: AppString.confirmPassword,
-                        borderColor: AppColors.navyBlue,
-                        isObscure: true,
-                        isPasswordField: true,
-                        validator: (val) {
-                          if (val!.isEmpty) {
-                            return "Password Required*";
-                          } else if (val !=
-                              _passwordTextEditingController.text) {
-                            return "Password do not match.";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 21),
-                      // Get OTP button
-                      CustomElevatedButton(
-                        isAnimate: uiProvider.loading,
-                        onPressed: _isFieldsEmpty
-                            ? () {}
-                            : () async {
-                                if (_formKey.currentState!.validate()) {
-                                  uiProvider.loaderTrue();
-                                  await apiServiceProvider.signupProvider(
-                                    context: context,
-                                    body: {
-                                      "name": _nameTextEditingController.text,
-                                      "contact":
-                                          _phoneTextEditingController.text,
-                                      "email": _emailTextEditingController.text,
-                                      "password":
-                                          _passwordTextEditingController.text,
-                                      "confirm_password":
-                                          _confirmPasswordTextEditingController
-                                              .text,
-                                    },
-                                  );
-                                  uiProvider.loaderFalse();
-                                }
-                              },
-                        elevation: 0,
-                        borderColor: AppColors.transparent,
-                        buttonColor: AppColors.navyBlue,
-                        buttonSize: Size(size.width, 52),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 17.0),
-                            child: Text(
-                              AppString.getOtp,
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                AppAssetImages.appLogo,
+                                height: 29,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 56),
+                          Text(
+                            AppString.signUp,
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 28,
+                            ),
+                          ),
+                          const SizedBox(height: 41),
+                          CustomTextField(
+                            controller: _nameTextEditingController,
+                            focusNode: _nameFocus,
+                            textInputAction: TextInputAction.next,
+                            readOnly: false,
+                            placeholder: AppString.name,
+                            validator: UserNameValidator().validateUserName,
+                            borderColor: AppColors.navyBlue,
+                            isObscure: false,
+                          ),
+                          const SizedBox(height: 18),
+                          CustomTextField(
+                            controller: _phoneTextEditingController,
+                            focusNode: _phoneFocus,
+                            textInputAction: TextInputAction.next,
+                            readOnly: false,
+                            placeholder: AppString.phoneNumber,
+                            validator: PhoneNoValidator().phoneNoValidation,
+                            inputFormatter: [
+                              LengthLimitingTextInputFormatter(10)
+                            ],
+                            borderColor: AppColors.navyBlue,
+                            isObscure: false,
+                          ),
+                          const SizedBox(height: 18),
+                          CustomTextField(
+                            controller: _emailTextEditingController,
+                            focusNode: _emailFocus,
+                            textInputAction: TextInputAction.next,
+                            readOnly: false,
+                            placeholder: AppString.emailAddress,
+                            validator: EmailValidator().validateEmail,
+                            borderColor: AppColors.navyBlue,
+                            isObscure: false,
+                          ),
+                          const SizedBox(height: 18),
+                          CustomTextField(
+                            isObscure: true,
+                            isPasswordField: true,
+                            controller: _passwordTextEditingController,
+                            focusNode: _passwordFocus,
+                            textInputAction: TextInputAction.next,
+                            readOnly: false,
+                            placeholder: AppString.password,
+                            validator: PasswordValidator().validatePassword,
+                            borderColor: AppColors.navyBlue,
+                          ),
+                          const SizedBox(height: 18),
+                          CustomTextField(
+                            controller: _confirmPasswordTextEditingController,
+                            focusNode: _confirmPasswordFocus,
+                            textInputAction: TextInputAction.next,
+                            readOnly: false,
+                            placeholder: AppString.confirmPassword,
+                            borderColor: AppColors.navyBlue,
+                            isObscure: true,
+                            isPasswordField: true,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return "Password Required*";
+                              } else if (val !=
+                                  _passwordTextEditingController.text) {
+                                return "Password do not match.";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 21),
+                          // Get OTP button
+                          CustomElevatedButton(
+                            isAnimate: uiProvider.loading,
+                            onPressed: _isFieldsEmpty
+                                ? () {}
+                                : () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      uiProvider.loaderTrue();
+                                      await apiServiceProvider.signupProvider(
+                                        context: context,
+                                        body: {
+                                          "name":
+                                              _nameTextEditingController.text,
+                                          "contact":
+                                              _phoneTextEditingController.text,
+                                          "email":
+                                              _emailTextEditingController.text,
+                                          "password":
+                                              _passwordTextEditingController
+                                                  .text,
+                                          "confirm_password":
+                                              _confirmPasswordTextEditingController
+                                                  .text,
+                                        },
+                                      );
+                                      uiProvider.loaderFalse();
+                                    }
+                                  },
+                            elevation: 0,
+                            borderColor: AppColors.transparent,
+                            buttonColor: AppColors.navyBlue,
+                            buttonSize: Size(size.width, 52),
+                            child: Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 17.0),
+                                child: Text(
+                                  AppString.getOtp,
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      const SizedBox(height: 21),
-                      Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: AppString.alreadyHaveAnAccount,
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: AppColors.darkGrey,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: AppString.signIn,
+                          const SizedBox(height: 21),
+                          Center(
+                            child: RichText(
+                              text: TextSpan(
+                                text: AppString.alreadyHaveAnAccount,
                                 style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: AppColors.navyBlue,
+                                  color: AppColors.darkGrey,
                                 ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pop(context);
-                                  },
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              // Loading Screen
-              uiProvider.loading == true
-                  ? Container(
-                      height: size.height,
-                      color: AppColors.whiteBackground.withOpacity(0.4),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                            color: AppColors.navyBlue),
+                                children: [
+                                  TextSpan(
+                                    text: AppString.signIn,
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      color: AppColors.navyBlue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.pop(context);
+                                      },
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  : const SizedBox()
-            ],
-          );
-        },
-      ),
+                    ),
+                  ),
+                  // Loading Screen
+                  uiProvider.loading == true
+                      ? Container(
+                          height: size.height,
+                          color: AppColors.whiteBackground.withOpacity(0.4),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.navyBlue),
+                          ),
+                        )
+                      : const SizedBox()
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

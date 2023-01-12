@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/ad_container.dart';
@@ -114,13 +115,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Consumer<ApiServiceProvider>(
-      builder: (context, apiServices, child) {
+    return Consumer2<ApiServiceProvider, ThemeProvider>(
+      builder: (context, apiServices, themeProvider, child) {
         return Scaffold(
+          // TODO:Colour change hoga is darkmode ke basis pr
           backgroundColor: AppColors.whiteBackground,
           drawer: AppDrawer(
             backgroundHeight: size.height * 0.18,
             isUserSignedIn: isSignIn,
+            isDarkMode: themeProvider.isDark,
           ),
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -305,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: size.width - 42,
                                       image: apiServices.sliderList?[index]
                                           ?['slider'],
+                                      isDarkMode: themeProvider.isDark,
                                     );
                                   },
                                 ),
@@ -378,6 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ?['title'],
                                 categoryImage: apiServices.categorylist?[index]
                                     ?['image'],
+                                isDarkMode: themeProvider.isDark,
                               ),
                             ),
                           ),
@@ -411,6 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: OffersContainerWidget(
                                   image: apiServices.offerList?[index]
                                       ?['image'],
+                                  isDarkMode: themeProvider.isDark,
                                 ),
                               );
                             },
@@ -446,6 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     apiServices.topFoodBrandList?[index]
                                         ?['offer_percentage'],
                                 width: size.width * 0.26,
+                                isdarkMode: themeProvider.isDark,
                               ),
                             ),
                           ),

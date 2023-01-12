@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nooow/provider/ui_provider.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/utils/app_asset_images.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -9,11 +9,12 @@ class NotificationTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UIProvider>(
-      builder: (context, uiProvider, child) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
         return InkWell(
           onTap: () {},
           child: Card(
+            // TODO:Colour change hoga is darkmode ke basis pr
             color: AppColors.drawerListItemColor,
             elevation: 0,
             child: ListTile(

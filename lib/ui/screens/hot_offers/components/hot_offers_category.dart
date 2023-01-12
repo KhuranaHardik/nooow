@@ -6,12 +6,14 @@ class HotDealsCategoryWidget extends StatelessWidget {
   final bool isSelected;
   final String categoryImage;
   final String categoryName;
+  final bool isDarkMode;
   // final Function()? onTap;
   const HotDealsCategoryWidget({
     super.key,
     required this.isSelected,
     required this.categoryImage,
     required this.categoryName,
+    required this.isDarkMode,
     // required this.onTap,
   });
 
@@ -26,6 +28,7 @@ class HotDealsCategoryWidget extends StatelessWidget {
           width: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
+            // TODO:Colour change hoga is darkmode ke basis pr
             color: isSelected
                 ? AppColors.navyBlue
                 : AppColors.navyBlue.withOpacity(0.15),

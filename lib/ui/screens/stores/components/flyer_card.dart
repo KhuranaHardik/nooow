@@ -5,9 +5,11 @@ import 'package:nooow/utils/app_colors.dart';
 
 class FlyersCard extends StatelessWidget {
   final double height;
+  final bool isDarkMode;
   const FlyersCard({
     super.key,
     required this.height,
+    required this.isDarkMode,
   });
 
   @override
@@ -40,6 +42,7 @@ class FlyersCard extends StatelessWidget {
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w400,
               fontSize: 10,
+              // TODO:Colour change hoga is darkmode ke basis pr
               color: AppColors.black,
             ),
           ),

@@ -14,8 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppDrawer extends StatelessWidget {
   final bool isUserSignedIn;
   final double backgroundHeight;
-  const AppDrawer(
-      {super.key, this.isUserSignedIn = false, required this.backgroundHeight});
+  final bool isDarkMode;
+
+  const AppDrawer({
+    super.key,
+    this.isUserSignedIn = false,
+    required this.backgroundHeight,
+    required this.isDarkMode,
+  });
 
   @override
   Widget build(BuildContext context) {

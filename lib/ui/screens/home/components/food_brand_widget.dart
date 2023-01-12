@@ -7,6 +7,7 @@ import 'package:nooow/utils/app_strings.dart';
 class FoodBrandWidget extends StatelessWidget {
   final String? image;
   final String? offerPercentage;
+  final bool isdarkMode;
 
   final double width;
   const FoodBrandWidget({
@@ -14,6 +15,7 @@ class FoodBrandWidget extends StatelessWidget {
     required this.width,
     this.image,
     this.offerPercentage,
+    required this.isdarkMode,
   }) : super(key: key);
 
   @override
@@ -26,13 +28,15 @@ class FoodBrandWidget extends StatelessWidget {
           width: width,
           margin: const EdgeInsets.only(bottom: 15),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(90),
-              border: Border.all(color: AppColors.lightGrey),
-              image: DecorationImage(
-                  image: (image == null || image!.isEmpty)
-                      ? const AssetImage(AppAssetImages.fashion)
-                          as ImageProvider
-                      : NetworkImage(image!))),
+            borderRadius: BorderRadius.circular(90),
+            // TODO:Colour change hoga is darkmode ke basis pr
+            border: Border.all(color: AppColors.lightGrey),
+            image: DecorationImage(
+              image: (image == null || image!.isEmpty)
+                  ? const AssetImage(AppAssetImages.fashion) as ImageProvider
+                  : NetworkImage(image!),
+            ),
+          ),
         ),
         Container(
           height: 30,

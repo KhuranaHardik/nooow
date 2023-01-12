@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/utils/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -44,12 +45,13 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (BuildContext context) => ObscureIconProvider(),
-      child: Consumer<ObscureIconProvider>(
-        builder: (context, passwordProvider, child) {
+      child: Consumer2<ObscureIconProvider, ThemeProvider>(
+        builder: (context, passwordProvider, themeProvider, child) {
           return TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             readOnly: readOnly,
             controller: controller,
+            // TODO:Colour change hoga is darkmode ke basis pr
             cursorColor: AppColors.navyBlue,
             textInputAction: textInputAction,
             keyboardType: textInputType,

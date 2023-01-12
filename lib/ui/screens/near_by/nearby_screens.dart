@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nooow/provider/api_services_provider.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/services/local_db.dart';
 import 'package:nooow/ui/components/drawer.dart';
@@ -195,202 +196,210 @@ class _NearByScreenState extends State<NearByScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      drawer: AppDrawer(
-        isUserSignedIn: isSignIn,
-        backgroundHeight: size.height * 0.18,
-      ),
-      appBar: AppBar(
-        backgroundColor: AppColors.navyBlue,
-        elevation: 0.0,
-        title: Text(
-          'Nearby',
-          style: GoogleFonts.montserrat(
-            fontWeight: FontWeight.w600,
-            fontSize: 16.0,
-            color: AppColors.white,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Scaffold(
+          drawer: AppDrawer(
+            isUserSignedIn: isSignIn,
+            backgroundHeight: size.height * 0.18,
+            isDarkMode: themeProvider.isDark,
           ),
-        ),
-        actions: [
-          // Favorites
-          InkWell(
-            onTap: () {
-              !isSignIn
-                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
-                  : Navigator.pushNamed(context, AppRoutes.myListScreen);
-            },
-            child: SizedBox(
-              width: 26,
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 17, right: 6),
-                    child: Icon(
-                      Icons.favorite_border_outlined,
-                      color: AppColors.white,
-                      size: 22,
-                    ),
-                  ),
-                  Positioned(
-                    top: 12,
-                    // right: 2,
-                    left: 12,
-                    child: CircleAvatar(
-                      radius: 7,
-                      backgroundColor: Colors.red,
-                      child: Center(
-                        child: Text(
-                          '0',
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 9,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: AppColors.navyBlue,
+            elevation: 0.0,
+            title: Text(
+              'Nearby',
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
+                // TODO:Colour change hoga is darkmode ke basis pr
+                color: AppColors.white,
               ),
             ),
-          ),
-          // Notifications
-          InkWell(
-            onTap: () {
-              !isSignIn
-                  ? Navigator.pushNamed(context, AppRoutes.signInScreen)
-                  : log('Notifications');
-            },
-            child: SizedBox(
-              width: 26,
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 17, right: 6),
-                    child: Icon(
-                      Icons.notifications_none,
-                      color: AppColors.white,
-                      size: 22,
-                    ),
-                  ),
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: CircleAvatar(
-                      radius: 7,
-                      backgroundColor: Colors.red,
-                      child: Center(
-                        child: Text(
-                          '0',
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 9,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 10)
-        ],
-      ),
-      body: Consumer<UIProvider>(
-        builder: (context, uiProvider, child) {
-          return (isSignIn == false)
-              ? const UserNotFoundErrorWidget()
-              : SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
+            actions: [
+              // Favorites
+              InkWell(
+                onTap: () {
+                  !isSignIn
+                      ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                      : Navigator.pushNamed(context, AppRoutes.myListScreen);
+                },
+                child: SizedBox(
+                  width: 26,
                   child: Stack(
+                    alignment: Alignment.topRight,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 18, bottom: 30, left: 21, right: 19),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: size.height * 0.60,
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: GoogleMap(
-                                myLocationEnabled: true,
-                                myLocationButtonEnabled: true,
-                                mapType: MapType.normal,
-                                initialCameraPosition: _cameraPosition,
-                                markers: markers,
-                                onMapCreated: (GoogleMapController controller) {
-                                  setState(() {
-                                    mapController = controller;
-                                    _controller.complete(controller);
-                                    _manager.setMapId(controller.mapId);
-                                  });
-                                  mapController?.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                      CameraPosition(
-                                        target: LatLng(
-                                            ApiServiceProvider()
-                                                    .currentPosition
-                                                    ?.latitude ??
-                                                0,
-                                            ApiServiceProvider()
-                                                    .currentPosition
-                                                    ?.longitude ??
-                                                0),
-                                        zoom: 11,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                onCameraMove: _manager.onCameraMove,
-                                onCameraIdle: _manager.updateMap,
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            Text(
-                              "Current Location",
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            currentAddress == null
-                                ? const SizedBox.shrink()
-                                : Text(
-                                    "${currentAddress?.street}, ${currentAddress?.administrativeArea}, ${currentAddress?.subLocality}, ${currentAddress?.country}, ${currentAddress?.postalCode}",
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                          ],
+                      const Padding(
+                        padding: EdgeInsets.only(top: 17, right: 6),
+                        child: Icon(
+                          Icons.favorite_border_outlined,
+                          color: AppColors.white,
+                          size: 22,
                         ),
                       ),
-                      uiProvider.loading
-                          ? Container(
-                              height: size.height,
-                              color: AppColors.whiteBackground.withOpacity(0.4),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                    color: AppColors.navyBlue),
+                      Positioned(
+                        top: 12,
+                        // right: 2,
+                        left: 12,
+                        child: CircleAvatar(
+                          radius: 7,
+                          backgroundColor: Colors.red,
+                          child: Center(
+                            child: Text(
+                              '0',
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 9,
+                                color: AppColors.white,
                               ),
-                            )
-                          : const SizedBox()
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                );
-        },
-      ),
+                ),
+              ),
+              // Notifications
+              InkWell(
+                onTap: () {
+                  !isSignIn
+                      ? Navigator.pushNamed(context, AppRoutes.signInScreen)
+                      : log('Notifications');
+                },
+                child: SizedBox(
+                  width: 26,
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 17, right: 6),
+                        child: Icon(
+                          Icons.notifications_none,
+                          color: AppColors.white,
+                          size: 22,
+                        ),
+                      ),
+                      Positioned(
+                        top: 12,
+                        left: 12,
+                        child: CircleAvatar(
+                          radius: 7,
+                          backgroundColor: Colors.red,
+                          child: Center(
+                            child: Text(
+                              '0',
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 9,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10)
+            ],
+          ),
+          body: Consumer<UIProvider>(
+            builder: (context, uiProvider, child) {
+              return (isSignIn == false)
+                  ? const UserNotFoundErrorWidget()
+                  : SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 18, bottom: 30, left: 21, right: 19),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: size.height * 0.60,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: GoogleMap(
+                                    myLocationEnabled: true,
+                                    myLocationButtonEnabled: true,
+                                    mapType: MapType.normal,
+                                    initialCameraPosition: _cameraPosition,
+                                    markers: markers,
+                                    onMapCreated:
+                                        (GoogleMapController controller) {
+                                      setState(() {
+                                        mapController = controller;
+                                        _controller.complete(controller);
+                                        _manager.setMapId(controller.mapId);
+                                      });
+                                      mapController?.animateCamera(
+                                        CameraUpdate.newCameraPosition(
+                                          CameraPosition(
+                                            target: LatLng(
+                                                ApiServiceProvider()
+                                                        .currentPosition
+                                                        ?.latitude ??
+                                                    0,
+                                                ApiServiceProvider()
+                                                        .currentPosition
+                                                        ?.longitude ??
+                                                    0),
+                                            zoom: 11,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    onCameraMove: _manager.onCameraMove,
+                                    onCameraIdle: _manager.updateMap,
+                                  ),
+                                ),
+                                const SizedBox(height: 18),
+                                Text(
+                                  "Current Location",
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                currentAddress == null
+                                    ? const SizedBox.shrink()
+                                    : Text(
+                                        "${currentAddress?.street}, ${currentAddress?.administrativeArea}, ${currentAddress?.subLocality}, ${currentAddress?.country}, ${currentAddress?.postalCode}",
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          uiProvider.loading
+                              ? Container(
+                                  height: size.height,
+                                  color: AppColors.whiteBackground
+                                      .withOpacity(0.4),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                        color: AppColors.navyBlue),
+                                  ),
+                                )
+                              : const SizedBox()
+                        ],
+                      ),
+                    );
+            },
+          ),
+        );
+      },
     );
   }
 }

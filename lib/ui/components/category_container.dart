@@ -6,11 +6,13 @@ import 'package:nooow/utils/app_colors.dart';
 class CategoryContainerWidget extends StatelessWidget {
   final String categoryName;
   final String categoryImage;
+  final bool isDarkMode;
 
   const CategoryContainerWidget({
     Key? key,
     required this.categoryName,
     required this.categoryImage,
+    required this.isDarkMode,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,7 @@ class CategoryContainerWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Container(
+        // TODO:Colour change hoga is darkmode ke basis pr
         color: AppColors.transparent,
         margin: const EdgeInsets.only(right: 18),
         child: Column(

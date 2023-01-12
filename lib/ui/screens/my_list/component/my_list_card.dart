@@ -13,6 +13,7 @@ class MyListCard extends StatelessWidget {
   final double height;
   Function()? deleteOnTap;
   Function()? saveOnTap;
+  bool isDarkMode;
 
   MyListCard({
     super.key,
@@ -22,6 +23,7 @@ class MyListCard extends StatelessWidget {
     required this.height,
     required this.deleteOnTap,
     required this.saveOnTap,
+    required this.isDarkMode,
   });
 
   @override
@@ -60,6 +62,7 @@ class MyListCard extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w400,
                   fontSize: 10,
+                  // TODO:Colour change hoga is darkmode ke basis pr
                   color: AppColors.black,
                 ),
               ),

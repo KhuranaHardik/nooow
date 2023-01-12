@@ -75,15 +75,17 @@ class AppSharedPrefrence {
     userData = pref.getStringList('userData');
   }
 
+  static const isDarkMode = "isDarkMode";
+
   // Saving theme
-  Future<void> saveTheme(String value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("theme", value);
+  Future<void> setTheme(bool value) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool(isDarkMode, value);
   }
 
   // Getting theme
-  Future<String?> getTheme() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("theme");
+  Future<bool> getTheme() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool(isDarkMode) ?? false;
   }
 }

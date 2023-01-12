@@ -117,7 +117,6 @@ class ApiServiceProvider extends ChangeNotifier {
         AppCommonSnackBar().appCommonSnackbar(context, data['message']);
       }
     }
-    // print(response.body);
   }
 
   //Forgot Password Provider
@@ -144,7 +143,6 @@ class ApiServiceProvider extends ChangeNotifier {
             .appCommonSnackbar(context, result["message"]);
       }
     }
-    // print(response.body);
   }
 
   //OTP Verification Forgot Password Provider
@@ -165,7 +163,6 @@ class ApiServiceProvider extends ChangeNotifier {
             .appCommonSnackbar(context, result["message"]);
       }
     }
-    // print(response.body);
   }
 
   // reset password api
@@ -186,7 +183,6 @@ class ApiServiceProvider extends ChangeNotifier {
             .appCommonSnackbar(context, result["message"]);
       }
     }
-    // print(response.body);
   }
 
   // slider api

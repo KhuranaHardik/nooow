@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:nooow/provider/api_services_provider.dart';
 import 'package:nooow/provider/theme_provider.dart';
@@ -34,16 +32,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ApiServiceProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          log(themeProvider.getTheme().toString());
-          return MaterialApp(
-            theme: themeProvider.getTheme(),
-            debugShowCheckedModeBanner: false,
-            title: AppKeys.appName,
-            onGenerateRoute: AppRoutes.generateRoute,
-          );
-        },
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: AppKeys.appName,
+        onGenerateRoute: AppRoutes.generateRoute,
       ),
     );
   }

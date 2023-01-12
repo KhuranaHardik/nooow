@@ -33,9 +33,7 @@ class _TileCardWidgetState extends State<TileCardWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      String? theme = await AppSharedPrefrence().getTheme();
-      isSwitchOn = (theme == 'light' || theme == null) ? false : true;
-      setState(() {});
+      isSwitchOn = await AppSharedPrefrence().getTheme();
     });
   }
 
@@ -46,6 +44,7 @@ class _TileCardWidgetState extends State<TileCardWidget> {
         return InkWell(
           onTap: widget.onTap,
           child: Card(
+            // TODO:Colour change hoga is darkmode ke basis pr
             color: AppColors.drawerListItemColor,
             elevation: 3,
             child: ListTile(
@@ -67,10 +66,10 @@ class _TileCardWidgetState extends State<TileCardWidget> {
                       value: isSwitchOn,
                       onChanged: (val) {
                         uiProvider.loaderTrue();
-                        isSwitchOn = uiProvider.updateSwitch(isSwitchOn);
-                        isSwitchOn
-                            ? themeProvider.setDarkMode()
-                            : themeProvider.setLightMode();
+                        isSwitchOn = uiProvider.updateSwitch(val);
+                        themeProvider.isDark
+                            ? themeProvider.setDarkMode(false)
+                            : themeProvider.setDarkMode(true);
                         uiProvider.loaderFalse();
                       },
                     )

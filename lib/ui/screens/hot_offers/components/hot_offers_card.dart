@@ -13,6 +13,7 @@ class HotDealsOfferCard extends StatelessWidget {
   final double height;
   Function()? seeDetailsOnTap;
   Function()? saveOnTap;
+  bool isDarkMode;
 
   HotDealsOfferCard({
     super.key,
@@ -22,6 +23,7 @@ class HotDealsOfferCard extends StatelessWidget {
     required this.height,
     this.seeDetailsOnTap,
     this.saveOnTap,
+    required this.isDarkMode,
   });
 
   @override
@@ -60,6 +62,7 @@ class HotDealsOfferCard extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w400,
                   fontSize: 10,
+                  // TODO:Colour change hoga is darkmode ke basis pr
                   color: AppColors.black,
                 ),
               ),

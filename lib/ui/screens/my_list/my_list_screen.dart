@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nooow/provider/theme_provider.dart';
 import 'package:nooow/provider/ui_provider.dart';
 import 'package:nooow/ui/screens/my_list/component/my_list_card.dart';
 import 'package:nooow/ui/screens/stores/components/flyer_card.dart';
@@ -22,6 +23,7 @@ class _MyListScreenState extends State<MyListScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        // TODO:Colour change hoga is darkmode ke basis pr
         backgroundColor: AppColors.navyBlue,
         elevation: 0.0,
         title: Text(
@@ -76,8 +78,8 @@ class _MyListScreenState extends State<MyListScreen> {
           const SizedBox(width: 10)
         ],
       ),
-      body: Consumer<UIProvider>(
-        builder: (context, uiProvider, child) {
+      body: Consumer2<UIProvider, ThemeProvider>(
+        builder: (context, uiProvider, themeProvider, child) {
           return DefaultTabController(
             length: 2,
             child: Container(
@@ -144,6 +146,7 @@ class _MyListScreenState extends State<MyListScreen> {
                                     offerDescription: AppString.orderPizzasNow,
                                     deleteOnTap: () {},
                                     saveOnTap: () {},
+                                    isDarkMode: themeProvider.isDark,
                                   ),
                                 );
                               },
@@ -187,7 +190,10 @@ class _MyListScreenState extends State<MyListScreen> {
                                           210, 210, 210, 1),
                                     ),
                                   ),
-                                  child: FlyersCard(height: size.height * 0.20),
+                                  child: FlyersCard(
+                                    height: size.height * 0.20,
+                                    isDarkMode: themeProvider.isDark,
+                                  ),
                                 );
                               },
                             ),

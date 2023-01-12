@@ -38,8 +38,6 @@ class UIProvider extends ChangeNotifier {
 
   // Theme Switch (Profile Screen)
   bool updateSwitch(bool switchValue) {
-    switchValue = !switchValue;
-    // notifyListeners();
     return switchValue;
   }
 }
@@ -47,9 +45,7 @@ class UIProvider extends ChangeNotifier {
 class ObscureIconProvider extends ChangeNotifier {
   // bool obscure = true;
   bool showPassword(bool obscure) {
-    print("Provider before $obscure");
     obscure = !obscure;
-    print("Provider after $obscure");
     notifyListeners();
     return obscure;
   }

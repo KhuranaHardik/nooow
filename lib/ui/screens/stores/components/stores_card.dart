@@ -9,6 +9,8 @@ class StoresCard extends StatelessWidget {
   final String? flyers;
   final String? offers;
   final double width;
+  final bool isDarkMode;
+
   const StoresCard({
     super.key,
     required this.width,
@@ -16,6 +18,7 @@ class StoresCard extends StatelessWidget {
     this.companyName,
     this.flyers,
     this.offers,
+    required this.isDarkMode,
   });
 
   @override
@@ -23,6 +26,7 @@ class StoresCard extends StatelessWidget {
     return Container(
       width: width,
       decoration: BoxDecoration(
+        // TODO:Colour change hoga is darkmode ke basis pr
         color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color.fromRGBO(210, 210, 210, 1)),
